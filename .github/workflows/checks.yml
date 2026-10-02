@@ -38,5 +38,7 @@ jobs:
         run: node scripts/adapter-checks.mjs
       - name: SmartRecruiters regression checks
         run: node scripts/smartrecruiters-checks.mjs
+      - name: Workable regression checks
+        run: node scripts/workable-checks.mjs
       - name: Build Worker
         run: pnpm build
