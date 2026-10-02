@@ -7,11 +7,11 @@ A free search interface for company-hosted job listings. React, TypeScript, Vine
 - Enter a title or title keywords, plus an optional location.
 - Use commas or OR to search alternatives. All words within an alternative must occur in a listing title, or in the available description when **Search descriptions too** is enabled.
 - **Include title aliases** expands explicit synonyms and abbreviations such as DevRel, SRE, QA, ML, UX, and software engineer/developer. Turn it off for literal matching. Each result explains which field and term matched.
-- **Results in JobScape** selects supported live platforms, shows registered employer scope before searching, and counts only responding boards with results. **Search on Google** has a separate platform selection and opens external searches. Role, location, and filter options remain available when switching views.
+- **Results in JobScape** selects supported live platforms, shows the scope of included company boards before searching, and counts only responding boards with results. **Search on Google** has a separate platform selection and opens external searches. Role, location, and filter options remain available when switching views.
 - Live listings load public Greenhouse, Lever, Ashby, SmartRecruiters, Workable, and Personio feeds from a maintained registry of company boards.
 - All ATS searches generate Google site queries for 18 platforms and open them in a new tab. They do not scrape Google or embed Google results.
 - Search values are encoded in the page URL. Reloading a search URL runs that search again.
-- Old URLs containing Google-only platforms explicitly explain their exclusion from live retrieval and offer the corresponding external links. Results distinguish unsupported sources, unregistered employers, unavailable/partial feeds, and searches with no matches.
+- Old URLs containing Google-only platforms explicitly explain their exclusion from live retrieval and offer the corresponding external links. Results distinguish unsupported sources, supported platforms with no included company boards, unavailable/partial feeds, and searches with no matches.
 
 ## Coverage and limitations
 
