@@ -60,3 +60,9 @@ The user authorized all three improvements after the initial report. The earlier
 - Real Greenhouse description search for `kubernetes` returned 554 matches across 4,656 searchable descriptions; 108 were longer than the search limit. Responses were capped at 300 and retained short previews plus actual match evidence.
 - Browser tests verified the new controls, three regional uncertainty labels, alias match explanations, company coverage details, description evidence, restored description/alias settings, Google link generation, and mobile overflow checks. The original preview tab became unresponsive to browser inspection; a fresh tab in the same browser worked.
 - Private Site identity and the pnpm lockfile remain unchanged. No deployment or audience changes were made. Production memory/performance at Cloudflare and a full cross-browser accessibility audit remain unverified.
+
+## JobScape rename
+
+- Updated the header, footer, page metadata, search favicon, package name, project instructions, and documentation to JobScape. Renamed the existing GitHub repository to `alexstoicescu/jobscape` and updated `origin`; repository visibility remains private.
+- TypeScript and the focused search regression checks passed. Browser verification confirmed the JobScape header, footer, and document title in the existing local preview.
+- The original ZIP folder name, published title, and deployment URL remain only as historical records in CODEX-HANDOFF.md. The private deployment and Site identity were not changed. The pnpm lockfile is byte-for-byte unchanged.

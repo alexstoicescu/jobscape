@@ -1,6 +1,6 @@
 'use client';
 import {useState,useEffect,useRef} from 'react';
-import {Search,MapPin,Globe2,ExternalLink,Radio,SlidersHorizontal,Check,BriefcaseBusiness,RotateCcw,Info,LoaderCircle} from 'lucide-react';
+import {Search,MapPin,Globe2,ExternalLink,SlidersHorizontal,Check,BriefcaseBusiness,RotateCcw,Info,LoaderCircle} from 'lucide-react';
 import {Checkbox} from '@/components/ui/checkbox';
 import {Tabs,TabsList,TabsTrigger,TabsContent} from '@/components/ui/tabs';
 import {Select,SelectTrigger,SelectValue,SelectContent,SelectItem} from '@/components/ui/select';
@@ -21,7 +21,7 @@ export default function Home(){
  const toggle=(id:string)=>setForm(f=>({...f,platforms:f.platforms.includes(id)?f.platforms.filter(x=>x!==id):[...f.platforms,id]}));
  const changed=submitted&&JSON.stringify(form)!==JSON.stringify(submitted);
  return <div className="app-shell">
-  <header className="topbar"><a className="brand" href="/"><span className="brand-icon"><Radio size={21}/></span>role<span className="brand-light">radar</span><span className="beta">BETA</span></a><div className="top-note">Direct from company job boards <span className="free-tag">Free to use</span></div></header>
+  <header className="topbar"><a className="brand" href="/"><span className="brand-icon"><Search size={21}/></span>Job<span className="brand-light">Scape</span><span className="beta">BETA</span></a><div className="top-note">Direct from company job boards <span className="free-tag">Free to use</span></div></header>
   <main className="workspace">
    <section className="intro"><div className="eyebrow">THE JOB SEARCH, WITHOUT THE QUERY WRANGLING</div><h1>Find your next role.<br/><span>Go straight to the source.</span></h1><p>Search live company listings. Reach the major hiring platforms with the same search.</p></section>
    <form className="search-panel" onSubmit={e=>{e.preventDefault();void run(form).catch(()=>{})}}>
@@ -52,7 +52,7 @@ export default function Home(){
     <TabsContent value="all"><div className="all-heading"><div><h2>One search. All your platforms.</h2><p>Google searches company application pages with your keywords and location. Results open in a new tab.</p></div>{active.keywords.trim()&&active.platforms.length>0&&<a className="google-all" href={googleUrl(active)} target="_blank" rel="noopener noreferrer"><Globe2 size={18}/>Search all selected</a>}</div>
      {!active.keywords.trim()?<div className="message"><h2>Add a role to get started.</h2><p>Your search links appear here as you type.</p></div>:active.platforms.length===0?<div className="message"><h2>Select a platform.</h2><p>Choose the hiring platforms you want to search.</p></div>:<><div className="ats-grid">{platforms.filter(p=>active.platforms.includes(p.id)).map((p,i)=><a key={p.id} className="ats-card" href={googleUrl(active,[p.id])} target="_blank" rel="noopener noreferrer"><span className={'ats-monogram tone-'+i%4}>{p.name.slice(0,1)}</span><div><h3>{p.name}</h3><p>{p.domains[0]}</p></div><ExternalLink size={16}/></a>)}</div><details className="query-details"><summary>See the generated search</summary><code>{googleQuery(active)}</code></details><p className="small-note">Search engines may miss unindexed pages or show closed roles. These are search links, not an exhaustive job index.</p></>}
     </TabsContent></Tabs></section>
-   </div><footer><span>role radar <span className="footer-separator">/</span> a direct route to company jobs</span><span>No account. No search API key.</span></footer>
+   </div><footer><span>JobScape <span className="footer-separator">/</span> a direct route to company jobs</span><span>No account. No search API key.</span></footer>
   </main>
  </div>
 }

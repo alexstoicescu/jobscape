@@ -1,4 +1,4 @@
-# Role Radar
+# JobScape
 
 A free search interface for company-hosted job listings. React, TypeScript, Vinext, and a Cloudflare-compatible server route. No paid search service or model API is required.
 
@@ -52,7 +52,7 @@ Local setup, type checking, production build, and browser QA were completed on W
 
 ## Repository and checks
 
-Source is maintained in the private repository [alexstoicescu/role-radar](https://github.com/alexstoicescu/role-radar). The initial commit records the current local version; the ZIP did not include earlier Git history.
+Source is maintained in the private repository [alexstoicescu/jobscape](https://github.com/alexstoicescu/jobscape). The initial commit records the current local version; the ZIP did not include earlier Git history.
 
 The Checks workflow runs a frozen-lockfile install, TypeScript checks, focused search regressions, and the portable Worker build on pushes to `main` and pull requests. It uses Node 24.15.0 and pnpm 11.25.0. Live board health is checked manually because provider availability changes independently of source changes.
 
