@@ -1,0 +1,70 @@
+import assert from 'node:assert/strict';
+import {sourceModule} from './load-source.mjs';
+const {hiringEvidence, matchesHiringRegion} = await import(sourceModule('../lib/hiring-regions.ts'));
+const {hiringRegions, euCountries, emeaCountries, apacCountries, regionCountries} = await import(sourceModule('../lib/hiring-region-map.ts'));
+const classify = (snippet, title = 'Engineer') => hiringEvidence({title, snippet});
+const usOnly = classify('Remote US only. Candidates must reside in the United States.');
+assert.equal(usOnly.unknown, false);
+assert.deepEqual(usOnly.regions, ['US']);
+assert.equal(matchesHiringRegion(usOnly, 'EU'), false);
+assert.equal(matchesHiringRegion(usOnly, 'EMEA', true), false);
+assert.equal(matchesHiringRegion(usOnly, 'Global'), true);
+assert.ok(usOnly.evidence.includes('Remote US only.'));
+const worldwide = classify('US-based company hiring worldwide remotely.');
+assert.equal(worldwide.worldwide, true);
+for (const region of hiringRegions) assert.equal(matchesHiringRegion(worldwide, region), true);
+const usEmployerEu = classify('Our US company is hiring in the EU.');
+assert.equal(matchesHiringRegion(usEmployerEu, 'EU'), true);
+assert.equal(matchesHiringRegion(usEmployerEu, 'US'), false);
+const euWide = classify('Remote across the European Union.');
+assert.deepEqual(euWide.regions, ['EU','EMEA']);
+const france = classify('Remote, France only.');
+assert.deepEqual(france.regions, ['EU','EMEA']);
+assert.deepEqual(france.countries, ['France']);
+assert.equal(france.restricted, true);
+assert.ok(france.evidence.includes('Remote, France only.'));
+for (const snippet of ['Remote', 'US headquartered company. Remote.', 'Remote role supporting EU customers.', 'Remote with EU time-zone overlap.']) {
+  const unknown = classify(snippet);
+  assert.equal(unknown.unknown, true, snippet);
+  assert.equal(matchesHiringRegion(unknown, 'EU'), false);
+  assert.equal(matchesHiringRegion(unknown, 'EU', true), true);
+  assert.equal(matchesHiringRegion(unknown, 'Global'), true);
+}
+assert.deepEqual(classify('Remote US or EU.').regions, ['EU','EMEA','US']);
+assert.deepEqual(classify('Remote EMEA or APAC.').regions, ['EU','EMEA','APAC']);
+const limited = classify('Worldwide remote; US only.');
+assert.deepEqual(limited.regions, ['US']);
+assert.equal(limited.worldwide, false);
+const excludedUs = classify('Remote worldwide except US.');
+assert.equal(matchesHiringRegion(excludedUs, 'EU'), true);
+assert.equal(matchesHiringRegion(excludedUs, 'US'), false);
+assert.deepEqual(excludedUs.excludedCountries, ['United States']);
+const excludedFrance = classify('Remote worldwide except France.');
+assert.equal(matchesHiringRegion(excludedFrance, 'EU'), true); // Other EU states remain, without implying France eligibility.
+assert.deepEqual(excludedFrance.excludedCountries, ['France']);
+assert.deepEqual(classify('Remote UK only.').regions, ['EMEA']);
+assert.deepEqual(classify('Location: Deutschland').regions, ['EU','EMEA']);
+assert.deepEqual(classify('Location: DE').regions, ['EU','EMEA']);
+assert.deepEqual(classify('Location: Berlin').regions, ['EU','EMEA']);
+assert.deepEqual(classify('Remote Samoa only.').countries, ['Samoa']);
+assert.deepEqual(classify('Remote American Samoa only.').countries, ['American Samoa']);
+assert.equal(euCountries.length, 27);
+assert.equal(apacCountries.length, 48);
+for (const [region, countries] of Object.entries(regionCountries)) {
+  assert.equal(new Set(countries).size, countries.length);
+  for (const country of countries) assert.equal(matchesHiringRegion(classify(`Location: ${country}`), region), true, `${region}: ${country}`);
+}
+assert.equal(emeaCountries.includes('Afghanistan'), true);
+assert.equal(apacCountries.includes('Afghanistan'), true);
+assert.equal(apacCountries.includes('United States'), false);
+assert.equal(euCountries.includes('United Kingdom'), false);
+// The same loaded collection (including a later page) is only projected;
+// switching regions does not mutate or discard its underlying cards.
+const loaded = [{title:'Engineer', snippet:'Remote US only.'}, {title:'Engineer', snippet:'Worldwide remote'}];
+const filter = region => loaded.filter(card => matchesHiringRegion(hiringEvidence(card), region));
+assert.equal(filter('EU').length, 1);
+loaded.push({title:'Engineer', snippet:'Remote France only.'});
+assert.equal(filter('EU').length, 2);
+assert.equal(filter('Global').length, 3);
+assert.equal(loaded.length, 3);
+console.log(`Hiring-region checks passed: requested cases, HQ/ambiguity, exclusions, aliases, loaded-page preservation and all mapped entries (EU ${euCountries.length}, EMEA ${emeaCountries.length}, APAC ${apacCountries.length}).`);

@@ -8,6 +8,8 @@ The isolated Search-only prototype is at `/prototype`. It reuses the existing fo
 
 See [extension setup, reload steps and limitations](extension/README.md). Description reading is deferred. Initial type checks, existing search regressions, extension boundary tests and JavaScript syntax checks passed on 2 October 2026. Real retrieval remains **unverified**: the initial Windows computer-use verification stopped before Search was clicked because the tool could not determine Chrome's current URL confidently enough to enforce its policy. Chrome testing of reconnect, pagination, focus and scroll is now reserved for the user. No alternate automation architecture was attempted.
 
+The prototype's **Hiring region** filter (Global, EU, EMEA, APAC, US) projects loaded titles/snippets locally, including later pages. Regional views hide Unknown unless Include unknown is selected. Cards show literal hiring-location evidence and country restrictions; employer HQ does not determine scope. Switching region preserves loaded cards and never requests Google or descriptions. Definitions, complete local mapping sources and limits are recorded in [HIRING-REGIONS.md](HIRING-REGIONS.md).
+
 ## Product behavior
 
 - Enter a title or title keywords, plus an optional location.

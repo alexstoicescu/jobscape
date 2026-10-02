@@ -30,3 +30,7 @@ The extension requests only `scripting`, session `storage`, and `https://www.goo
 - After changing ATS definitions, regenerate the extension snapshot with `node scripts/extension-platforms.mjs`, then reload the unpacked extension.
 
 Live validation evidence is recorded in the PR. Loading the extension and unit fixtures alone are not evidence that Google retrieval works.
+
+## Local hiring-region filtering
+
+On `/prototype`, select Global, EU, EMEA, APAC or US to filter already loaded titles/snippets. Global shows everything; regional views hide Unknown unless Include unknown is checked. Country-only matches retain their country restrictions and literal evidence. Employer HQ is not hiring scope. The filter also applies to later Load more pages and preserves all loaded cards when changed. No query, extension request or description fetch is triggered. Complete mappings and sources are in [HIRING-REGIONS.md](../HIRING-REGIONS.md). This website-only update requires refreshing JobScape, not reloading the extension.
