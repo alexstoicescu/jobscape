@@ -1,27 +1,33 @@
-# Role Radar: Codex handoff
+# JobScape: Codex handoff
 
 Prepared 2 October 2026. This package contains the source for the deployed beta, plus this guide and AGENTS.md. It contains no dependencies, build output, Git authentication tokens, or local execution profile. No application code was changed for this export.
 
+## Current checkout
+
+The user renamed the project to **JobScape** after the original export. Source and Git history now live at https://github.com/alexstoicescu/jobscape. Local setup, browser verification, and the three approved improvements are documented in README.md, QA.md, and REGISTRY.md. The creation evidence and constraints below describe the original beta and remain historical context.
+
+The existing private deployment retains its original title and URL until publication is requested. Preserve `.openai/hosting.json` and its Site identity; a source/repository rename does not authorize publication or an audience change.
+
 ## Start here
 
-1. Extract the ZIP. Choose the inner `role-radar` folder, containing package.json, as your Codex project folder.
+1. Open the JobScape checkout folder containing package.json. For the original ZIP, that folder was named `role-radar`.
 2. Start a new Codex chat in that project.
 3. Use the starter prompt below. The included files supply the project context independently of conversation memory.
 
 ### Starter prompt
 
-Read AGENTS.md, CODEX-HANDOFF.md, and README.md. Continue this existing Role Radar project without rebuilding it. Set up the project with the pinned pnpm lockfile, run the type check, and start a local preview. Test the main search flow in a browser if available: keywords, title alternatives, location, remote filtering, ATS selection, partial-feed failures, result links, and Google search links. Fix any defects you find. Keep the existing private deployment intact. Then report what works, what remains unverified, and the three highest-impact improvements for broader search coverage. Do not implement the proposed new features until we choose the next step.
+Read AGENTS.md, CODEX-HANDOFF.md, and README.md. Continue this existing JobScape project without rebuilding it. Set up the project with the pinned pnpm lockfile, run the type check, and start a local preview. Test the main search flow in a browser if available: keywords, title alternatives, location, remote filtering, ATS selection, partial-feed failures, result links, and Google search links. Fix any defects you find. Keep the existing private deployment intact. Then report what works, what remains unverified, and the three highest-impact improvements for broader search coverage. Do not implement the proposed new features until we choose the next step.
 
-## Current publication
+## Existing private publication (unchanged)
 
-- Title: Role Radar
+- Published title: Role Radar (original deployed version)
 - Private URL: https://role-radar.st0icescu.chatgpt.site
 - Sites project ID: appgprj_6abf8c8c334c8191b59398eb8d83ea22
 - Published source commit: 134af601a63eb797a83befb38ff6696636d3c495
 - Saved version: appgprj_6abf8c8c334c8191b59398eb8d83ea22~appgver_a319c5be9a688191b5b3ea3f88040aef
 - Publication status was confirmed succeeded on 2 October 2026.
 
-The archive has no Git history or Git remote. These identifiers document the publication; they are not credentials. Initialize local Git if needed. A GitHub repository has not been created for this project. The beta is separate from Alex's personal portfolio repository.
+The original archive had no Git history or Git remote; the current checkout has both. These identifiers document the unchanged publication and are not credentials. The beta is separate from Alex's personal portfolio repository.
 
 If Codex has the Sites plugin and the relevant account access, use the existing project ID and Sites workflow to open and publish the same Site. Do not assume that the plugin, authenticated account, or this Work conversation is available in a new Codex session. If Sites is unavailable, development can continue locally; decide on hosting separately before attempting publication.
 

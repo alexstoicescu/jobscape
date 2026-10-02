@@ -1,4 +1,4 @@
-# Role Radar project instructions
+# JobScape project instructions
 
 Read CODEX-HANDOFF.md before the first change. This is an existing, working beta. Continue from the included source.
 
