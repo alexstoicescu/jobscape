@@ -2,6 +2,12 @@
 
 A free search interface for company-hosted job listings. React, TypeScript, Vinext, and a Cloudflare-compatible server route. No paid search service or model API is required.
 
+## Chrome search prototype
+
+The isolated Search-only prototype is at `/prototype`. It reuses the existing form styling, ATS definitions and combined Boolean query builder, and requests one Google results page through a minimal unpacked Chrome extension. It never falls back to the employer registry. The existing search interface below remains at `/`.
+
+See [extension setup and limitations](extension/README.md). Description reading and pagination are deferred. Type checks, existing search regressions, extension boundary tests and JavaScript syntax checks passed on 2 October 2026. Real retrieval remains **unverified**: Windows computer-use verification stopped before Search was clicked because the tool could not determine Chrome's current URL confidently enough to enforce its policy. No retry or alternate automation architecture was attempted.
+
 ## Product behavior
 
 - Enter a title or title keywords, plus an optional location.

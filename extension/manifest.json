@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "JobScape Search Prototype",
+  "version": "0.1.0",
+  "description": "Bring one explicitly requested combined Google ATS search into local JobScape.",
+  "permissions": ["scripting", "storage"],
+  "host_permissions": ["https://www.google.com/*"],
+  "background": {"service_worker": "worker.js", "type": "module"},
+  "content_scripts": [{
+    "matches": ["http://127.0.0.1/*", "http://localhost/*"],
+    "js": ["bridge.js"],
+    "run_at": "document_start",
+    "all_frames": false
+  }]
+}
