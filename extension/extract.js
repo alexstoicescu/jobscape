@@ -23,5 +23,7 @@ export function extractGoogle() {
     if (title) results.push({title, snippet: snippet.trim().slice(0,2000), url});
     if (results.length >= 30) break;
   }
-  return {blocked: false, results};
+  // Follow Google's actual next-page link; do not synthesize page offsets.
+  const nextPage = document.querySelector('a#pnnext, a[rel="next"]')?.href ?? null;
+  return {blocked: false, results, nextPage};
 }

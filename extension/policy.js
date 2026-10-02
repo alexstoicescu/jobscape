@@ -31,3 +31,17 @@ export function destination(raw, ids) {
     return {url: u.href, platform: source.id};
   } catch { return null; }
 }
+export function nextPage(raw, query, current) {
+  if (raw === null) return null;
+  try {
+    const u = new URL(raw);
+    const start = u.searchParams.get('start');
+    const previous = Number(new URL(current).searchParams.get('start') ?? 0);
+    if (u.origin !== 'https://www.google.com' || u.username || u.password || u.pathname !== '/search' ||
+        u.searchParams.get('q') !== query || !start || !/^\d+$/.test(start) ||
+        !Number.isSafeInteger(Number(start)) || Number(start) <= previous || u.href.length > 12000)
+      throw new Error();
+    u.hash = '';
+    return u.href;
+  } catch { throw new Error('Google’s next-page link could not be validated for the submitted query. Open the helper tab to inspect it.'); }
+}
