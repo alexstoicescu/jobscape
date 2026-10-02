@@ -11,7 +11,7 @@ The existing visual direction was approved: a restrained light interface with co
 ## Preserve correct behavior
 
 - Never invent listings, freshness, salary, language requirements, geographic eligibility, or coverage.
-- Live results use a finite company registry on Greenhouse, Lever, and Ashby. Broader searches are generated Google links for 18 ATS platforms.
+- Live results use a finite company registry. Supported providers are defined by shared capability metadata and adapter implementations. Broader searches are generated Google links for 18 ATS platforms.
 - Label partial results when a feed fails. Show the scope and number of responding company boards.
 - Keep title alternatives, location filtering, remote filtering, application URLs, caching, and URL-restored searches working.
 - An Updated date is not the initial posting date. Remote does not automatically mean available in Germany.

@@ -8,14 +8,14 @@ A free search interface for company-hosted job listings. React, TypeScript, Vine
 - Use commas or OR to search alternatives. All words within an alternative must occur in a listing title, or in the available description when **Search descriptions too** is enabled.
 - **Include title aliases** expands explicit synonyms and abbreviations such as DevRel, SRE, QA, ML, UX, and software engineer/developer. Turn it off for literal matching. Each result explains which field and term matched.
 - **Results in JobScape** selects supported live platforms, shows registered employer scope before searching, and counts only responding boards with results. **Search on Google** has a separate platform selection and opens external searches. Role, location, and filter options remain available when switching views.
-- Live listings load public Greenhouse, Lever, and Ashby feeds from a maintained registry of company boards.
+- Live listings load public Greenhouse, Lever, Ashby, and SmartRecruiters feeds from a maintained registry of company boards.
 - All ATS searches generate Google site queries for 18 platforms and open them in a new tab. They do not scrape Google or embed Google results.
 - Search values are encoded in the page URL. Reloading a search URL runs that search again.
 - Old URLs containing Google-only platforms explicitly explain their exclusion from live retrieval and offer the corresponding external links. Results distinguish unsupported sources, unregistered employers, unavailable/partial feeds, and searches with no matches.
 
 ## Coverage and limitations
 
-The 48-board registry lives in `lib/registry.ts`. It is deliberately finite, not a global ATS index. APIs are company-scoped; they do not supply a global employer directory. Unavailable boards produce partial-result warnings rather than invented or stale jobs. **Company board coverage** shows current health, counts, sources, checked times, and cache use. See `REGISTRY.md` for the maintenance workflow and ATS migration checks.
+The finite employer registry lives in `lib/registry.ts`. It is deliberately finite, not a global ATS index. APIs are company-scoped; they do not supply a global employer directory. Unavailable boards produce partial-result warnings rather than invented or stale jobs. **Company board coverage** shows current health, counts, sources, checked times, and cache use. See `REGISTRY.md` for the maintenance workflow and ATS migration checks.
 
 Successful board responses are cached in memory for up to ten minutes, with earlier eviction possible under the 24 MB cache budget. Cache survives only for the current server isolate. Searches use bounded concurrency, a nine-second timeout per board, and a sixteen-second overall fetch budget. No API key is required. Live results are deduplicated by application URL and capped at 300 matches.
 
