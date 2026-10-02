@@ -4,7 +4,7 @@
 
 1. Start the existing site with `pnpm dev` (pnpm 11.25.0).
 2. In your existing Chrome, open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select `G:\ATS job search\extension`.
-3. Open `http://127.0.0.1:5173/prototype` in the same Chrome profile. Reload if it was open before loading the extension. The connection status should say **Chrome extension connected**.
+3. Open `http://127.0.0.1:5173/` in the same Chrome profile. `/prototype` remains a query-preserving alias. Reload if it was open before loading the extension. The connection status should say **Chrome extension connected**.
 4. Enter keywords and location, choose remote preference and ATS platforms, then click **Search**. One combined Boolean query navigates an extension-owned inactive helper tab. Search reconnects on demand after worker idle/disconnection; **Check connection** and page reload are not prerequisites.
 5. **Load more** retrieves only Google's saved next-page link for the submitted query. It appends deduplicated cards while preserving scroll. Editing the form does not change that submitted query. Loading stops when Google exposes no next-page link.
 6. After successful extraction, pagination state is saved in session storage before the extension closes only its helper tab. JobScape remains focused. If Google requires consent or verification, choose **Open helper tab** and handle it manually. Return to JobScape and explicitly repeat Search or Load more. Failures retain the helper tab; there is no bypass or retry loop.
@@ -26,7 +26,7 @@ The extension requests `scripting`, session `storage`, Google search access and 
 - Next-page links must be HTTPS Google search links with the same submitted query and a strictly increasing page offset. Saved cursors are scoped to the requesting JobScape tab and rotated after success; stale/replayed cursors are rejected without navigation. Missing next-page markup stops pagination; it does not prove exhaustive ATS coverage. Actual focus, scroll and Google markup behavior remain for manual Chrome testing.
 - Results display only titles, snippets, source labels and HTTPS original links. Text renders through React escaping. Destination domains and path prefixes must match the selected ATS definitions. Tracking parameters and fragments are removed for deduplication.
 - Google DOM extraction is experimental. Consent, verification, redirects, unsupported markup and empty extraction are reported instead of invented results. No exhaustive coverage, freshness, active status, company/location metadata or remote eligibility is claimed. Large Boolean queries may omit platforms.
-- Existing registry-based search remains at `/`; its code and adapters are preserved. `/prototype` is the isolated extension milestone and never falls back to those feeds.
+- `/` and `/prototype` use the same extension interface. The logo returns to `/` with the current query parameters. The old registry UI is removed from user navigation; backend routes and adapters are preserved. Neither entry point falls back to registry feeds.
 - After changing ATS definitions, regenerate the extension snapshot with `node scripts/extension-platforms.mjs`, then reload the unpacked extension.
 
 Live validation evidence is recorded in the PR. Loading the extension and unit fixtures alone are not evidence that Google retrieval works.

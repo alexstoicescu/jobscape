@@ -4,7 +4,7 @@ A free search interface for company-hosted job listings. React, TypeScript, Vine
 
 ## Chrome search prototype
 
-The isolated Search-only prototype is at `/prototype`. It reuses the existing form styling, ATS definitions and combined Boolean query builder, and requests one Google results page through a minimal unpacked Chrome extension. Search reconnects on demand. Explicit Load more follows Google's saved next-page link for the submitted query and appends deduplicated results. Successful extraction saves pagination before closing only the extension-owned helper tab; manual-intervention failures retain it. It never falls back to the employer registry. The existing search interface below remains at `/`.
+The extension interface is the homepage at `/`; `/prototype` remains an alias using the same component without redirecting or dropping query parameters. It reuses the existing form styling, ATS definitions and combined Boolean query builder, and requests one Google results page through a minimal unpacked Chrome extension. Search reconnects on demand. Explicit Load more follows Google's saved next-page link for the submitted query and appends deduplicated results. Successful extraction saves pagination before closing only the extension-owned helper tab; manual-intervention failures retain it. It never falls back to the employer registry. The old registry UI is no longer exposed through user navigation; its backend remains intact.
 
 See [extension setup, reload steps and limitations](extension/README.md). Description reading is deferred. Initial type checks, existing search regressions, extension boundary tests and JavaScript syntax checks passed on 2 October 2026. Real retrieval remains **unverified**: the initial Windows computer-use verification stopped before Search was clicked because the tool could not determine Chrome's current URL confidently enough to enforce its policy. Chrome testing of reconnect, pagination, focus and scroll is now reserved for the user. No alternate automation architecture was attempted.
 
@@ -69,7 +69,7 @@ Use a feature branch and a pull request for subsequent changes. Dependencies, lo
 
 ## Sources
 
-The isolated Chrome prototype at `/prototype` supports combined Google search, explicit pagination, local region filters and per-result full-posting remote checks. Setup and reload steps are in [extension/README.md](extension/README.md); real posting evidence and remaining manual Chrome checks are in [REMOTE-ELIGIBILITY.md](REMOTE-ELIGIBILITY.md). The existing registry search at `/` is preserved.
+The Chrome interface at `/` and its `/prototype` alias supports combined Google search, explicit pagination, local region filters and per-result full-posting remote checks. Setup and reload steps are in [extension/README.md](extension/README.md); real posting evidence and remaining manual Chrome checks are in [REMOTE-ELIGIBILITY.md](REMOTE-ELIGIBILITY.md). The registry backend is preserved.
 
 - https://docs.greenhouse.io/job-board.html
 - https://github.com/lever/postings-api

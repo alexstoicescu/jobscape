@@ -10,6 +10,7 @@ import {remoteEligibility, type RemoteEligibility} from '@/lib/remote-eligibilit
 const initial: SearchInput = {keywords: '', location: '', remote: false, platforms: platforms.map(p => p.id), expandTitles: true};
 export default function Prototype() {
   const [form, setForm] = useState(initial);
+  const [homeHref, setHomeHref] = useState('/');
   const [connection, setConnection] = useState('Checking Chrome extension…');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -44,6 +45,7 @@ export default function Prototype() {
   };
   useEffect(() => {
     const q = new URLSearchParams(location.search);
+    setHomeHref('/' + location.search);
     if (q.has('q')) setForm({...initial, keywords: q.get('q') ?? '', location: q.get('l') ?? '', remote: q.get('r') === '1',
       platforms: q.has('p') ? (q.get('p') ?? '').split(',').filter(id => platforms.some(p => p.id === id)) : initial.platforms,
       expandTitles: q.get('a') !== '0'});
@@ -68,6 +70,7 @@ export default function Prototype() {
     appendScroll.current = null;
     setQuery(combined); setSubmitted(input); setPagination(null); setCards([]); setError(''); setWarning(''); setBusy(true); setPaging(false);
     history.replaceState(null, '', '?' + new URLSearchParams({q: input.keywords, l: input.location, r: input.remote ? '1' : '0', p: input.platforms.join(','), a: input.expandTitles === false ? '0' : '1'}));
+    setHomeHref('/' + location.search);
     try {
       if (!await check()) throw new Error('Extension missing or disconnected. Enable it in Chrome, then click Search to reconnect.');
       const response = await extensionRequest('search', {query: combined, platforms: input.platforms});
@@ -118,7 +121,7 @@ export default function Prototype() {
   };
   const openHelper = async () => { try { await extensionRequest('open-helper'); } catch (e) { setError(e instanceof Error ? e.message : 'Could not open helper.'); } };
   return <div className="app-shell">
-    <header className="topbar"><a className="brand" href="/"><span className="brand-icon"><Search size={21}/></span>Job<span className="brand-light">Scape</span><span className="beta">PROTOTYPE</span></a><div className="top-note">Google ATS search <span className="free-tag">Free to use</span></div></header>
+    <header className="topbar"><a className="brand" href={homeHref}><span className="brand-icon"><Search size={21}/></span>Job<span className="brand-light">Scape</span><span className="beta">PROTOTYPE</span></a><div className="top-note">Google ATS search <span className="free-tag">Free to use</span></div></header>
     <main className="workspace">
       <section className="intro"><div className="eyebrow">THE JOB SEARCH, WITHOUT THE QUERY WRANGLING</div><h1>Find your next role.<br/><span>Go straight to the source.</span></h1><p>One combined search across your selected hiring platforms, with results here in JobScape.</p></section>
       <div className="source-notice" role="status"><p>{connection}</p><button type="button" disabled={busy || checkingUrl !== null} onClick={() => void check()}>Check connection</button></div>
