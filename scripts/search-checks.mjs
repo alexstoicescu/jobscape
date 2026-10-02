@@ -57,7 +57,8 @@ assert.equal(locationMatch({...job,location:'France; Germany; USA'},'France'),'l
 assert.equal(locationMatch({...job,location:'EMEA excluding Germany'},'Germany'),'none');
 assert.equal(normalizePlace({label:'Berlin',country:'USA'}).country,'US');
 assert.equal(new Set(boards.map(board=>board.platform+':'+board.slug)).size,boards.length);
-assert.ok(boards.length<=48,'Keep public-feed fan-out within the current free Worker subrequest budget');
+// The shared transport bounds actual requests, including pages and redirects.
+assert.equal(sourceCoverage(['ashby'],[{platform:'ashby'}],[{platform:'ashby',status:'partial'}])[0].state,'partial');
 assert.equal(boards.find(board=>board.name==='Snyk').platform,'ashby');
 
 // Synthetic provider responses are confined to this process, never the app.

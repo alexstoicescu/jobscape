@@ -1,7 +1,8 @@
-export type Board = {slug:string;name:string;platform:'greenhouse'|'lever'|'ashby';source:string};
+import {adapters} from './adapters/index';
+export type Board = {slug:string;name:string;platform:'greenhouse'|'lever'|'ashby'|'smartrecruiters'|'workable'|'personio';source:string;domain?:'de'|'com';locale?:string};
 const group = (platform:Board['platform'], entries:string[][]):Board[] => entries.map(([slug,name,source])=>({slug,name,platform,source:source??boardPage(platform,slug)}));
 function boardPage(platform:Board['platform'],slug:string){
- return platform==='greenhouse'?`https://job-boards.greenhouse.io/${slug}`:platform==='lever'?`https://jobs.lever.co/${slug}`:`https://jobs.ashbyhq.com/${slug}`;
+ const pages={greenhouse:`https://job-boards.greenhouse.io/${slug}`,lever:`https://jobs.lever.co/${slug}`,ashby:`https://jobs.ashbyhq.com/${slug}`,smartrecruiters:`https://careers.smartrecruiters.com/${slug}`,workable:`https://apply.workable.com/${slug}/`,personio:`https://${slug}.jobs.personio.de/`};return pages[platform];
 }
 // Add boards only after checking their public feed and employer identity.
 // source is the employer's careers page or official hosted ATS board.
@@ -17,5 +18,5 @@ export const boards:Board[] = [
  ]),
 ];
 export function boardFeedUrl(board:Board, descriptions=false){
- return board.platform==='greenhouse'?`https://boards-api.greenhouse.io/v1/boards/${board.slug}/jobs${descriptions?'?content=true':''}`:board.platform==='lever'?`https://api.lever.co/v0/postings/${board.slug}?mode=json`:`https://api.ashbyhq.com/posting-api/job-board/${board.slug}`;
+ const adapter=adapters[board.platform];if(!adapter)throw new Error('No public adapter is enabled for this source.');return adapter.feedUrl(board,descriptions);
 }

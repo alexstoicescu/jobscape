@@ -1,11 +1,11 @@
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {sourceModule} from './load-source.mjs';
 const {checkBoards}=await import(sourceModule('../lib/boards.ts'));
-const health=await checkBoards();
+const health=await checkBoards(process.argv[2]);
 const checked=new Date().toISOString();
-const report={checked,responding:health.filter(board=>board.status==='ok').length,attempted:health.length,listings:health.reduce((sum,board)=>sum+board.jobs,0),boards:health};
+const report={checked,responding:health.filter(board=>board.status!=='unavailable').length,complete:health.filter(board=>board.status==='ok').length,attempted:health.length,listings:health.reduce((sum,board)=>sum+board.jobs,0),boards:health};
 mkdirSync(new URL('../outputs/',import.meta.url),{recursive:true});
 writeFileSync(new URL('../outputs/board-health.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.table(health.map(({name,platform,status,jobs,error})=>({name,platform,status,jobs,error:error??''})));
 console.log(`${report.responding}/${report.attempted} responding boards; ${report.listings} accessible listings. Report: outputs/board-health.json`);
-if(report.responding<report.attempted)process.exitCode=1;
+if(report.complete<report.attempted)process.exitCode=1;

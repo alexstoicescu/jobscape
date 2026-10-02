@@ -34,5 +34,7 @@ jobs:
         run: pnpm exec tsc --noEmit
       - name: Search regression checks
         run: node scripts/search-checks.mjs
+      - name: Adapter regression checks
+        run: node scripts/adapter-checks.mjs
       - name: Build Worker
         run: pnpm build
