@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import {sourceModule} from './load-source.mjs';
+import {validateSearch, nextPage} from '../extension/policy.js';
+const {googleQuery, platforms} = await import(sourceModule('../lib/search.ts'));
+const {regionCountries} = await import(sourceModule('../lib/hiring-region-map.ts'));
+const {remoteEligibility} = await import(sourceModule('../lib/remote-eligibility.ts'));
+const input = {keywords:'developer relations, developer advocate', location:'', remote:false, platforms:platforms.map(p => p.id), expandTitles:false};
+const base = googleQuery(input);
+assert.equal(googleQuery(input, input.platforms, 'All'), base);
+const global = googleQuery(input, input.platforms, 'Global');
+assert.ok(global.includes('"remote worldwide"'));
+assert.ok(global.includes('"worldwide remote"'));
+assert.ok(global.includes('"work from anywhere"'));
+for (const region of ['Global','EU','EMEA','APAC','US']) {
+  const query = googleQuery(input, input.platforms, region);
+  assert.equal((query.match(/\(site:/g) ?? []).length, 1);
+  for (const platform of platforms) for (const domain of platform.domains) assert.ok(query.includes('site:' + domain));
+  assert.ok(query.includes('"developer relations"'));
+  assert.ok(query.includes('"remote worldwide"'));
+  assert.equal(/-US\b|-USA\b|-"United States"/i.test(query), false);
+  assert.equal(validateSearch({query, platforms:input.platforms}).query, query);
+  if (region !== 'Global') for (const country of regionCountries[region]) assert.ok(query.includes('"' + country + '"'), `${region}: ${country}`);
+}
+const submitted = googleQuery(input, input.platforms, 'EU');
+const current = 'https://www.google.com/search?' + new URLSearchParams({q:submitted});
+const next = current + '&start=10';
+const edited = googleQuery(input, input.platforms, 'US');
+assert.notEqual(submitted, edited);
+assert.equal(nextPage(next, submitted, current), next);
+assert.throws(() => nextPage(next, edited, current));
+const posting = text => remoteEligibility({title:'Engineer',text,remote:true,locations:[],requirements:[],truncated:false,method:'structured'});
+assert.equal(posting('Fully remote worldwide.').scope, 'Worldwide');
+assert.equal(posting('Remote. We are a global company.').scope, 'Unknown');
+assert.equal(posting('Fully remote worldwide. Candidates must reside in US only.').scope, 'United States');
+console.log('Region discovery checks passed: one combined query, All unchanged, worldwide candidates in every region, all mapped countries, ATS domain preservation, no blanket US exclusions, submitted-query pagination and explicit eligibility evidence.');

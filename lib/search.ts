@@ -1,4 +1,5 @@
 import {locationMatch, normalizeText, type Place, type LocationMatch} from './geography';
+import {regionCountries, type Regional} from './hiring-region-map';
 export const platforms = [
  {id:'greenhouse',name:'Greenhouse',domains:['boards.greenhouse.io','job-boards.greenhouse.io'],live:true},
  {id:'lever',name:'Lever',domains:['jobs.lever.co','jobs.eu.lever.co'],live:true},
@@ -49,11 +50,14 @@ export function expandedTerms(input:SearchInput){
  }
  return result.slice(0,40);
 }
-export function googleQuery(input:SearchInput, ids=input.platforms){
+export function googleQuery(input:SearchInput, ids=input.platforms, hiringRegion: 'All'|'Global'|Regional = 'All'){
  const domains=platforms.filter(p=>ids.includes(p.id)).flatMap(p=>p.domains);
  const quote=(s:string)=>'"'+s.replace(/["“”]/g,'').trim()+'"';
  const roles=[...new Set(expandedTerms(input).map(value=>value.term))].map(quote);
- return [domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':'',input.location.trim()?quote(input.location):'',input.remote?'("remote" OR "work from home" OR "distributed")':''].filter(Boolean).join(' ');
+ const worldwide=['remote worldwide','worldwide remote','remote globally','globally remote','work from anywhere'];
+ const regionalAliases:Record<Regional,string[]>={EU:['EU','European Union','Europe'],EMEA:['EMEA','Europe Middle East and Africa'],APAC:['APAC','Asia Pacific'],US:['US','USA','United States']};
+ const hiring=hiringRegion==='All'?[]:hiringRegion==='Global'?worldwide:[...worldwide,...regionalAliases[hiringRegion],...regionCountries[hiringRegion]];
+ return [domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':'',input.location.trim()?quote(input.location):'',input.remote?'("remote" OR "work from home" OR "distributed")':'',hiring.length?'('+[...new Set(hiring)].map(quote).join(' OR ')+')':''].filter(Boolean).join(' ');
 }
 export function googleUrl(input:SearchInput,ids=input.platforms){return 'https://www.google.com/search?'+new URLSearchParams({q:googleQuery(input,ids)})}
 export function validateInput(value:unknown):SearchInput{

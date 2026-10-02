@@ -1,6 +1,6 @@
 # Explicit full-posting remote checks
 
-On either entry point, Check remote eligibility reads only the clicked ATS destination. There is no bulk scan, Google query, employer allowlist, reader UI or paid service. Successful inert descriptions are cached for a future reader. Full findings now override snippet estimates in the hiring filters immediately; loaded results and pagination are preserved. Global remote admits only explicit unrestricted worldwide remote findings. Unknown distinguishes unchecked from checked but inconclusive.
+On either entry point, Check remote eligibility reads only the clicked ATS destination. There is no bulk scan, Google query from a description check, employer allowlist, reader UI or paid service. Successful inert descriptions are cached for a future reader. Full findings override snippet estimates in evidence labels/counts immediately; loaded candidates and pagination remain visible. Global discovery queries do not establish eligibility: only explicit unrestricted worldwide remote posting findings earn Global remote. Unknown distinguishes unchecked from checked but inconclusive. Description checks remain on demand, never automatic per page.
 
 ## Real posting evidence, 2 October 2026
 
