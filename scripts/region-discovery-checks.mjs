@@ -11,6 +11,19 @@ const global = googleQuery(input, input.platforms, 'Global');
 assert.ok(global.includes('"remote worldwide"'));
 assert.ok(global.includes('"worldwide remote"'));
 assert.ok(global.includes('"work from anywhere"'));
+const berlin = {...input, keywords:'engineer', location:'Berlin', remote:true, platforms:['ashby','lever']};
+const mandatory = '(site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com) ("engineer")';
+const berlinEu = googleQuery(berlin, berlin.platforms, 'EU');
+assert.ok(berlinEu.startsWith(mandatory + ' (("Berlin" AND ("remote" OR "work from home" OR "distributed") AND ("EU" OR '));
+assert.match(berlinEu, /\)\) OR \("remote worldwide" OR "worldwide remote" OR "remote globally" OR "globally remote" OR "work from anywhere"\)\)$/);
+assert.equal((berlinEu.match(/"Berlin"/g) ?? []).length, 1, 'Location only occurs in regional branch');
+assert.equal(validateSearch({query:berlinEu,platforms:berlin.platforms}).query, berlinEu);
+const berlinGlobal = googleQuery(berlin, berlin.platforms, 'Global');
+assert.equal(berlinGlobal, mandatory + ' ("remote worldwide" OR "worldwide remote" OR "remote globally" OR "globally remote" OR "work from anywhere")');
+assert.equal(berlinGlobal.includes('Berlin'), false);
+assert.equal(googleQuery(berlin, berlin.platforms, 'All'), mandatory + ' "Berlin" ("remote" OR "work from home" OR "distributed")');
+const nonRemoteEu = googleQuery({...berlin,remote:false}, berlin.platforms, 'EU');
+assert.ok(nonRemoteEu.startsWith(mandatory + ' "Berlin" ("remote worldwide" OR '), 'Non-remote regional query retains mandatory location');
 for (const region of ['Global','EU','EMEA','APAC','US']) {
   const query = googleQuery(input, input.platforms, region);
   assert.equal((query.match(/\(site:/g) ?? []).length, 1);
@@ -32,4 +45,4 @@ const posting = text => remoteEligibility({title:'Engineer',text,remote:true,loc
 assert.equal(posting('Fully remote worldwide.').scope, 'Worldwide');
 assert.equal(posting('Remote. We are a global company.').scope, 'Unknown');
 assert.equal(posting('Fully remote worldwide. Candidates must reside in US only.').scope, 'United States');
-console.log('Region discovery checks passed: one combined query, All unchanged, worldwide candidates in every region, all mapped countries, ATS domain preservation, no blanket US exclusions, submitted-query pagination and explicit eligibility evidence.');
+console.log('Region discovery checks passed: Berlin + EU remote grouped alternatives, Berlin + Global location bypass, mandatory keywords/domains, All/non-remote preservation, all mapped regions, submitted-query pagination and explicit eligibility evidence.');

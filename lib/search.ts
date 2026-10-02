@@ -57,6 +57,14 @@ export function googleQuery(input:SearchInput, ids=input.platforms, hiringRegion
  const worldwide=['remote worldwide','worldwide remote','remote globally','globally remote','work from anywhere'];
  const regionalAliases:Record<Regional,string[]>={EU:['EU','European Union','Europe'],EMEA:['EMEA','Europe Middle East and Africa'],APAC:['APAC','Asia Pacific'],US:['US','USA','United States']};
  const hiring=hiringRegion==='All'?[]:hiringRegion==='Global'?worldwide:[...worldwide,...regionalAliases[hiringRegion],...regionCountries[hiringRegion]];
+ const mandatory=[domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':''].filter(Boolean).join(' ');
+ const worldwideGroup='('+worldwide.map(quote).join(' OR ')+')';
+ if(hiringRegion==='Global')return [mandatory,worldwideGroup].filter(Boolean).join(' ');
+ if(input.remote&&hiringRegion!=='All'){
+  const regionalGroup='('+[...new Set([...regionalAliases[hiringRegion],...regionCountries[hiringRegion]])].map(quote).join(' OR ')+')';
+  const regionalBranch=[input.location.trim()?quote(input.location):'', '("remote" OR "work from home" OR "distributed")',regionalGroup].filter(Boolean).join(' AND ');
+  return [mandatory,'(('+regionalBranch+') OR '+worldwideGroup+')'].filter(Boolean).join(' ');
+ }
  return [domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':'',input.location.trim()?quote(input.location):'',input.remote?'("remote" OR "work from home" OR "distributed")':'',hiring.length?'('+[...new Set(hiring)].map(quote).join(' OR ')+')':''].filter(Boolean).join(' ');
 }
 export function googleUrl(input:SearchInput,ids=input.platforms){return 'https://www.google.com/search?'+new URLSearchParams({q:googleQuery(input,ids)})}
