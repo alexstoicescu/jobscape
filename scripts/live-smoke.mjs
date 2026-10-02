@@ -1,0 +1,13 @@
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {sourceModule} from './load-source.mjs';
+const {searchBoards}=await import(sourceModule('../lib/boards.ts'));
+const provider=process.argv[2]??'all',descriptions=process.argv.includes('--descriptions');
+const {platforms}=await import(sourceModule('../lib/search.ts'));
+const ids=provider==='all'?platforms.filter(platform=>platform.live).map(platform=>platform.id):[provider];
+if(ids.some(id=>!platforms.some(platform=>platform.id===id&&platform.live)))throw new Error('Choose an enabled live provider.');
+const before=process.memoryUsage().heapUsed;
+const result=await searchBoards({keywords:process.env.SMOKE_KEYWORDS??'engineer,manager,developer',location:'',remote:false,platforms:ids,searchDescriptions:descriptions});
+const report={provider,checked:result.checked,descriptions,attempted:result.attempted,responding:result.boards,scanned:result.scanned,matches:result.total,metrics:result.metrics,nodeHeapDeltaBytes:process.memoryUsage().heapUsed-before,health:result.health,samples:result.jobs.slice(0,3)};
+mkdirSync('outputs',{recursive:true});writeFileSync(`outputs/live-smoke-${provider}${descriptions?'-descriptions':''}.json`,JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({...report,health:report.health.map(board=>({name:board.name,status:board.status,jobs:board.jobs,reportedTotal:board.reportedTotal,error:board.error,checked:board.checked,source:board.source})),samples:report.samples.map(job=>({title:job.title,company:job.company,url:job.url,remote:job.remote,published:job.published,dateKind:job.dateKind,match:job.match}))},null,2));
+if(result.boards===0)process.exitCode=1;
