@@ -5,8 +5,8 @@ import {Checkbox} from '@/components/ui/checkbox';
 import {platforms, googleQuery, validateInput, type SearchInput} from '@/lib/search';
 import {extensionRequest, resultCards, paginationState, checkedPosting, type Pagination, type GoogleCard} from '@/lib/extension-search';
 import {hiringRegions, type HiringRegion} from '@/lib/hiring-region-map';
-import {hiringEvidence, matchesHiringRegion} from '@/lib/hiring-regions';
-import {remoteEligibility, type RemoteEligibility} from '@/lib/remote-eligibility';
+import {matchesHiringRegion} from '@/lib/hiring-regions';
+import {remoteEligibility, hiringForResult, type RemoteEligibility} from '@/lib/remote-eligibility';
 const initial: SearchInput = {keywords: '', location: '', remote: false, platforms: platforms.map(p => p.id), expandTitles: true};
 export default function Prototype() {
   const [form, setForm] = useState(initial);
@@ -20,13 +20,14 @@ export default function Prototype() {
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [paging, setPaging] = useState(false);
   const [warning, setWarning] = useState('');
-  const [region, setRegion] = useState<HiringRegion>('Global');
+  const [region, setRegion] = useState<HiringRegion>('All');
   const [includeUnknown, setIncludeUnknown] = useState(false);
   const [checkingUrl, setCheckingUrl] = useState<string | null>(null);
   const [remoteChecks, setRemoteChecks] = useState<Record<string, RemoteEligibility & {cached?: boolean; checkedAt?: number; warning?: string}>>({});
-  const classified = cards.map(card => ({card, hiring: hiringEvidence(card)}));
-  const visible = classified.filter(({hiring}) => matchesHiringRegion(hiring, region, includeUnknown));
-  const unknownCount = classified.filter(({hiring}) => hiring.unknown).length;
+  const classified = cards.map(card => ({card, checked: remoteChecks[card.url], hiring: hiringForResult(card, remoteChecks[card.url])}));
+  const visible = classified.filter(({hiring, checked}) => matchesHiringRegion(hiring, region, includeUnknown, !!checked));
+  const uncheckedCount = classified.filter(({checked}) => !checked).length;
+  const inconclusiveCount = classified.filter(({hiring, checked}) => checked && hiring.unknown).length;
   const request = useRef(0);
   const inFlight = useRef(false);
   const appendScroll = useRef<{x: number; y: number} | null>(null);
@@ -138,16 +139,16 @@ export default function Prototype() {
         <div className="provider-list">{platforms.map(p => <label className="provider" key={p.id}><Checkbox checked={form.platforms.includes(p.id)} onCheckedChange={() => setForm({...form, platforms: form.platforms.includes(p.id) ? form.platforms.filter(id => id !== p.id) : [...form.platforms, p.id]})}/><span>{p.name}<small>{p.domains[0]}</small></span></label>)}</div></aside>
         <section className="results-area" aria-live="polite">
           <div className="search-bottom"><label className="check-label">Hiring region <select aria-label="Hiring region" value={region} onChange={e => setRegion(e.target.value as HiringRegion)}>{hiringRegions.map(name => <option key={name} value={name}>{name}</option>)}</select></label>
-            {region !== 'Global' && <label className="check-label"><Checkbox checked={includeUnknown} onCheckedChange={v => setIncludeUnknown(v === true)}/>Include unknown</label>}</div>
-          <p className="small-note">Filters loaded titles and snippets only. Employer HQ does not determine hiring region. Country restrictions still apply; eligibility is not verified.</p>
+            {['EU','EMEA','APAC','US'].includes(region) && <label className="check-label"><Checkbox checked={includeUnknown} onCheckedChange={v => setIncludeUnknown(v === true)}/>Include unknown</label>}</div>
+          <p className="small-note">All shows every loaded result. Global remote requires a full-posting check supporting worldwide remote hiring without geographic restrictions. Unknown includes unchecked and inconclusive results. Full-posting findings override snippet estimates; employer HQ does not establish hiring scope.</p>
           {query && <details className="query-details"><summary>See the combined query</summary><code>{query}</code></details>}
           {busy && !paging && <div className="loading" role="status"><p><LoaderCircle size={18} className="spin"/>Retrieving one Google results page…</p></div>}
           {error && <div className="message error" role="alert"><h2>Search could not finish.</h2><p>{error}</p><button onClick={() => void openHelper()}>Open helper tab</button><p>No automatic retry or company-feed fallback was made.</p></div>}
           {!query && <div className="welcome"><div className="welcome-icon"><BriefcaseBusiness size={28}/></div><h2>A shorter path to the right job.</h2><p>Load the Chrome extension, choose your platforms, then click Search.</p></div>}
-          {cards.length > 0 && <><div className="result-summary"><div><h2>{visible.length} of {cards.length} loaded results</h2><p>{pagination?.pages ?? 1} results {pagination?.pages === 1 ? 'page' : 'pages'} retrieved, capped at 20 cards per page. Coverage of individual platforms is not guaranteed.</p><p>{unknownCount} with unknown hiring region{region !== 'Global' && !includeUnknown ? ' hidden' : ''}. Switching region preserves all loaded cards.</p></div></div>
-            <div className="job-list">{visible.map(({card, hiring}) => <article className="job-card" key={card.url}><div className={'company-avatar ' + card.platform}><Search size={20}/></div><div className="job-main"><div className="job-company">{platforms.find(p => p.id === card.platform)?.name}</div><h3><a href={card.url} target="_blank" rel="noopener noreferrer">{card.title}</a></h3>{card.snippet ? <p className="job-description">{card.snippet}</p> : <p className="small-note">Google did not expose a readable snippet.</p>}
-              <p className="match-reason">Hiring region: {hiring.unknown ? 'Unknown' : hiring.worldwide ? 'Global' : hiring.regions.join(', ') || 'Outside selected regions'}</p>
-              {hiring.evidence.map(phrase => <p className="small-note" key={phrase}>Evidence: “{phrase}”</p>)}
+          {cards.length > 0 && <><div className="result-summary"><div><h2>{visible.length} of {cards.length} loaded results</h2><p>{pagination?.pages ?? 1} results {pagination?.pages === 1 ? 'page' : 'pages'} retrieved, capped at 20 cards per page. Coverage of individual platforms is not guaranteed.</p><p>{uncheckedCount} unchecked; {inconclusiveCount} checked but inconclusive. Switching filters preserves all loaded cards.</p></div></div>
+            <div className="job-list">{visible.map(({card, hiring, checked}) => <article className="job-card" key={card.url}><div className={'company-avatar ' + card.platform}><Search size={20}/></div><div className="job-main"><div className="job-company">{platforms.find(p => p.id === card.platform)?.name}</div><h3><a href={card.url} target="_blank" rel="noopener noreferrer">{card.title}</a></h3>{card.snippet ? <p className="job-description">{card.snippet}</p> : <p className="small-note">Google did not expose a readable snippet.</p>}
+              <p className="match-reason">{checked ? 'Full posting' : 'Unchecked; snippet estimate'}: {hiring.unknown ? checked ? 'Unknown (inconclusive)' : 'Unknown (not checked)' : hiring.worldwide ? checked ? 'Worldwide remote' : 'Worldwide mentioned; full check required' : hiring.regions.join(', ') || 'Outside selected regions'}</p>
+              {!checked && hiring.evidence.map(phrase => <p className="small-note" key={phrase}>Snippet evidence: “{phrase}”</p>)}
               {hiring.countries.length > 0 && <p className="eligibility uncertain">{hiring.restricted ? 'Country restriction' : 'Listed job countries'}: {hiring.countries.join(', ')}. This does not establish eligibility elsewhere in the region.</p>}
               {hiring.excludedCountries.length > 0 && <p className="eligibility uncertain">Excluded countries: {hiring.excludedCountries.join(', ')}.</p>}
               <button type="button" className="refresh" disabled={busy || checkingUrl !== null} onClick={() => void checkRemote(card)}>{checkingUrl === card.url ? 'Checking full posting…' : 'Check remote eligibility'}</button>
@@ -158,7 +159,7 @@ export default function Prototype() {
                 {remoteChecks[card.url].warning && <p className="small-note">{remoteChecks[card.url].warning}</p>}
                 <p className="small-note">Stated terms only. Work authorization and individual eligibility are not verified.</p></div>}
               <p className="small-note">{new URL(card.url).hostname}</p></div><a className="open-job" href={card.url} target="_blank" rel="noopener noreferrer" aria-label={'Open original: ' + card.title}><ExternalLink size={17}/></a></article>)}</div>
-              {!visible.length && <p className="small-note">No loaded results match this region. Choose Global or Include unknown, or explicitly load another page if available.</p>}</>}
+              {!visible.length && <p className="small-note">No loaded results match this filter. Choose All to review and check loaded postings, or explicitly load another page if available.</p>}</>}
           {pagination?.hasMore && <button className="load-more" disabled={busy || checkingUrl !== null} onClick={() => void loadMore()}>{paging ? 'Loading…' : 'Load more'}</button>}
           {pagination && !pagination.hasMore && <p className="small-note">No next-page link was exposed by Google.</p>}
           {pagination && cards.length === 0 && <p className="small-note">No selected-ATS destinations on this page.</p>}

@@ -1,6 +1,9 @@
-import {hiringEvidence} from './hiring-regions';
+import {hiringEvidence, type HiringEvidence} from './hiring-regions';
 export type Posting = {title: string; text: string; locations: string[]; requirements: string[]; remote: boolean | null; truncated: boolean; method: string};
-export type RemoteEligibility = {scope: string; quotes: {text: string; source: string}[]; restrictions: string[]; reason?: string};
+export type RemoteEligibility = {scope: string; quotes: {text: string; source: string}[]; restrictions: string[]; reason?: string; hiring?: HiringEvidence};
+export function hiringForResult(card: {title: string; snippet: string}, checked?: RemoteEligibility): HiringEvidence {
+  return checked ? checked.hiring ?? hiringEvidence({title: '', snippet: ''}) : hiringEvidence(card);
+}
 export function remoteEligibility(posting: Posting): RemoteEligibility {
   const unknown = (reason: string): RemoteEligibility => ({scope: 'Unknown', quotes: [], restrictions: [], reason});
   if (posting.truncated) return unknown('The description exceeded extraction bounds; later restrictions may be missing.');
@@ -21,6 +24,8 @@ export function remoteEligibility(posting: Posting): RemoteEligibility {
     hiring = hiringEvidence({title: '', snippet: 'Job location: ' + posting.locations.join(', ')});
     quotes = posting.locations.map(text => ({text, source: 'jobLocation'}));
   }
+  if (hiring.worldwide && !quotes.some(quote => quote.source === 'Description' && /\b(?:remote(?:ly)?[\s,:()-]+(?:worldwide|globally)|worldwide[\s,:()-]+remote|(?:hire|hiring|hires)(?:\s+(?:remote|remotely|candidates|applicants|people|employees))*\s+(?:worldwide|globally)|work(?:\s+remotely)?\s+from\s+anywhere|globally\s+remote)\b/i.test(quote.text)))
+    return unknown('Worldwide remote hiring was not explicitly established; global company or market references are not hiring evidence.');
   if (hiring.unknown || !hiring.regions.length) return unknown('No unambiguous permitted hiring location was established from the full posting.');
   const countries = hiring.countries.filter(country => hiring.permittedCountries.includes(country));
   const restrictions = [...countries.map(country => (hiring.restricted ? 'Restricted country: ' : 'Listed country: ') + country), ...hiring.excludedCountries.map(country => 'Excluded country: ' + country)];
@@ -32,5 +37,5 @@ export function remoteEligibility(posting: Posting): RemoteEligibility {
     {name:'Europe', matches:/\bEurope\b/i, permitted:'EMEA'}
   ].filter(region => region.matches.test(phrases) && hiring.regions.includes(region.permitted as 'EU'|'EMEA'|'APAC'));
   const worldwideWithExclusions = !hiring.restricted && hiring.excludedCountries.length > 0 && /\bworldwide\b/i.test(phrases);
-  return {scope: hiring.worldwide ? 'Worldwide' : worldwideWithExclusions ? 'Worldwide (with exclusions)' : countries.length ? countries.join(', ') : stated.map(region => region.name).join(', ') || hiring.regions.join(', '), quotes: quotes.slice(-8), restrictions};
+  return {scope: hiring.worldwide ? 'Worldwide' : worldwideWithExclusions ? 'Worldwide (with exclusions)' : countries.length ? countries.join(', ') : stated.map(region => region.name).join(', ') || hiring.regions.join(', '), quotes: quotes.slice(-8), restrictions, hiring};
 }

@@ -86,6 +86,9 @@ export function hiringEvidence(card: {title: string; snippet: string}): HiringEv
   return {unknown, regions: unknown ? [] : regions, worldwide: worldwide && limits === null && !excluded.size,
     evidence: [...new Set(evidence)], countries: [...countries], excludedCountries: [...excludedCountries], restricted: limits !== null, permittedCountries: [...permitted]};
 }
-export function matchesHiringRegion(evidence: HiringEvidence, region: HiringRegion, includeUnknown = false) {
-  return region === 'Global' || (evidence.unknown ? includeUnknown : evidence.regions.includes(region));
+export function matchesHiringRegion(evidence: HiringEvidence, region: HiringRegion, includeUnknown = false, fullPostingChecked = false) {
+  if (region === 'All') return true;
+  if (region === 'Global remote') return fullPostingChecked && !evidence.unknown && evidence.worldwide;
+  if (region === 'Unknown') return !fullPostingChecked || evidence.unknown;
+  return evidence.unknown ? includeUnknown : evidence.regions.includes(region);
 }

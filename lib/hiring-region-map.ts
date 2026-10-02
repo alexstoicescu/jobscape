@@ -1,7 +1,7 @@
 // Local snapshot, 2026-10-02. Sources and definitions: HIRING-REGIONS.md.
-export const hiringRegions = ['Global', 'EU', 'EMEA', 'APAC', 'US'] as const;
+export const hiringRegions = ['All', 'Global remote', 'Unknown', 'EU', 'EMEA', 'APAC', 'US'] as const;
 export type HiringRegion = typeof hiringRegions[number];
-export type Regional = Exclude<HiringRegion, 'Global'>;
+export type Regional = Exclude<HiringRegion, 'All' | 'Global remote' | 'Unknown'>;
 const list = (value: string) => value.split('|');
 export const euCountries = list('Austria|Belgium|Bulgaria|Croatia|Cyprus|Czechia|Denmark|Estonia|Finland|France|Germany|Greece|Hungary|Ireland|Italy|Latvia|Lithuania|Luxembourg|Malta|Netherlands|Poland|Portugal|Romania|Slovakia|Slovenia|Spain|Sweden');
 export const emeaEurope = list('Armenia|Azerbaijan|Belarus|Bulgaria|Czechia|Georgia|Hungary|Kazakhstan|Kyrgyzstan|Moldova|Poland|Romania|Russia|Slovakia|Tajikistan|Turkmenistan|Ukraine|Uzbekistan|Denmark|Estonia|Finland|Iceland|Latvia|Lithuania|Norway|Sweden|Albania|Andorra|Bosnia and Herzegovina|Croatia|Greece|Italy|Kosovo|Malta|Monaco|Montenegro|North Macedonia|Portugal|San Marino|Serbia|Slovenia|Spain|Turkey|Vatican City|Austria|Belgium|France|Germany|Ireland|Liechtenstein|Luxembourg|Netherlands|Switzerland|United Kingdom');
