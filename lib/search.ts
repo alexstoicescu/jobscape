@@ -5,7 +5,7 @@ export const platforms = [
  {id:'ashby',name:'Ashby',domains:['jobs.ashbyhq.com'],live:true},
  {id:'workday',name:'Workday',domains:['myworkdayjobs.com'],live:false},
  {id:'smartrecruiters',name:'SmartRecruiters',domains:['jobs.smartrecruiters.com'],live:true},
- {id:'workable',name:'Workable',domains:['apply.workable.com'],live:false},
+ {id:'workable',name:'Workable',domains:['apply.workable.com'],live:true},
  {id:'recruitee',name:'Recruitee',domains:['recruitee.com'],live:false},
  {id:'personio',name:'Personio',domains:['jobs.personio.de','jobs.personio.com'],live:false},
  {id:'icims',name:'iCIMS',domains:['icims.com'],live:false},

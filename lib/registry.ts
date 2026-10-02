@@ -7,6 +7,11 @@ function boardPage(platform:Board['platform'],slug:string){
 // Add boards only after checking their public feed and employer identity.
 // source is the employer's careers page or official hosted ATS board.
 export const boards:Board[] = [
+ ...group('workable',[
+  ['hack-the-box-ltd','Hack The Box','https://www.hackthebox.com/join-us'],
+  ['learnworlds','LearnWorlds','https://www.learnworlds.com/company/careers/'],
+  ['careers','Workable','https://apply.workable.com/careers/'],
+ ]),
  ...group('smartrecruiters',[
   ['SmartRecruiters','SmartRecruiters','https://careers.smartrecruiters.com/smartrecruiters'],
   ['Ubisoft2','Ubisoft','https://www.ubisoft.com/en-us/company/careers/search'],
