@@ -1,6 +1,7 @@
 import {type Job,type SearchInput,type SearchResult,type BoardHealth,matchJob} from './search';
 import {boards,boardFeedUrl,type Board} from './registry';
 import {normalizePlaces,type Place} from './geography';
+import {sourceCoverage} from './coverage';
 export {boards} from './registry';
 
 type CachedBoard={jobs:Job[];until:number;checked:string;bytes:number};
@@ -74,5 +75,5 @@ export async function searchBoards(input:SearchInput):Promise<SearchResult>{
  const matching:Job[]=[];
  for(const job of all){const match=matchJob(job,input);if(match)matching.push({...job,description:job.description.slice(0,420),match})}
  const unique=[...new Map(matching.map(job=>[job.url,job])).values()].sort((a,b)=>a.title.localeCompare(b.title));
- return {jobs:unique.slice(0,300),total:unique.length,scanned:all.length,boards:health.filter(board=>board.status==='ok').length,attempted:selected.length,failed:health.filter(board=>board.status==='unavailable').map(board=>board.name),checked:new Date().toISOString(),truncated:unique.length>300,health,descriptions:{available:all.filter(job=>job.description).length,truncated:all.filter(job=>job.descriptionTruncated).length}};
+ return {jobs:unique.slice(0,300),total:unique.length,scanned:all.length,boards:health.filter(board=>board.status==='ok').length,attempted:selected.length,failed:health.filter(board=>board.status==='unavailable').map(board=>board.name),checked:new Date().toISOString(),truncated:unique.length>300,health,coverage:sourceCoverage(input.platforms,boards,health),descriptions:{available:all.filter(job=>job.description).length,truncated:all.filter(job=>job.descriptionTruncated).length}};
 }

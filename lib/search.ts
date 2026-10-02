@@ -23,7 +23,7 @@ export type SearchInput = {keywords:string;location:string;remote:boolean;platfo
 export type MatchReason = {field:'title'|'description';term:string;alias:boolean;snippet?:string;location:LocationMatch};
 export type Job = {id:string;title:string;company:string;location:string;locations?:Place[];remote:boolean;url:string;platform:string;description:string;descriptionTruncated?:boolean;published:string|null;dateKind:'published'|'updated'|null;checked:string;match?:MatchReason};
 export type BoardHealth = {name:string;platform:string;source:string;status:'ok'|'unavailable';jobs:number;checked:string;cached:boolean;error?:string};
-export type SearchResult = {jobs:Job[];total:number;scanned:number;boards:number;attempted:number;failed:string[];checked:string;truncated:boolean;health?:BoardHealth[];descriptions?:{available:number;truncated:number}};
+export type SearchResult = {jobs:Job[];total:number;scanned:number;boards:number;attempted:number;failed:string[];checked:string;truncated:boolean;health?:BoardHealth[];coverage?:import('./coverage').SourceCoverage[];descriptions?:{available:number;truncated:number}};
 export function terms(value:string){return value.split(/\s+OR\s+|,/i).map(x=>x.replace(/["“”]/g,'').trim()).filter(Boolean).slice(0,8)}
 const titleAliases=[
  ['devrel','developer relations','developer advocate','dev advocate'],
