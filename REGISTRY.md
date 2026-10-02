@@ -1,6 +1,6 @@
 # Employer registry maintenance
 
-The registry is in `lib/registry.ts`. It includes verified boards on Greenhouse, Lever, Ashby, SmartRecruiters, and Workable. It is a finite list, not global ATS coverage. Each entry includes a source link to the employer's careers page or official hosted ATS board.
+The registry is in `lib/registry.ts`. It includes verified boards on Greenhouse, Lever, Ashby, SmartRecruiters, Workable, and Personio. It is a finite list, not global ATS coverage. Each entry includes a source link to the employer's careers page or official hosted ATS board.
 
 ## Check health
 
@@ -15,7 +15,7 @@ Search results also expose current board status, accessible listing counts, sour
 ## Add or update a board
 
 1. Follow the employer's official careers page to its public ATS board. Verify the employer name and application links, not just an assumed slug.
-2. Verify a JSON response from the appropriate public feed with the documented array shape. Hidden Ashby jobs must remain excluded. Do not add failures or speculative feeds as verified additions.
+2. Verify the appropriate public JSON feed or enabled Personio XML with its documented shape. Hidden Ashby jobs must remain excluded. Do not add failures, speculative feeds, or leftover feeds after a verified migration. A disabled XML feed returning HTML is unavailable, not a healthy empty board.
 3. Update the registry entry's platform, slug, name, and source. Replace the old entry when an employer migrates to prevent duplicate boards. Snyk's migration from Greenhouse to Ashby was verified on 2 October 2026.
 4. Run the health check, regression checks, and type check. Inspect source URLs and live results before changing any coverage claims.
 
@@ -32,5 +32,7 @@ Successful responses cache for up to ten minutes. The cache is bounded to approx
 SmartRecruiters validation, bounds, and measured costs: [smartrecruiters.md](docs/validation/smartrecruiters.md).
 
 Workable validation, geographic deduplication, empty-board evidence, and costs: [workable.md](docs/validation/workable.md).
+
+Personio validation, official employer identities, excluded stale feeds, locale/XML behavior, and built-Worker evidence: [personio.md](docs/validation/personio.md).
 
 Provider references: [Greenhouse](https://docs.greenhouse.io/job-board.html), [Lever](https://github.com/lever/postings-api), [Ashby](https://developers.ashbyhq.com/docs/public-job-posting-api).

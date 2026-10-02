@@ -16,7 +16,7 @@ function store(key:string,value:CachedBoard){
 }
 async function loadBoard(board:Board,descriptions:boolean,budget:FetchBudget):Promise<{entry:CachedBoard;cached:boolean}>{
  const adapter=adapters[board.platform];if(!adapter)throw new Error('No public adapter is enabled for this source.');
- const key=board.platform+':'+board.slug+':'+adapter.cacheVariant(descriptions),old=cache.get(key);
+ const key=[board.platform,board.slug,board.domain??'',board.locale??'',adapter.cacheVariant(descriptions)].join(':'),old=cache.get(key);
  if(old&&old.until>Date.now())return {entry:old,cached:true};const inFlight=pending.get(key);if(inFlight)return {entry:await inFlight,cached:false};
  const context=makeContext(board,budget,descriptions);
  const promise=(async()=>{const result=await adapter.load(board,context);const entry={...result,until:Date.now()+(result.complete?600000:60000),checked:context.checked,bytes:JSON.stringify(result.jobs).length*2};store(key,entry);return entry})();

@@ -7,7 +7,7 @@ export const platforms = [
  {id:'smartrecruiters',name:'SmartRecruiters',domains:['jobs.smartrecruiters.com'],live:true},
  {id:'workable',name:'Workable',domains:['apply.workable.com'],live:true},
  {id:'recruitee',name:'Recruitee',domains:['recruitee.com'],live:false},
- {id:'personio',name:'Personio',domains:['jobs.personio.de','jobs.personio.com'],live:false},
+ {id:'personio',name:'Personio',domains:['jobs.personio.de','jobs.personio.com'],live:true},
  {id:'icims',name:'iCIMS',domains:['icims.com'],live:false},
  {id:'jobvite',name:'Jobvite',domains:['jobs.jobvite.com'],live:false},
  {id:'breezy',name:'Breezy HR',domains:['breezy.hr'],live:false},

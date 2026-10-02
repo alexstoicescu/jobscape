@@ -7,6 +7,9 @@ function boardPage(platform:Board['platform'],slug:string){
 // Add boards only after checking their public feed and employer identity.
 // source is the employer's careers page or official hosted ATS board.
 export const boards:Board[] = [
+ {platform:'personio',slug:'deskbird',name:'deskbird',domain:'com',locale:'en',source:'https://www.deskbird.com/careers'},
+ {platform:'personio',slug:'holy',name:'HOLY',domain:'com',locale:'en',source:'https://holy.jobs.personio.com/'},
+ {platform:'personio',slug:'welearn',name:'wehorse',domain:'de',locale:'en',source:'https://welearn.jobs.personio.de/'},
  ...group('workable',[
   ['hack-the-box-ltd','Hack The Box','https://www.hackthebox.com/join-us'],
   ['learnworlds','LearnWorlds','https://www.learnworlds.com/company/careers/'],
