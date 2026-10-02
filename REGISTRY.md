@@ -1,6 +1,6 @@
 # Employer registry maintenance
 
-The registry is in `lib/registry.ts`. It currently includes 48 boards on Greenhouse, Lever, and Ashby. It is a finite list, not global ATS coverage. Each entry includes a source link to the employer's careers page or official hosted ATS board.
+The registry is in `lib/registry.ts`. It includes verified boards on Greenhouse, Lever, Ashby, and SmartRecruiters. It is a finite list, not global ATS coverage. Each entry includes a source link to the employer's careers page or official hosted ATS board.
 
 ## Check health
 
@@ -28,5 +28,7 @@ Responses are limited to 16 MiB per response and 64 MiB in total per search. The
 `node scripts/live-smoke.mjs all` measures real adapter requests, response bytes, elapsed time, estimated cache bytes, and Node heap change. `node scripts/live-smoke.mjs <provider> --descriptions` checks description retrieval. Reports stay in ignored `outputs/`; live availability is not a CI gate. Node heap observations do not establish production Cloudflare memory behavior.
 
 Successful responses cache for up to ten minutes. The cache is bounded to approximately 24 MB of serialized text and may evict boards earlier; concurrent requests reuse in-flight loads. Greenhouse description requests use a separate cache entry. These limits protect the free Worker runtime and can produce explicitly partial results under slow feeds.
+
+SmartRecruiters validation, bounds, and measured costs: [smartrecruiters.md](docs/validation/smartrecruiters.md).
 
 Provider references: [Greenhouse](https://docs.greenhouse.io/job-board.html), [Lever](https://github.com/lever/postings-api), [Ashby](https://developers.ashbyhq.com/docs/public-job-posting-api).

@@ -7,6 +7,11 @@ function boardPage(platform:Board['platform'],slug:string){
 // Add boards only after checking their public feed and employer identity.
 // source is the employer's careers page or official hosted ATS board.
 export const boards:Board[] = [
+ ...group('smartrecruiters',[
+  ['SmartRecruiters','SmartRecruiters','https://careers.smartrecruiters.com/smartrecruiters'],
+  ['Ubisoft2','Ubisoft','https://www.ubisoft.com/en-us/company/careers/search'],
+  ['Devoteam','Devoteam','https://careers.smartrecruiters.com/Devoteam'],
+ ]),
  ...group('greenhouse',[
   ['stripe','Stripe'],['cloudflare','Cloudflare'],['datadog','Datadog'],['mongodb','MongoDB'],['gitlab','GitLab'],['canonical','Canonical'],['elastic','Elastic'],['grafanalabs','Grafana Labs'],['figma','Figma'],['reddit','Reddit'],['discord','Discord'],['coinbase','Coinbase'],['vercel','Vercel'],['anthropic','Anthropic'],['contentful','Contentful'],['hubspot','HubSpot'],['intercom','Intercom'],['twilio','Twilio'],['postman','Postman','https://www.postman.com/company/careers/open-positions/'],
   ['cockroachlabs','Cockroach Labs','https://www.cockroachlabs.com/careers/'],['fastly','Fastly','https://www.fastly.com/about/careers'],['launchdarkly','LaunchDarkly'],['netlify','Netlify'],
