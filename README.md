@@ -69,6 +69,8 @@ Use a feature branch and a pull request for subsequent changes. Dependencies, lo
 
 ## Sources
 
+The isolated Chrome prototype at `/prototype` supports combined Google search, explicit pagination, local region filters and per-result full-posting remote checks. Setup and reload steps are in [extension/README.md](extension/README.md); real posting evidence and remaining manual Chrome checks are in [REMOTE-ELIGIBILITY.md](REMOTE-ELIGIBILITY.md). The existing registry search at `/` is preserved.
+
 - https://docs.greenhouse.io/job-board.html
 - https://github.com/lever/postings-api
 - https://developers.ashbyhq.com/docs/public-job-posting-api

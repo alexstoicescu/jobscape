@@ -3,6 +3,7 @@ import {countryNames, extraCountryAliases, existingCountryNames, regionCountries
 export type HiringEvidence = {
   unknown: boolean; regions: Regional[]; worldwide: boolean; evidence: string[];
   countries: string[]; excludedCountries: string[]; restricted: boolean;
+  permittedCountries: string[];
 };
 const contains = (text: string, phrase: string) => (' ' + text + ' ').includes(' ' + normalizeText(phrase) + ' ');
 const allCountries = new Set(countryNames);
@@ -83,7 +84,7 @@ export function hiringEvidence(card: {title: string; snippet: string}): HiringEv
   permitted = new Set([...permitted].filter(country => !excluded.has(country)));
   const regions = (Object.keys(regionCountries) as Regional[]).filter(region => regionCountries[region].some(country => permitted.has(country)));
   return {unknown, regions: unknown ? [] : regions, worldwide: worldwide && limits === null && !excluded.size,
-    evidence: [...new Set(evidence)], countries: [...countries], excludedCountries: [...excludedCountries], restricted: limits !== null};
+    evidence: [...new Set(evidence)], countries: [...countries], excludedCountries: [...excludedCountries], restricted: limits !== null, permittedCountries: [...permitted]};
 }
 export function matchesHiringRegion(evidence: HiringEvidence, region: HiringRegion, includeUnknown = false) {
   return region === 'Global' || (evidence.unknown ? includeUnknown : evidence.regions.includes(region));

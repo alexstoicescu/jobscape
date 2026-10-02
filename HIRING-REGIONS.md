@@ -19,4 +19,6 @@ The EMEA/APAC definitions are the requested business groupings, not assertions o
 
 ## Focused validation
 
+The separate, explicit **Check remote eligibility** action reuses these mappings against a selected full posting. It requires stated remote-work terms, considers structured `applicantLocationRequirements`, and uses `jobLocation` only when description hiring scope is absent. Restrictions narrow broader claims; conflicting requirements return Unknown. These full-posting checks do not change the snippet filter or remove loaded cards. Supporting quotes identify description versus structured-field evidence. See [REMOTE-ELIGIBILITY.md](REMOTE-ELIGIBILITY.md).
+
 `node scripts/hiring-region-checks.mjs` covers US-only, US employer hiring worldwide/in EU, EU-wide, France-only and Unknown, plus multiple regions, exclusions, existing aliases, territory-name boundaries, every mapping entry and preserving loaded cards across region switches and added pages. These are local text fixtures; they do not establish a posting's actual eligibility or real Chrome/Google retrieval.

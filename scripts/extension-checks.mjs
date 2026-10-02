@@ -25,7 +25,9 @@ assert.equal(destination('https://company.bamboohr.com/careers/1', ['bamboohr'])
 assert.equal(destination('https://company.bamboohr.com/careers-evil/1', ['bamboohr']), null);
 const manifest = JSON.parse(readFileSync(new URL('../extension/manifest.json', import.meta.url)));
 assert.deepEqual(manifest.permissions, ['scripting', 'storage']);
-assert.deepEqual(manifest.host_permissions, ['https://www.google.com/*']);
+assert.deepEqual(manifest.host_permissions, ['https://www.google.com/*', ...new Set(platforms.flatMap(p => p.domains).map(domain => {
+  const [host, ...path] = domain.split('/'); return 'https://*.' + host + '/' + (path.length ? path.join('/') + '*' : '*');
+}))]);
 assert.equal(manifest.manifest_version, 3);
 const first = 'https://www.google.com/search?' + new URLSearchParams({q: query});
 const next = first + '&start=10';
@@ -87,7 +89,7 @@ const chrome = {
 const worker = readFileSync(new URL('../extension/worker.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
 function restartWorker() {
   chrome.runtime.onConnect = event();
-  vm.runInNewContext(worker, {chrome, allowedSender, validateSearch, destination, nextPage, extractGoogle: () => {}, crypto: webcrypto, URL, URLSearchParams, setTimeout, clearTimeout});
+  vm.runInNewContext(worker, {chrome, allowedSender, validateSearch, destination, nextPage, extractGoogle: () => {}, extractPosting: () => {}, crypto: webcrypto, URL, URLSearchParams, setTimeout, clearTimeout});
 }
 function request(message, owner = 42) {
   let handler, response;
@@ -130,4 +132,21 @@ const duplicate = await request({id: 'duplicate', type: 'search', query, platfor
 assert.equal(duplicate.type, 'error'); assert.match(duplicate.error, /still running/);
 release({blocked: false, results: rows, nextPage: null}); await pending;
 assert.ok(actions.filter(a => a[0] === 'close').every(a => a[1] !== 42 && a[1] !== 777));
-console.log('Extension checks passed: boundaries, reconnect, single delivery, busy guard, saved next-page links, idle state, exhaustion, manual retention and owned-tab cleanup. Google/Chrome remain manual validation.');
+const cursor = JSON.stringify(storage['search:42']);
+const postingUrl = 'https://jobs.ashbyhq.com/example/one';
+extraction = async () => ({title: 'Engineer', text: 'Fully remote worldwide.', blocks: [], links: [], locations: [], requirements: [], remote: true, truncated: false, method: 'structured'});
+const posting = await request({id: 'posting', type: 'check-posting', url: postingUrl, platform: 'ashby'});
+assert.equal(posting.type, 'posting'); assert.equal(posting.cached, false);
+assert.equal(tabs.size, 2); assert.equal(JSON.stringify(storage['search:42']), cursor);
+assert.ok(actions.findIndex(a => a[0] === 'save' && a.includes('descriptions')) < actions.findLastIndex(a => a[0] === 'close'));
+const afterRead = actions.length;
+restartWorker();
+assert.equal((await request({id: 'cached', type: 'check-posting', url: postingUrl, platform: 'ashby'})).cached, true);
+assert.equal(actions.length, afterRead, 'Cached reads do not open or navigate tabs');
+extraction = async () => ({error: 'Posting requires access or verification.'});
+assert.equal((await request({id: 'inaccessible', type: 'check-posting', url: postingUrl + '2', platform: 'ashby'})).type, 'error');
+assert.equal(tabs.size, 2); assert.equal(JSON.stringify(storage['search:42']), cursor);
+const afterFailure = actions.length;
+assert.equal((await request({id: 'unsafe', type: 'check-posting', url: 'https://evil.example/', platform: 'ashby'})).type, 'error');
+assert.equal(actions.length, afterFailure);
+console.log('Extension checks passed: search/reconnect/pagination, URL boundaries, posting cache across idle, save-before-close, failure cleanup and unchanged search cursor. Chrome remains manual validation.');

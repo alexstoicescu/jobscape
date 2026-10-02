@@ -1,7 +1,18 @@
 import {destination} from '../extension/policy.js';
+import type {Posting} from './remote-eligibility';
 export type GoogleCard = {title: string; snippet: string; url: string; platform: string};
+export function checkedPosting(response: Record<string, unknown>, card: GoogleCard): Posting {
+  const posting = response.posting as Posting | undefined;
+  if (response.type !== 'posting' || response.url !== card.url || !posting ||
+      typeof posting.title !== 'string' || posting.title.length > 500 || typeof posting.text !== 'string' || posting.text.length > 100000 ||
+      typeof posting.truncated !== 'boolean' || !['structured','page'].includes(posting.method) ||
+      posting.remote !== null && typeof posting.remote !== 'boolean' ||
+      ![posting.locations, posting.requirements].every(values => Array.isArray(values) && values.length <= 50 && values.every(value => typeof value === 'string' && value.length <= 300)))
+    throw new Error('Invalid full-posting response. Remote eligibility is Unknown.');
+  return posting;
+}
 const protocol = 'jobscape-extension-v1';
-export function extensionRequest(type: 'ping' | 'search' | 'load-more' | 'open-helper', data: {query?: string; platforms?: string[]; token?: string} = {}) {
+export function extensionRequest(type: 'ping' | 'search' | 'load-more' | 'check-posting' | 'open-helper', data: {query?: string; platforms?: string[]; token?: string; url?: string; platform?: string} = {}) {
   return new Promise<Record<string, unknown>>((resolve, reject) => {
     const id = crypto.randomUUID();
     const cleanup = () => { clearTimeout(timer); window.removeEventListener('message', receive); };
@@ -13,7 +24,7 @@ export function extensionRequest(type: 'ping' | 'search' | 'load-more' | 'open-h
       if (m.type === 'error' || m.type === 'blocked') reject(new Error(typeof m.error === 'string' ? m.error.slice(0,1000) : 'Extension retrieval failed.'));
       else resolve(m);
     };
-    const timer = setTimeout(() => { cleanup(); reject(new Error(type === 'ping' ? 'Extension missing or disconnected. Enable it in Chrome, then click Search to reconnect.' : 'Extension did not respond. Open the helper tab to inspect it. No automatic retry was made.')); }, type === 'ping' ? 5000 : 25000);
+    const timer = setTimeout(() => { cleanup(); reject(new Error(type === 'ping' ? 'Extension missing or disconnected. Enable it in Chrome, then click Search to reconnect.' : 'Extension did not respond. No automatic retry was made.')); }, type === 'ping' ? 5000 : type === 'check-posting' ? 35000 : 25000);
     window.addEventListener('message', receive);
     window.postMessage({protocol, direction: 'request', id, type, ...data}, location.origin);
   });

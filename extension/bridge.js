@@ -9,7 +9,7 @@
     if (event.source !== window || event.origin !== location.origin || !m ||
         m.protocol !== protocol || m.direction !== 'request' ||
         typeof m.id !== 'string' || m.id.length > 80 ||
-        !['ping', 'search', 'load-more', 'open-helper'].includes(m.type)) return;
+        !['ping', 'search', 'load-more', 'check-posting', 'open-helper'].includes(m.type)) return;
     // A fresh port wakes an idle worker on each explicit request. Never resend a
     // search after an uncertain delivery, and never keep an idle port alive.
     let port;
@@ -26,7 +26,7 @@
         completed = true; send(reply); port.disconnect();
       });
       port.onDisconnect.addListener(fail);
-      port.postMessage({id: m.id, type: m.type, query: m.query, platforms: m.platforms, token: m.token});
+      port.postMessage({id: m.id, type: m.type, query: m.query, platforms: m.platforms, token: m.token, url: m.url, platform: m.platform});
     } catch { fail(); if (port) port.disconnect(); }
   });
 })();

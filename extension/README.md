@@ -1,4 +1,4 @@
-# Search-only Chrome prototype
+# Chrome search prototype
 
 ## Windows setup
 
@@ -17,7 +17,7 @@ Manual checks: let the worker idle, Clear the platforms, select three, then Sear
 
 The alternate allowed development origin is `http://localhost:5173`. Other ports and production origins are rejected by both the bridge and worker. No private deployment settings are modified. Chrome match patterns cannot restrict ports, so the bridge checks the exact origin before doing anything. Communication is confined to the top-level development page; it cannot access arbitrary tabs.
 
-The extension requests only `scripting`, session `storage`, and `https://www.google.com/*`. No ATS host permissions are needed because this milestone never retrieves a posting. No cookies, credentials, browsing-history API, or broad `tabs` permission are requested. Session storage holds its own helper tab ID/owner and each JobScape tab's submitted query, platform IDs and pagination cursor. This survives worker idle, not browser-session termination. Queries are sent to Google using the user's existing Chrome profile; signing in is not required.
+The extension requests `scripting`, session `storage`, Google search access and host access for the existing ATS domain definitions. ATS access is used only for a selected posting after an explicit Check remote eligibility click. URL/domain/path checks still apply before reading; redirects to other destinations are rejected. No cookies, credentials, browsing-history API, or broad `tabs` permission are requested. Session storage holds its own helper tab ID/owner and each JobScape tab's submitted query, platform IDs and pagination cursor. This survives worker idle, not browser-session termination. Queries are sent to Google using the user's existing Chrome profile; signing in is not required.
 
 ## Bounds and limitations
 
@@ -30,6 +30,14 @@ The extension requests only `scripting`, session `storage`, and `https://www.goo
 - After changing ATS definitions, regenerate the extension snapshot with `node scripts/extension-platforms.mjs`, then reload the unpacked extension.
 
 Live validation evidence is recorded in the PR. Loading the extension and unit fixtures alone are not evidence that Google retrieval works.
+
+## Check remote eligibility
+
+Each result has **Check remote eligibility**. Clicking it retrieves that exact ATS posting in the inactive owned helper, reads structured JobPosting description data or a supported job-content container, and shows stated countries/regions or Worldwide with literal supporting quotes. Applicant location requirements and explicit restrictions take precedence. Employer HQ is ignored. Unconfirmed remote work, conflicting terms, inaccessible pages, unsupported markup or truncated descriptions produce Unknown. This is an English heuristic about stated terms, not a guarantee of individual eligibility.
+
+Successful descriptions are cached as inert text, heading/paragraph/list blocks and HTTPS links in session storage for a future reader: 30 minutes, at most ten entries and a 2 MB budget. Raw HTML is not rendered or cached. Cache hits do not navigate; checks never issue Google searches or change the saved pagination cursor. The helper closes after a posting check, including inaccessible/Unknown outcomes; Google consent helpers retain their existing manual-handling behavior. No bulk scanning, prefetching, reader UI or AI service is added.
+
+For this update, reload the unpacked extension in `chrome://extensions`, review the added ATS host access if Chrome prompts, then reload JobScape once. Search, click a result's Check remote eligibility, inspect its evidence, and verify JobScape keeps focus and its helper closes. Repeating the check should say cached. Real posting evidence and the remaining Chrome verification limit are in [REMOTE-ELIGIBILITY.md](../REMOTE-ELIGIBILITY.md).
 
 ## Local hiring-region filtering
 

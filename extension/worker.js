@@ -1,5 +1,6 @@
 import {allowedSender, validateSearch, destination, nextPage} from './policy.js';
 import {extractGoogle} from './extract.js';
+import {extractPosting} from './extract-posting.js';
 const protocol = 'jobscape-extension-v1';
 let busy = false;
 async function helper(owner) {
@@ -23,10 +24,47 @@ function navigate(tabId, url) {
     };
     const updated = (id, change) => { if (id === tabId && change.status === 'complete') finish(); };
     const removed = id => { if (id === tabId) finish(new Error('Helper tab was closed.')); };
-    const timer = setTimeout(() => finish(new Error('Google did not finish loading within 20 seconds. Open the helper tab to inspect it. No automatic retry was made.')), 20000);
+    const timer = setTimeout(() => finish(new Error('The requested page did not finish loading within 20 seconds. No automatic retry was made.')), 20000);
     chrome.tabs.onUpdated.addListener(updated); chrome.tabs.onRemoved.addListener(removed);
     chrome.tabs.update(tabId, {url, active: false}).catch(finish);
   });
+}
+async function checkPosting(message, owner) {
+  if (typeof message.url !== 'string' || message.url.length > 4000 || typeof message.platform !== 'string')
+    throw new Error('Invalid posting request.');
+  const target = destination(message.url, [message.platform]);
+  if (!target) throw new Error('Posting is outside the configured ATS domains.');
+  const {descriptions = {}} = await chrome.storage.session.get('descriptions');
+  const now = Date.now();
+  const existing = descriptions[target.url];
+  if (existing && now - existing.checkedAt < 30 * 60 * 1000)
+    return {type: 'posting', url: target.url, posting: existing.posting, checkedAt: existing.checkedAt, cached: true};
+  const tab = await helper(owner);
+  let response;
+  try {
+    await navigate(tab.id, target.url);
+    const loaded = await chrome.tabs.get(tab.id);
+    if (!loaded.url || destination(loaded.url, [message.platform])?.url !== target.url)
+      throw new Error('The posting redirected or requires access. Remote eligibility is Unknown.');
+    const [{result}] = await chrome.scripting.executeScript({target: {tabId: tab.id}, func: extractPosting});
+    if (!result || result.error) throw new Error(result?.error ?? 'The posting could not be read.');
+    // Cache only explicit successful reads, with a 2 MB/10-entry session budget.
+    const cache = Object.fromEntries(Object.entries(descriptions).filter(([, entry]) => now - entry.checkedAt < 30 * 60 * 1000));
+    cache[target.url] = {posting: result, checkedAt: now};
+    const entries = Object.entries(cache).sort((a,b) => b[1].checkedAt - a[1].checkedAt).slice(0,10);
+    while (entries.length && JSON.stringify(Object.fromEntries(entries)).length * 2 > 2 * 1024 * 1024) entries.pop();
+    await chrome.storage.session.set({descriptions: Object.fromEntries(entries)});
+    response = {type: 'posting', url: target.url, posting: result, checkedAt: now, cached: false};
+  } finally {
+    // Posting checks close our tab even on Unknown/inaccessible results. Search
+    // consent helpers retain their existing behavior and pagination is untouched.
+    const {helperId, helperOwner} = await chrome.storage.session.get(['helperId','helperOwner']);
+    if (helperId === tab.id && helperOwner === owner) {
+      try {await chrome.tabs.remove(tab.id); await chrome.storage.session.remove(['helperId','helperOwner']);}
+      catch {if (response) response.warning = 'Posting checked, but the owned helper could not be closed.';}
+    }
+  }
+  return response;
 }
 async function search(message, owner) {
   const key = 'search:' + owner;
@@ -91,10 +129,10 @@ chrome.runtime.onConnect.addListener(port => {
       catch { reply({id, type: 'error', error: 'There is no helper tab yet. Click Search first.'}); }
       return;
     }
-    if (!['search', 'load-more'].includes(message.type)) return;
+    if (!['search', 'load-more', 'check-posting'].includes(message.type)) return;
     if (busy) { reply({id, type: 'error', error: 'Another search is still running. Wait for it to finish, then click Search.'}); return; }
     busy = true;
-    try { reply({id, ...await search(message, owner)}); }
+    try { reply({id, ...await (message.type === 'check-posting' ? checkPosting(message, owner) : search(message, owner))}); }
     catch (error) { reply({id, type: 'error', error: error instanceof Error ? error.message : 'Extension retrieval failed.'}); }
     finally { busy = false; }
   });

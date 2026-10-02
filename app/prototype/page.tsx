@@ -3,9 +3,10 @@ import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Search, MapPin, SlidersHorizontal, ExternalLink, LoaderCircle, BriefcaseBusiness} from 'lucide-react';
 import {Checkbox} from '@/components/ui/checkbox';
 import {platforms, googleQuery, validateInput, type SearchInput} from '@/lib/search';
-import {extensionRequest, resultCards, paginationState, type Pagination, type GoogleCard} from '@/lib/extension-search';
+import {extensionRequest, resultCards, paginationState, checkedPosting, type Pagination, type GoogleCard} from '@/lib/extension-search';
 import {hiringRegions, type HiringRegion} from '@/lib/hiring-region-map';
 import {hiringEvidence, matchesHiringRegion} from '@/lib/hiring-regions';
+import {remoteEligibility, type RemoteEligibility} from '@/lib/remote-eligibility';
 const initial: SearchInput = {keywords: '', location: '', remote: false, platforms: platforms.map(p => p.id), expandTitles: true};
 export default function Prototype() {
   const [form, setForm] = useState(initial);
@@ -20,6 +21,8 @@ export default function Prototype() {
   const [warning, setWarning] = useState('');
   const [region, setRegion] = useState<HiringRegion>('Global');
   const [includeUnknown, setIncludeUnknown] = useState(false);
+  const [checkingUrl, setCheckingUrl] = useState<string | null>(null);
+  const [remoteChecks, setRemoteChecks] = useState<Record<string, RemoteEligibility & {cached?: boolean; checkedAt?: number; warning?: string}>>({});
   const classified = cards.map(card => ({card, hiring: hiringEvidence(card)}));
   const visible = classified.filter(({hiring}) => matchesHiringRegion(hiring, region, includeUnknown));
   const unknownCount = classified.filter(({hiring}) => hiring.unknown).length;
@@ -98,16 +101,31 @@ export default function Prototype() {
     } catch (e) { if (id === request.current) setError(e instanceof Error ? e.message : 'Could not load the next page.'); }
     finally { inFlight.current = false; if (id === request.current) { setBusy(false); setPaging(false); } }
   };
+  const checkRemote = async (card: GoogleCard) => {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    const id = ++request.current;
+    setCheckingUrl(card.url);
+    try {
+      const response = await extensionRequest('check-posting', {url: card.url, platform: card.platform});
+      const eligibility = remoteEligibility(checkedPosting(response, card));
+      if (id === request.current) setRemoteChecks(previous => ({...previous, [card.url]: {...eligibility,
+        cached: response.cached === true, checkedAt: typeof response.checkedAt === 'number' ? response.checkedAt : undefined,
+        warning: typeof response.warning === 'string' ? response.warning : undefined}}));
+    } catch (e) {
+      if (id === request.current) setRemoteChecks(previous => ({...previous, [card.url]: {scope: 'Unknown', quotes: [], restrictions: [], reason: e instanceof Error ? e.message : 'The posting could not be accessed.'}}));
+    } finally {inFlight.current = false; if (id === request.current) setCheckingUrl(null);}
+  };
   const openHelper = async () => { try { await extensionRequest('open-helper'); } catch (e) { setError(e instanceof Error ? e.message : 'Could not open helper.'); } };
   return <div className="app-shell">
     <header className="topbar"><a className="brand" href="/"><span className="brand-icon"><Search size={21}/></span>Job<span className="brand-light">Scape</span><span className="beta">PROTOTYPE</span></a><div className="top-note">Google ATS search <span className="free-tag">Free to use</span></div></header>
     <main className="workspace">
       <section className="intro"><div className="eyebrow">THE JOB SEARCH, WITHOUT THE QUERY WRANGLING</div><h1>Find your next role.<br/><span>Go straight to the source.</span></h1><p>One combined search across your selected hiring platforms, with results here in JobScape.</p></section>
-      <div className="source-notice" role="status"><p>{connection}</p><button type="button" disabled={busy} onClick={() => void check()}>Check connection</button></div>
+      <div className="source-notice" role="status"><p>{connection}</p><button type="button" disabled={busy || checkingUrl !== null} onClick={() => void check()}>Check connection</button></div>
       <form className="search-panel" onSubmit={e => {e.preventDefault(); void search();}}>
         <div className="search-fields"><label className="field"><span>Job title or keywords</span><div><Search size={20}/><input required maxLength={180} value={form.keywords} onChange={e => setForm({...form, keywords: e.target.value})} placeholder="e.g. developer relations, community" aria-describedby="prototype-keyword-help"/></div></label>
           <label className="field location"><span>Location</span><div><MapPin size={20}/><input maxLength={100} value={form.location} onChange={e => setForm({...form, location: e.target.value})} placeholder="City, country, or leave blank"/></div></label>
-          <button className="search-button" type="submit" disabled={busy || !form.platforms.length}>{busy ? <LoaderCircle className="spin" size={19}/> : <Search size={19}/>} {busy ? 'Searching' : 'Search'}</button></div>
+          <button className="search-button" type="submit" disabled={busy || checkingUrl !== null || !form.platforms.length}>{busy ? <LoaderCircle className="spin" size={19}/> : <Search size={19}/>} {busy ? 'Searching' : 'Search'}</button></div>
         <div className="search-bottom"><span id="prototype-keyword-help">Separate alternatives with a comma or OR.</span><label className="check-label"><Checkbox checked={form.remote} onCheckedChange={v => setForm({...form, remote: v === true})}/>Prefer remote</label></div>
         <div className="search-options"><label className="check-label"><Checkbox checked={form.expandTitles !== false} onCheckedChange={v => setForm({...form, expandTitles: v === true})}/>Include title aliases</label><p>Location and remote preferences are Google query terms. They do not verify hiring eligibility.</p></div>
         <p className="search-destination">{form.platforms.length} selected ATS platforms in one query. No employer list or posting-age cutoff.</p>
@@ -129,13 +147,20 @@ export default function Prototype() {
               {hiring.evidence.map(phrase => <p className="small-note" key={phrase}>Evidence: “{phrase}”</p>)}
               {hiring.countries.length > 0 && <p className="eligibility uncertain">{hiring.restricted ? 'Country restriction' : 'Listed job countries'}: {hiring.countries.join(', ')}. This does not establish eligibility elsewhere in the region.</p>}
               {hiring.excludedCountries.length > 0 && <p className="eligibility uncertain">Excluded countries: {hiring.excludedCountries.join(', ')}.</p>}
+              <button type="button" className="refresh" disabled={busy || checkingUrl !== null} onClick={() => void checkRemote(card)}>{checkingUrl === card.url ? 'Checking full posting…' : 'Check remote eligibility'}</button>
+              {remoteChecks[card.url] && <div role="status"><p className="match-reason">Full posting hiring scope: <strong>{remoteChecks[card.url].scope}</strong>{remoteChecks[card.url].cached ? ' (cached)' : ''}</p>
+                {remoteChecks[card.url].quotes.map((quote, index) => <p className="small-note" key={index}>{quote.source}: “{quote.text}”</p>)}
+                {remoteChecks[card.url].restrictions.map(text => <p className="eligibility uncertain" key={text}>{text}</p>)}
+                {remoteChecks[card.url].reason && <p className="small-note">{remoteChecks[card.url].reason}</p>}
+                {remoteChecks[card.url].warning && <p className="small-note">{remoteChecks[card.url].warning}</p>}
+                <p className="small-note">Stated terms only. Work authorization and individual eligibility are not verified.</p></div>}
               <p className="small-note">{new URL(card.url).hostname}</p></div><a className="open-job" href={card.url} target="_blank" rel="noopener noreferrer" aria-label={'Open original: ' + card.title}><ExternalLink size={17}/></a></article>)}</div>
               {!visible.length && <p className="small-note">No loaded results match this region. Choose Global or Include unknown, or explicitly load another page if available.</p>}</>}
-          {pagination?.hasMore && <button className="load-more" disabled={busy} onClick={() => void loadMore()}>{paging ? 'Loading…' : 'Load more'}</button>}
+          {pagination?.hasMore && <button className="load-more" disabled={busy || checkingUrl !== null} onClick={() => void loadMore()}>{paging ? 'Loading…' : 'Load more'}</button>}
           {pagination && !pagination.hasMore && <p className="small-note">No next-page link was exposed by Google.</p>}
           {pagination && cards.length === 0 && <p className="small-note">No selected-ATS destinations on this page.</p>}
           {warning && <p className="small-note" role="status">{warning}</p>}
-          <p className="small-note">Google titles and snippets are search evidence, not verified job descriptions or active status. Description reading is deferred.</p>
+          <p className="small-note">Google titles and snippets are search evidence, not full descriptions or active status. Full-posting checks run only on click; a description reader is deferred.</p>
         </section></div>
       <footer><span>JobScape <span className="footer-separator">/</span> a direct route to company jobs</span><span>No account. No search API key.</span></footer>
     </main>
