@@ -40,5 +40,7 @@ jobs:
         run: node scripts/smartrecruiters-checks.mjs
       - name: Workable regression checks
         run: node scripts/workable-checks.mjs
+      - name: Personio regression checks
+        run: node scripts/personio-checks.mjs
       - name: Build Worker
         run: pnpm build
