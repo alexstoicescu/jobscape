@@ -68,12 +68,13 @@ async function checkPosting(message, owner) {
 }
 async function search(message, owner) {
   const key = 'search:' + owner;
-  let input, url, pages;
+  let input, url, pages, previous;
   if (message.type === 'load-more') {
     const saved = (await chrome.storage.session.get(key))[key];
     if (!saved || typeof message.token !== 'string' || message.token !== saved.token || !saved.nextPage)
       throw new Error('This next page is no longer available. Start a new Search.');
     input = validateSearch(saved);
+    previous = saved;
     url = saved.nextPage;
     pages = saved.pages + 1;
   } else {
@@ -93,19 +94,33 @@ async function search(message, owner) {
       Number(actual.searchParams.get('start') ?? 0) !== Number(new URL(url).searchParams.get('start') ?? 0))
     return {type: 'blocked', error: 'The helper is not on the requested results page. Open it to handle any verification, then repeat your Search or Load more action.'};
   const [{result}] = await chrome.scripting.executeScript({target: {tabId: tab.id}, func: extractGoogle});
-  if (result.blocked) return {type: 'blocked', error: 'Google requires consent or verification. Open the helper tab and handle it manually, then repeat your Search or Load more action.'};
-  if (!Array.isArray(result.results) || !result.results.length)
-    return {type: 'error', error: 'No readable result cards were found. Google may have no matches or its page structure may be unsupported. Open the helper tab to inspect the result.'};
+  if (result?.blocked) return {type: 'blocked', error: 'Google requires consent or verification. Open the helper tab and handle it manually, then repeat your Search or Load more action.'};
+  if (!result || result.error || !Array.isArray(result.results) || !result.results.length && !result.empty)
+    return {type: 'error', error: result?.error ?? 'Google result extraction failed; exhaustion is not confirmed. Open the helper tab to inspect it.'};
+  const raw = await Promise.all(result.results.map(async row => {
+    const u = new URL(row.url); u.hash = '';
+    for (const key of [...u.searchParams.keys()]) if (/^(utm_|gclid$|fbclid$)/i.test(key)) u.searchParams.delete(key);
+    u.searchParams.sort();
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(u.href));
+    return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2,'0')).join('');
+  }));
+  const prior = new Set(previous?.rawSeen ?? []);
+  const fresh = raw.some(key => !prior.has(key));
+  const rawSeen = [...new Set([...prior, ...raw])];
+  const exhausted = !raw.length || !fresh;
   const seen = new Set();
   const results = result.results.flatMap(row => {
     const target = destination(row.url, input.platforms);
     if (!target || seen.has(target.url)) return [];
     seen.add(target.url); return [{...target, title: row.title, snippet: row.snippet}];
   }).slice(0,20);
-  const saved = {...input, nextPage: nextPage(result.nextPage, input.query, url), token: crypto.randomUUID(), pages};
+  const actualNext = nextPage(result.nextPage, input.query, url);
+  const fallback = new URL(url); fallback.searchParams.set('start', String(Number(fallback.searchParams.get('start') ?? 0) + 10));
+  const limited = rawSeen.length >= 5000;
+  const saved = {...input, rawSeen:rawSeen.slice(0,5000), nextPage: exhausted || limited ? null : actualNext ?? fallback.href, token: crypto.randomUUID(), pages};
   // Persist the cursor before closing our tab. It survives service-worker idle.
   await chrome.storage.session.set({[key]: saved});
-  let warning;
+  let warning = exhausted ? 'Pagination stopped: empty or repeated raw Google results.' : limited ? 'Pagination stopped at the 5,000 raw-URL history limit.' : !actualNext ? 'No actual next/numbered link found. Load more will make one next-offset attempt with the submitted query.' : undefined;
   const {helperId, helperOwner} = await chrome.storage.session.get(['helperId', 'helperOwner']);
   if (helperId === tab.id && helperOwner === owner) {
     try {

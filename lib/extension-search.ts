@@ -1,5 +1,6 @@
 import {destination} from '../extension/policy.js';
 import type {Posting} from './remote-eligibility';
+import {matchesGoogleTitle, type SearchInput} from './search';
 export type GoogleCard = {title: string; snippet: string; url: string; platform: string};
 export function checkedPosting(response: Record<string, unknown>, card: GoogleCard): Posting {
   const posting = response.posting as Posting | undefined;
@@ -37,7 +38,7 @@ export function paginationState(response: Record<string, unknown>): Pagination {
     throw new Error('Invalid extension pagination state.');
   return page as Pagination;
 }
-export function resultCards(response: Record<string, unknown>, query: string, ids: string[]): GoogleCard[] {
+export function resultCards(response: Record<string, unknown>, query: string, ids: string[], input: SearchInput): GoogleCard[] {
   if (response.type !== 'results' || response.query !== query || !Array.isArray(response.results) || response.results.length > 20)
     throw new Error('Invalid extension result response.');
   const seen = new Set<string>();
@@ -47,5 +48,5 @@ export function resultCards(response: Record<string, unknown>, query: string, id
     const target = destination(row.url, ids);
     if (!target || target.platform !== row.platform) throw new Error('Result destination is outside the selected ATS domains.');
     return {title: row.title, snippet: row.snippet, ...target};
-  }).filter(row => { if (seen.has(row.url)) return false; seen.add(row.url); return true; });
+  }).filter(row => { if (seen.has(row.url)) return false; seen.add(row.url); return matchesGoogleTitle(row.title, input); });
 }

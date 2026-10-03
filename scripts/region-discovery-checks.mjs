@@ -12,7 +12,7 @@ assert.ok(global.includes('"remote worldwide"'));
 assert.ok(global.includes('"worldwide remote"'));
 assert.ok(global.includes('"work from anywhere"'));
 const berlin = {...input, keywords:'engineer', location:'Berlin', remote:true, platforms:['ashby','lever']};
-const mandatory = '(site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com) ("engineer")';
+const mandatory = '(site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com) (intitle:"engineer")';
 const berlinEu = googleQuery(berlin, berlin.platforms, 'EU');
 assert.ok(berlinEu.startsWith(mandatory + ' (("Berlin" AND ("remote" OR "work from home" OR "distributed") AND ("EU" OR '));
 assert.match(berlinEu, /\)\) OR \("remote worldwide" OR "worldwide remote" OR "remote globally" OR "globally remote" OR "work from anywhere"\)\)$/);
