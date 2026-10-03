@@ -2,6 +2,7 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Search, MapPin, SlidersHorizontal, ExternalLink, LoaderCircle, BriefcaseBusiness} from 'lucide-react';
 import {Checkbox} from '@/components/ui/checkbox';
+import {ThemeToggle} from '@/components/theme-toggle';
 import {platforms, googleQuery, validateInput, type SearchInput} from '@/lib/search';
 import {extensionRequest, resultCards, paginationState, checkedPosting, type Pagination, type GoogleCard} from '@/lib/extension-search';
 import {hiringRegions, type HiringRegion} from '@/lib/hiring-region-map';
@@ -125,7 +126,7 @@ export default function Prototype() {
   };
   const openHelper = async () => { try { await extensionRequest('open-helper'); } catch (e) { setError(e instanceof Error ? e.message : 'Could not open helper.'); } };
   return <div className="app-shell">
-    <header className="topbar"><a className="brand" href={homeHref}><span className="brand-icon"><Search size={21}/></span>Job<span className="brand-light">Scape</span><span className="beta">PROTOTYPE</span></a><div className="top-note">Google ATS search <span className="free-tag">Free to use</span></div></header>
+    <header className="topbar"><a className="brand" href={homeHref}><span className="brand-icon"><Search size={21}/></span>Job<span className="brand-light">Scape</span><span className="beta">PROTOTYPE</span></a><div className="header-actions"><div className="top-note">Google ATS search <span className="free-tag">Free to use</span></div><ThemeToggle/></div></header>
     <main className="workspace">
       <section className="intro"><div className="eyebrow">THE JOB SEARCH, WITHOUT THE QUERY WRANGLING</div><h1>Find your next role.<br/><span>Go straight to the source.</span></h1><p>One combined search across your selected hiring platforms, with results here in JobScape.</p></section>
       <div className="source-notice" role="status"><p>{connection}</p><button type="button" disabled={busy || checkingUrl !== null} onClick={() => void check()}>Check connection</button></div>
