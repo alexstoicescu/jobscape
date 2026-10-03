@@ -4,6 +4,8 @@
 
 Branch `feat/dark-mode` starts at `35d63fc` on `feat/chrome-search-reader` (PR #12). Review this change against that branch so the diff contains only theme work. Merge PR #12 first, then retarget the dark-mode PR to `main` and review its checks before merging. Nothing has been merged or deployed.
 
+Sync on 3 October 2026: merged PR #12's `b8a73c9` into this branch with a merge commit; no conflicts. This includes default intitle searches, returned-title validation, event/events handling, whole-page opt-in, actual navigation links/explicit offset attempts, raw-result exhaustion detection and all prior regional discovery fixes. PR #13 remains based on `feat/chrome-search-reader`.
+
 The header toggle and matching dark palette work on `/` and the `/prototype` alias. Existing search, region-aware query generation, extension messaging, description checks and pagination are unchanged. No dependencies or lockfile changes.
 
 ## Behavior
@@ -29,6 +31,8 @@ The header toggle and matching dark palette work on `/` and the `/prototype` ali
 
 No production build or deployment was run for this UI change. Standard PR CI provides the remaining production-build check. Browser observations cover the existing local preview, not the private deployment. OS-preference changes, cross-tab synchronization and blocked-storage fallback were reviewed in code rather than manually simulated.
 
+After the sync, TypeScript, title/pagination fixtures, region-discovery fixtures, extension state-machine fixtures and search regressions passed once. The diff against PR #12 contains only dark mode and its documentation, confirming the search changes were retained. No new live browser/Google or build cycle was run for the merge; the earlier browser observations above remain historical evidence.
+
 ## Reviewer checklist
 
-Confirm both theme palettes, focus indicators and result evidence readability with real loaded cards; optionally exercise system preference changes, a second tab and restricted storage. Do not merge this branch ahead of PR #12. For local review, refresh JobScape after checking out this branch; no extension reload is needed. The existing private deployment remains unchanged.
+Confirm both theme palettes, focus indicators and result evidence readability with real loaded cards; optionally exercise system preference changes, a second tab and restricted storage. Do not merge this branch ahead of PR #12. For combined manual testing, run **feat/dark-mode**. Reload the unpacked extension in chrome://extensions to pick up the latest search/pagination fixes, then refresh JobScape and click Search again. The existing private deployment remains unchanged.
