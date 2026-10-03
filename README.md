@@ -12,6 +12,8 @@ See [extension setup, reload steps and limitations](extension/README.md). Descri
 
 ## Product behavior
 
+Extension search defaults to title-qualified alternatives (`intitle:`) plus returned-title validation, including event/events. Search whole-page keywords is opt-in. Pagination inspects actual next/numbered links, then allows one offset attempt per Load more click; empty/repeated raw results stop pagination, while zero title matches do not. Comparison evidence, limitations and reload steps: [TITLE-PAGINATION.md](TITLE-PAGINATION.md).
+
 - Enter a title or title keywords, plus an optional location.
 - Use commas or OR to search alternatives. All words within an alternative must occur in a listing title, or in the available description when **Search descriptions too** is enabled.
 - **Include title aliases** expands explicit synonyms and abbreviations such as DevRel, SRE, QA, ML, UX, and software engineer/developer. Turn it off for literal matching. Each result explains which field and term matched.

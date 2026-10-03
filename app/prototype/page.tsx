@@ -51,7 +51,7 @@ export default function Prototype() {
     if (hiringRegions.some(name => name !== 'Unknown' && name === restoredRegion)) setRegion(restoredRegion as HiringRegion);
     if (q.has('q')) setForm({...initial, keywords: q.get('q') ?? '', location: q.get('l') ?? '', remote: q.get('r') === '1',
       platforms: q.has('p') ? (q.get('p') ?? '').split(',').filter(id => platforms.some(p => p.id === id)) : initial.platforms,
-      expandTitles: q.get('a') !== '0'});
+      expandTitles: q.get('a') !== '0', wholePageKeywords: q.get('wp') === '1'});
     // Connection handshake only. Restoring filters never performs a search.
     void check();
     const disconnected = (event: MessageEvent) => {
@@ -73,12 +73,12 @@ export default function Prototype() {
     appendScroll.current = null;
     setQuery(combined); setSubmitted(input); setPagination(null); setCards([]); setError(''); setWarning(''); setBusy(true); setPaging(false);
     setSubmittedRegion(region);
-    history.replaceState(null, '', '?' + new URLSearchParams({q: input.keywords, l: input.location, r: input.remote ? '1' : '0', p: input.platforms.join(','), a: input.expandTitles === false ? '0' : '1', hr: region === 'Global remote' ? 'Global' : region}));
+    history.replaceState(null, '', '?' + new URLSearchParams({q: input.keywords, l: input.location, r: input.remote ? '1' : '0', p: input.platforms.join(','), a: input.expandTitles === false ? '0' : '1', hr: region === 'Global remote' ? 'Global' : region, wp: input.wholePageKeywords ? '1' : '0'}));
     setHomeHref('/' + location.search);
     try {
       if (!await check()) throw new Error('Extension missing or disconnected. Enable it in Chrome, then click Search to reconnect.');
       const response = await extensionRequest('search', {query: combined, platforms: input.platforms});
-      const rows = resultCards(response, combined, input.platforms);
+      const rows = resultCards(response, combined, input.platforms, input);
       const page = paginationState(response);
       if (id === request.current) {
         setCards(rows); setPagination(page); setWarning(typeof response.warning === 'string' ? response.warning : '');
@@ -95,7 +95,7 @@ export default function Prototype() {
       if (!await check()) throw new Error('Extension missing or disconnected. Enable it in Chrome, then click Load more to reconnect.');
       const response = await extensionRequest('load-more', {token: pagination.token});
       // Use the submitted query/platforms, even if the form has since changed.
-      const rows = resultCards(response, query, submitted.platforms);
+      const rows = resultCards(response, query, submitted.platforms, submitted);
       const page = paginationState(response);
       if (id === request.current) {
         appendScroll.current = {x: window.scrollX, y: window.scrollY};
@@ -134,7 +134,7 @@ export default function Prototype() {
           <label className="field location"><span>Location</span><div><MapPin size={20}/><input maxLength={100} value={form.location} onChange={e => setForm({...form, location: e.target.value})} placeholder="City, country, or leave blank"/></div></label>
           <button className="search-button" type="submit" disabled={busy || checkingUrl !== null || !form.platforms.length}>{busy ? <LoaderCircle className="spin" size={19}/> : <Search size={19}/>} {busy ? 'Searching' : 'Search'}</button></div>
         <div className="search-bottom"><span id="prototype-keyword-help">Separate alternatives with a comma or OR.</span><label className="check-label"><Checkbox checked={form.remote} onCheckedChange={v => setForm({...form, remote: v === true})}/>Prefer remote</label></div>
-        <div className="search-options"><label className="check-label"><Checkbox checked={form.expandTitles !== false} onCheckedChange={v => setForm({...form, expandTitles: v === true})}/>Include title aliases</label><p>Location and remote preferences are Google query terms. They do not verify hiring eligibility.</p></div>
+        <div className="search-options"><label className="check-label"><Checkbox checked={form.expandTitles !== false} onCheckedChange={v => setForm({...form, expandTitles: v === true})}/>Include title aliases</label><label className="check-label"><Checkbox checked={form.wholePageKeywords === true} onCheckedChange={v => setForm({...form, wholePageKeywords: v === true})}/>Search whole-page keywords</label><p>Default searches require keywords in returned titles; snippet mentions do not qualify. Location and remote preferences are discovery terms, not eligibility verification.</p></div>
         <p className="search-destination">{form.platforms.length} selected ATS platforms in one query. No employer list or posting-age cutoff.</p>
       </form>
       <div className="main-grid"><aside className="filters"><div className="filters-title"><SlidersHorizontal size={17}/><h2>ATS platforms</h2></div><p className="source-note">Searches publicly indexed pages across these domains. Google may omit postings or retain closed roles.</p>
@@ -163,8 +163,8 @@ export default function Prototype() {
               <p className="small-note">{new URL(card.url).hostname}</p></div><a className="open-job" href={card.url} target="_blank" rel="noopener noreferrer" aria-label={'Open original: ' + card.title}><ExternalLink size={17}/></a></article>)}</div>
               </>}
           {pagination?.hasMore && <button className="load-more" disabled={busy || checkingUrl !== null} onClick={() => void loadMore()}>{paging ? 'Loading…' : 'Load more'}</button>}
-          {pagination && !pagination.hasMore && <p className="small-note">No next-page link was exposed by Google.</p>}
-          {pagination && cards.length === 0 && <p className="small-note">No selected-ATS destinations on this page.</p>}
+          {pagination && !pagination.hasMore && <p className="small-note">Google returned an empty page or no new raw result URLs. Pagination stopped.</p>}
+          {pagination && cards.length === 0 && <p className="small-note">No loaded results match the submitted title search and ATS selection. Load more remains available while Google returns new raw results.</p>}
           {warning && <p className="small-note" role="status">{warning}</p>}
           <p className="small-note">Google titles and snippets are search evidence, not full descriptions or active status. Full-posting checks run only on click; a description reader is deferred.</p>
         </section></div>

@@ -89,7 +89,7 @@ const chrome = {
 const worker = readFileSync(new URL('../extension/worker.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
 function restartWorker() {
   chrome.runtime.onConnect = event();
-  vm.runInNewContext(worker, {chrome, allowedSender, validateSearch, destination, nextPage, extractGoogle: () => {}, extractPosting: () => {}, crypto: webcrypto, URL, URLSearchParams, setTimeout, clearTimeout});
+  vm.runInNewContext(worker, {chrome, allowedSender, validateSearch, destination, nextPage, extractGoogle: () => {}, extractPosting: () => {}, crypto: webcrypto, TextEncoder, URL, URLSearchParams, setTimeout, clearTimeout});
 }
 function request(message, owner = 42) {
   let handler, response;
@@ -117,9 +117,14 @@ await request({id: 'foreign', type: 'open-helper'}, 99);
 assert.equal(tabs.get(retained).active, false); // Another JobScape tab cannot open it.
 extraction = async () => ({blocked: false, results: [{...rows[0], url: 'https://jobs.ashbyhq.com/example/two'}], nextPage: null});
 const pageTwo = await request({id: 'two', type: 'load-more', token: oldToken});
-assert.equal(pageTwo.type, 'results'); assert.equal(pageTwo.pagination.pages, 2); assert.equal(pageTwo.pagination.hasMore, false);
+assert.equal(pageTwo.type, 'results'); assert.equal(pageTwo.pagination.pages, 2); assert.equal(pageTwo.pagination.hasMore, true);
 assert.equal(actions.filter(a => a[0] === 'update' && a[2]).at(-1)[2], next); // Google's saved URL, not a synthesized offset.
 assert.equal(tabs.size, 2); assert.equal(storage.helperId, undefined);
+const nextAttempt = storage['search:42'].nextPage;
+assert.equal(new URL(nextAttempt).searchParams.get('start'), '20');
+const repeated = await request({id:'repeated',type:'load-more',token:pageTwo.pagination.token});
+assert.equal(repeated.type, 'results'); assert.equal(repeated.pagination.hasMore, false);
+assert.equal(actions.filter(a => a[0] === 'update' && a[2]).at(-1)[2], nextAttempt);
 const count = actions.length;
 assert.equal((await request({id: 'replay', type: 'load-more', token: oldToken})).type, 'error');
 assert.equal(actions.length, count); // No navigation after cursor exhaustion/replay.
@@ -149,4 +154,14 @@ assert.equal(tabs.size, 2); assert.equal(JSON.stringify(storage['search:42']), c
 const afterFailure = actions.length;
 assert.equal((await request({id: 'unsafe', type: 'check-posting', url: 'https://evil.example/', platform: 'ashby'})).type, 'error');
 assert.equal(actions.length, afterFailure);
-console.log('Extension checks passed: search/reconnect/pagination, URL boundaries, posting cache across idle, save-before-close, failure cleanup and unchanged search cursor. Chrome remains manual validation.');
+extraction = async () => ({blocked:false, results:[{title:'Backend Integration Engineer',snippet:'Events',url:'https://jobs.ashbyhq.com/example/no-title-match'}],nextPage:null});
+const noTitle = await request({id:'raw-candidates',type:'search',query,platforms:input.platforms});
+assert.equal(noTitle.pagination.hasMore, true, 'Raw results preserve pagination regardless of client title matches');
+const failureCursor = storage['search:42'].token;
+extraction = async () => ({blocked:false,results:[],error:'Unsupported Google markup'});
+assert.equal((await request({id:'extract-failure',type:'load-more',token:failureCursor})).type, 'error');
+assert.equal(storage['search:42'].token, failureCursor, 'Extraction failure retains cursor for explicit user retry');
+extraction = async () => ({blocked:false,results:[],empty:true,nextPage:null});
+const empty = await request({id:'empty',type:'load-more',token:failureCursor});
+assert.equal(empty.type, 'results'); assert.equal(empty.pagination.hasMore, false);
+console.log('Extension checks passed: one offset per click, raw repeat/empty exhaustion, zero-title-match pagination, extraction failure distinction, reconnect, cache, ownership and unchanged posting-check cursor. Chrome remains manual validation.');

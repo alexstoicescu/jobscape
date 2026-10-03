@@ -23,7 +23,18 @@ export function extractGoogle() {
     if (title) results.push({title, snippet: snippet.trim().slice(0,2000), url});
     if (results.length >= 30) break;
   }
-  // Follow Google's actual next-page link; do not synthesize page offsets.
-  const nextPage = document.querySelector('a#pnnext, a[rel="next"]')?.href ?? null;
-  return {blocked: false, results, nextPage};
+  // Inspect actual next/numbered search links before offering an offset attempt.
+  const current = new URL(location.href), start = Number(current.searchParams.get('start') ?? 0);
+  const links = [...document.querySelectorAll('a[href]')].flatMap(anchor => {
+    try {
+      const u = new URL(anchor.href);
+      const offset = Number(u.searchParams.get('start'));
+      return u.origin === current.origin && u.pathname === '/search' && u.searchParams.get('q') === current.searchParams.get('q') &&
+        u.searchParams.has('start') && Number.isSafeInteger(offset) && offset > start ? [{url:u.href, offset,
+          next:anchor.id === 'pnnext' || anchor.getAttribute('rel') === 'next' || /next|weiter|suivant|siguiente|avanti/i.test(anchor.getAttribute('aria-label') ?? anchor.textContent ?? '')}] : [];
+    } catch {return [];}
+  }).sort((a,b) => Number(b.next) - Number(a.next) || a.offset - b.offset);
+  const empty = /(?:did not match any documents|no results found|keine Ergebnisse|keine passenden Dokumente|keine Dokumente gefunden)/i.test(text);
+  return {blocked: false, results, nextPage: links[0]?.url ?? null, empty,
+    error: !results.length && !empty ? 'Google result markup could not be extracted; this is not confirmed exhaustion.' : undefined};
 }
