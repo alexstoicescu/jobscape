@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {sourceModule} from './load-source.mjs';
+const {remoteEligibility} = await import(sourceModule('../lib/remote-eligibility.ts'));
+const check = (text, extra = {}) => remoteEligibility({title: 'Engineer', text, locations: [], requirements: [], remote: true, truncated: false, method: 'structured', ...extra});
+assert.equal(check('Fully remote worldwide. Candidates must reside in US only.').scope, 'United States');
+assert.equal(check('Our company headquarters is in the US. We hire remote worldwide.').scope, 'Worldwide');
+assert.equal(check('Fully remote. Hiring in the EU.').scope, 'EU');
+assert.equal(check('Fully remote worldwide. Candidates must reside in France only.').scope, 'France');
+assert.equal(check('Remote.', {remote: null}).scope, 'Unknown');
+assert.equal(check('Fully remote worldwide.', {requirements: ['Germany', 'France']}).scope, 'Germany, France');
+assert.equal(check('Fully remote worldwide.', {locations: ['United States']}).scope, 'Worldwide', 'Broad explicit hiring terms are not narrowed by office metadata');
+assert.equal(check('Fully remote worldwide. Candidates must reside in France only.', {requirements: ['United States']}).scope, 'Unknown');
+assert.equal(check('Remote worldwide except United States.').scope, 'Worldwide (with exclusions)');
+for (const extra of [{truncated: true}, {remote: false}]) assert.equal(check('Fully remote worldwide.', extra).scope, 'Unknown');
+assert.equal(check('').scope, 'Unknown');
+assert.equal(check('Fully remote worldwide. This is not a remote role.').scope, 'Unknown');
+assert.equal(check('We may hire worldwide for this remote role.').scope, 'Unknown');
+assert.equal(check('This role is not available worldwide.').scope, 'Unknown');
+// Short literal evidence observed in the live BoWatt posting on 2026-10-02.
+const quote = 'Are based in Germany and have the right to work here';
+const live = check(quote + '\nFully remote, hybrid, or onsite? Up to you.', {title: 'Applied AI Engineer (Germany-based)', locations: ['Germany']});
+assert.equal(live.scope, 'Germany'); assert.ok(live.quotes.some(q => q.text === quote));
+console.log('Remote eligibility checks passed: US-only, US HQ worldwide, EU, France-only, multiple permitted countries, restrictions precedence, exclusions, ambiguous/inaccessible/truncated and live BoWatt evidence.');

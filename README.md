@@ -2,7 +2,17 @@
 
 A free search interface for company-hosted job listings. React, TypeScript, Vinext, and a Cloudflare-compatible server route. No paid search service or model API is required.
 
+## Chrome search prototype
+
+The extension interface is the homepage at `/`; `/prototype` remains an alias using the same component without redirecting or dropping query parameters. It reuses the existing form styling, ATS definitions and combined Boolean query builder, and requests one Google results page through a minimal unpacked Chrome extension. Search reconnects on demand. Explicit Load more follows Google's saved next-page link for the submitted query and appends deduplicated results. Successful extraction saves pagination before closing only the extension-owned helper tab; manual-intervention failures retain it. It never falls back to the employer registry. The old registry UI is no longer exposed through user navigation; its backend remains intact.
+
+See [extension setup, reload steps and limitations](extension/README.md). Description reading is deferred. Initial type checks, existing search regressions, extension boundary tests and JavaScript syntax checks passed on 2 October 2026. Real retrieval remains **unverified**: the initial Windows computer-use verification stopped before Search was clicked because the tool could not determine Chrome's current URL confidently enough to enforce its policy. Chrome testing of reconnect, pagination, focus and scroll is now reserved for the user. No alternate automation architecture was attempted.
+
+**Search hiring region** offers All (default), Global, EU, EMEA, APAC and US. Search combines that choice, keywords, location/remote preferences and selected ATS domains into one Google query. All adds no region terms; Global targets worldwide-remote phrases; regional queries include mapped countries and worldwide candidates without blanket US exclusions. Every returned candidate appears immediately, without automatic description checks. Changing region takes effect only on the next Search; Load more retains the submitted query. Full-posting checks stay on demand and override snippet estimates in evidence labels/counts. Only explicit unrestricted worldwide remote posting evidence earns Global remote; unchecked and inconclusive Unknown remain distinct. Definitions and limits are in [HIRING-REGIONS.md](HIRING-REGIONS.md).
+
 ## Product behavior
+
+Extension search defaults to title-qualified alternatives (`intitle:`) plus returned-title validation, including event/events. Search whole-page keywords is opt-in. Pagination inspects actual next/numbered links, then allows one offset attempt per Load more click; empty/repeated raw results stop pagination, while zero title matches do not. Comparison evidence, limitations and reload steps: [TITLE-PAGINATION.md](TITLE-PAGINATION.md).
 
 - Enter a title or title keywords, plus an optional location.
 - Use commas or OR to search alternatives. All words within an alternative must occur in a listing title, or in the available description when **Search descriptions too** is enabled.
@@ -60,6 +70,8 @@ The Checks workflow runs a frozen-lockfile install, TypeScript checks, focused s
 Use a feature branch and a pull request for subsequent changes. Dependencies, local runtime state, build outputs, QA reports in `outputs/`, and environment files are ignored. `.openai/hosting.json` retains the existing private Site identity. There is no deployment workflow; pushing source does not publish the Site.
 
 ## Sources
+
+The Chrome interface at `/` and its `/prototype` alias supports combined Google search, explicit pagination, local region filters and per-result full-posting remote checks. Setup and reload steps are in [extension/README.md](extension/README.md); real posting evidence and remaining manual Chrome checks are in [REMOTE-ELIGIBILITY.md](REMOTE-ELIGIBILITY.md). The registry backend is preserved.
 
 - https://docs.greenhouse.io/job-board.html
 - https://github.com/lever/postings-api

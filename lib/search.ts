@@ -1,4 +1,5 @@
 import {locationMatch, normalizeText, type Place, type LocationMatch} from './geography';
+import {regionCountries, type Regional} from './hiring-region-map';
 export const platforms = [
  {id:'greenhouse',name:'Greenhouse',domains:['boards.greenhouse.io','job-boards.greenhouse.io'],live:true},
  {id:'lever',name:'Lever',domains:['jobs.lever.co','jobs.eu.lever.co'],live:true},
@@ -19,13 +20,14 @@ export const platforms = [
  {id:'adp',name:'ADP',domains:['workforcenow.adp.com'],live:false},
  {id:'successfactors',name:'SAP SuccessFactors',domains:['jobs2web.com','successfactors.com'],live:false}
 ];
-export type SearchInput = {keywords:string;location:string;remote:boolean;platforms:string[];expandTitles?:boolean;searchDescriptions?:boolean;includeUnknownRemote?:boolean};
+export type SearchInput = {keywords:string;location:string;remote:boolean;platforms:string[];expandTitles?:boolean;searchDescriptions?:boolean;includeUnknownRemote?:boolean;wholePageKeywords?:boolean};
 export type MatchReason = {field:'title'|'description';term:string;alias:boolean;snippet?:string;location:LocationMatch};
 export type Job = {id:string;title:string;company:string;location:string;locations?:Place[];remote:boolean;url:string;platform:string;description:string;descriptionTruncated?:boolean;published:string|null;dateKind:'published'|'updated'|null;checked:string;match?:MatchReason};
 export type BoardHealth = {name:string;platform:string;source:string;status:'ok'|'partial'|'unavailable';jobs:number;checked:string;cached:boolean;error?:string;reportedTotal?:number;retryAt?:string};
 export type SearchResult = {jobs:Job[];total:number;scanned:number;boards:number;attempted:number;failed:string[];checked:string;truncated:boolean;health?:BoardHealth[];coverage?:import('./coverage').SourceCoverage[];metrics?:{requests:number;responseBytes:number;elapsedMs:number;cacheBytes:number};descriptions?:{available:number;truncated:number}};
 export function terms(value:string){return value.split(/\s+OR\s+|,/i).map(x=>x.replace(/["“”]/g,'').trim()).filter(Boolean).slice(0,8)}
 const titleAliases=[
+ ['event','events'],
  ['devrel','developer relations','developer advocate','dev advocate'],
  ['sre','site reliability engineer','site reliability engineering'],
  ['software engineer','software developer'],
@@ -49,11 +51,22 @@ export function expandedTerms(input:SearchInput){
  }
  return result.slice(0,40);
 }
-export function googleQuery(input:SearchInput, ids=input.platforms){
+export function googleQuery(input:SearchInput, ids=input.platforms, hiringRegion: 'All'|'Global'|Regional = 'All'){
  const domains=platforms.filter(p=>ids.includes(p.id)).flatMap(p=>p.domains);
  const quote=(s:string)=>'"'+s.replace(/["“”]/g,'').trim()+'"';
- const roles=[...new Set(expandedTerms(input).map(value=>value.term))].map(quote);
- return [domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':'',input.location.trim()?quote(input.location):'',input.remote?'("remote" OR "work from home" OR "distributed")':''].filter(Boolean).join(' ');
+ const roles=[...new Set(expandedTerms(input).map(value=>value.term))].map(value=>(input.wholePageKeywords?'':'intitle:')+quote(value));
+ const worldwide=['remote worldwide','worldwide remote','remote globally','globally remote','work from anywhere'];
+ const regionalAliases:Record<Regional,string[]>={EU:['EU','European Union','Europe'],EMEA:['EMEA','Europe Middle East and Africa'],APAC:['APAC','Asia Pacific'],US:['US','USA','United States']};
+ const hiring=hiringRegion==='All'?[]:hiringRegion==='Global'?worldwide:[...worldwide,...regionalAliases[hiringRegion],...regionCountries[hiringRegion]];
+ const mandatory=[domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':''].filter(Boolean).join(' ');
+ const worldwideGroup='('+worldwide.map(quote).join(' OR ')+')';
+ if(hiringRegion==='Global')return [mandatory,worldwideGroup].filter(Boolean).join(' ');
+ if(input.remote&&hiringRegion!=='All'){
+  const regionalGroup='('+[...new Set([...regionalAliases[hiringRegion],...regionCountries[hiringRegion]])].map(quote).join(' OR ')+')';
+  const regionalBranch=[input.location.trim()?quote(input.location):'', '("remote" OR "work from home" OR "distributed")',regionalGroup].filter(Boolean).join(' AND ');
+  return [mandatory,'(('+regionalBranch+') OR '+worldwideGroup+')'].filter(Boolean).join(' ');
+ }
+ return [domains.length?'('+domains.map(d=>'site:'+d).join(' OR ')+')':'',roles.length?'('+roles.join(' OR ')+')':'',input.location.trim()?quote(input.location):'',input.remote?'("remote" OR "work from home" OR "distributed")':'',hiring.length?'('+[...new Set(hiring)].map(quote).join(' OR ')+')':''].filter(Boolean).join(' ');
 }
 export function googleUrl(input:SearchInput,ids=input.platforms){return 'https://www.google.com/search?'+new URLSearchParams({q:googleQuery(input,ids)})}
 export function validateInput(value:unknown):SearchInput{
@@ -62,8 +75,14 @@ export function validateInput(value:unknown):SearchInput{
  if(typeof v.keywords!=='string'||!terms(v.keywords).some(term=>normalizeText(term).length)||v.keywords.length>180)throw new Error('Enter keywords up to 180 characters.');
  if(typeof v.location!=='string'||v.location.length>100||typeof v.remote!=='boolean')throw new Error('Check the location and remote filter.');
  if(!Array.isArray(v.platforms)||!v.platforms.length||v.platforms.some(p=>!platforms.some(x=>x.id===p)))throw new Error('Select at least one ATS platform.');
- for(const option of ['expandTitles','searchDescriptions','includeUnknownRemote'])if(v[option]!==undefined&&typeof v[option]!=='boolean')throw new Error('Check the search options.');
- return {keywords:v.keywords.trim(),location:v.location.trim(),remote:v.remote,platforms:[...new Set(v.platforms)] as string[],expandTitles:v.expandTitles!==false,searchDescriptions:v.searchDescriptions===true,includeUnknownRemote:v.includeUnknownRemote===true};
+ for(const option of ['expandTitles','searchDescriptions','includeUnknownRemote','wholePageKeywords'])if(v[option]!==undefined&&typeof v[option]!=='boolean')throw new Error('Check the search options.');
+ return {keywords:v.keywords.trim(),location:v.location.trim(),remote:v.remote,platforms:[...new Set(v.platforms)] as string[],expandTitles:v.expandTitles!==false,searchDescriptions:v.searchDescriptions===true,includeUnknownRemote:v.includeUnknownRemote===true,wholePageKeywords:v.wholePageKeywords===true};
+}
+export function matchesGoogleTitle(title:string,input:SearchInput){
+ if(input.wholePageKeywords)return true;
+ const words=(value:string)=>normalizeText(value).split(/\s+/).map(word=>word==='events'?'event':word);
+ const returned=new Set(words(title));
+ return expandedTerms(input).some(({term})=>words(term).every(word=>returned.has(word)));
 }
 const hasWords=(text:string,term:string)=>normalizeText(term).split(/\s+/).every(word=>word.length<=3?(' '+normalizeText(text)+' ').includes(' '+word+' '):normalizeText(text).includes(word));
 export function matchJob(job:Job,input:SearchInput):MatchReason|null{
