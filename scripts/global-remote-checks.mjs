@@ -52,6 +52,28 @@ const cases=[
  ['must be in US',affirmative+' You must be in the US.','restricted'],
  ['must work from London',affirmative+' You must work from London.','restricted'],
  ['same-clause city overrides marketing',affirmative+' You must be based in London, despite our worldwide team.','restricted'],
+ ['CTO Berlin living',affirmative+' Only applicants living in Berlin will be considered.','restricted'],
+ ['CTO Berlin residents',affirmative+' Only residents of Berlin may apply.','restricted'],
+ ['city residents adjective',affirmative+' Only Berlin residents may apply.','restricted'],
+ ['applicants who live',affirmative+' Only applicants who live in Berlin will be considered.','restricted'],
+ ['city currently residing',affirmative+' Only candidates currently residing within Berlin may apply.','restricted'],
+ ['city resident requirement',affirmative+' Applicants are required to be residents of Berlin.','restricted'],
+ ['city residency mandatory',affirmative+' Residency in Berlin is mandatory.','restricted'],
+ ['commuting distance residency',affirmative+' Applicants must live within commuting distance of Berlin.','restricted'],
+ ['unparsed geographic criteria',affirmative+' Applicants must meet our location requirements.','unknown'],
+ ['unparsed local scope',affirmative+' Only local applicants will be considered.','unknown'],
+ ['city living preference',affirmative+' Applicants living in Berlin are preferred.','verified'],
+ ['city based preference',affirmative+' Candidates based in Berlin are preferred.','verified'],
+ ['country preference',affirmative+' Candidates based in Germany are preferred.','verified'],
+ ['city ordinary office',affirmative+' Our office is located in Berlin.','verified'],
+ ['city HQ',affirmative+' Our headquarters is in Berlin.','verified'],
+ ['city HQ address',affirmative+' Our headquarters is located in Berlin.','verified'],
+ ['explicit eligibility label','Eligibility: Open to candidates worldwide; this role is fully remote.','verified',{remote:null}],
+ ['eligibility label Berlin veto','Eligibility: Open to candidates worldwide; this role is fully remote. Only residents of Berlin may apply.','restricted'],
+ ['eligibility label country veto','Eligibility: Open to candidates worldwide; this role is fully remote. Remote US only.','restricted'],
+ ['eligibility label needs remote','Eligibility: Open to candidates worldwide.','unknown',{remote:null}],
+ ['conditional eligibility label','Eligibility: May be open to candidates worldwide.','unknown'],
+ ['company label is not role eligibility','Company eligibility: Open to candidates worldwide.','unknown'],
  ['anywhere within a region',affirmative+' You must live anywhere in the Americas.','restricted'],
  ['HQ irrelevant',affirmative+' Our headquarters is in the US.','verified'],
  ['office metadata irrelevant',affirmative,'verified',{locations:['United States']}],
@@ -77,6 +99,9 @@ const real=[
  {url:'https://job-boards.greenhouse.io/customerio/jobs/8260218',text:'Based in the UK or Ireland (London or Dublin ideal)',requirements:[]},
 ];
 for(const row of real)assert.equal(strictGlobal({posting:{...base,text:row.text,requirements:row.requirements},sourceUrl:row.url,method:'2026-10-20 source excerpt',checkedAt}).status,'restricted',row.url);
+// Literal positive ATS excerpt read during CTO review. The exact eligibility
+// label is affirmative hiring evidence; remote and conflict gates still apply.
+assert.equal(inspect('Eligibility: Open to candidates worldwide; this role is fully remote.').status,'verified');
 const filler='You will build effective programs, coordinate delivery, document decisions, and work with your colleagues on projects. The role involves planning, communication and evaluation of outcomes. ';
 const card=(id=randomUUID())=>{const url='https://jobs.ashbyhq.com/fixture/'+id;return {title:'Events Manager',snippet:'Remote worldwide (untrusted search text)',...atsPosting(url,['ashby'])};};
 const html=(c,description=affirmative,metadata={},extra='')=>'<html><body>'+extra+'<script type="application/ld+json">'+JSON.stringify({'@type':'JobPosting',title:'Events Manager',identifier:{value:c.url.split('/').at(-1)},description:'<p>'+description+'</p><p>'+filler+'</p>',jobLocationType:'TELECOMMUTE',...metadata})+'</script></body></html>';
@@ -85,7 +110,13 @@ const budget=()=>({deadline:Date.now()+POSTING_LIMITS.pageMs,requests:0,bytes:0}
 const c=card();
 assert.equal(structuredPosting(html(c),c).requirements.length,0);
 assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c)))).status,'verified');
+assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c,'Eligibility: Open to candidates worldwide; this role is fully remote.')))).status,'verified');
+assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c,'This role involves coordinating programs.',{},'<p>Eligibility: Open to candidates worldwide; this role is fully remote.</p>')))).status,'unknown','Supplemental context cannot establish positive eligibility');
 assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c,affirmative,{},'<p>Candidates must reside in the US.</p>')))).status,'restricted','Visible role restriction vetoes JSON-LD');
+for(const restriction of ['Only applicants living in Berlin will be considered.','Only residents of Berlin may apply.']){
+ assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c,affirmative+' '+restriction)))).status,'restricted','Full reader and classifier: '+restriction);
+ assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c,affirmative,{},'<p>'+restriction+'</p>')))).status,'restricted','Supplemental visible restriction: '+restriction);
+}
 assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response(html(c,affirmative,{applicantLocationRequirements:{name:'France'}})))).status,'restricted');
 assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response('Verify you are human'))).status,'unknown');
 assert.equal(strictGlobal(await readPosting(c,budget(),async()=>response('',403))).status,'unknown');
@@ -122,12 +153,19 @@ try{
  // Render the real component with deliberately mixed/stale card state. Even
  // then, restricted/unknown candidates must appear only in separate disclosures.
  const component=ts.transpileModule(readFileSync(new URL('../components/discovery-search.tsx',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
- const states=[spec.input,'Global','/',false,false,'',first.globalReview,first.globalReview,first,spec,true];let hook=0;
+ let states=[spec.input,'Global','/',false,false,'',first.globalReview,first.globalReview,first,spec,true],hook=0;
  const exports={};vm.runInNewContext(component,{exports,URL,require:name=>name==='react'?{...React,useState:()=>[states[hook++],()=>{}],useRef:value=>({current:value}),useEffect:()=>{},useLayoutEffect:()=>{}}:
    name==='react/jsx-runtime'?jsxRuntime:name==='@/lib/discovery'?discoveryUi:name==='@/lib/search'?searchUi:name==='lucide-react'?Object.fromEntries(['Search','MapPin','SlidersHorizontal','ExternalLink','LoaderCircle','BriefcaseBusiness'].map(k=>[k,()=>null])):name.includes('checkbox')?{Checkbox:()=>null}:{ThemeToggle:()=>null}});
  const markup=renderToStaticMarkup(exports.default({enabled:true}));
  assert.equal((markup.match(/<article\b/g)??[]).length,1,'Only verified cards render in the main list');
  assert.ok(markup.includes('Verified Global: 1. Restricted or not fully remote: 1. Unverified: 1.'));
+ assert.ok(markup.includes('Posting description: “'+affirmative+'”'),'Actual eligibility quote is visible on the verified card');
+ for(const [label,row] of [['Restricted or not fully remote',b],['Unverified',unknown]]){
+  const disclosure=markup.match(new RegExp('<details[^>]*><summary>'+label+' \\(1\\)</summary>([\\s\\S]*?)</details>'));
+  assert.ok(disclosure,label+' has a separate accessible disclosure');
+  assert.ok(disclosure[1].includes('href="'+row.url+'"'),label+' retains the original posting link');
+  assert.ok(disclosure[1].includes(row===b?'limits applicant geography':'HTTP 403'),label+' shows its reason');
+ }
  const next=await discovery({session,page:2,spec:{...spec,region:'All'}},env,fetcher);
  assert.equal(providerCalls,2);assert.equal(postingCalls,4);assert.equal(next.results.length,1);assert.equal(next.duplicates,1);assert.equal(next.query,first.query);
  const replay=await discovery({session:randomUUID(),page:1,spec},env,fetcher);assert.equal(providerCalls,2);assert.equal(postingCalls,4);assert.equal(replay.usage.request,0);
@@ -135,9 +173,24 @@ try{
  const old={...first,results:[b]};delete old.globalReview;delete old.globalPolicy;
  sqlite.prepare('UPDATE discovery_requests SET response=? WHERE session=? AND page=1').run(JSON.stringify(old),session);
  assert.equal((await discovery({session,page:1,spec},env,fetcher)).results.length,0);
+ // A fresh v1 verified page must also be reclassified under the corrected city
+ // policy. Reuse cached source content, with zero provider or ATS requests.
+ const cityRead={posting:{...base,text:affirmative+' Only residents of Berlin may apply.'},sourceUrl:a.url,method:'fixture',checkedAt};
+ sqlite.prepare('UPDATE discovery_cache SET body=? WHERE key=?').run(JSON.stringify(cityRead),'posting:v1:'+a.key);
+ sqlite.prepare('UPDATE discovery_requests SET response=? WHERE session=? AND page=1').run(JSON.stringify({...first,globalPolicy:'strict-global-v1'}),session);
+ const beforeReplay={providerCalls,postingCalls},corrected=await discovery({session,page:1,spec},env,fetcher);
+ assert.equal(corrected.globalPolicy,'strict-global-v2');assert.equal(corrected.results.length,0);
+ assert.equal(corrected.globalReview.find(row=>row.key===a.key).globalCheck.status,'restricted');
+ assert.deepEqual({providerCalls,postingCalls},beforeReplay,'Policy upgrade reuses cached posting reads');
  // Zero verified positions is not exhaustion when new raw results exist.
  const none={...spec,input:{...spec.input,keywords:'field marketing',wholePageKeywords:true}};
  const zero=await discovery({session:randomUUID(),page:1,spec:none},env,async(url,options)=>url==='https://google.serper.dev/search'?Response.json({organic:[{title:'Field Marketing',link:b.url}],credits:1}):fetcher(url,options));
  assert.equal(zero.results.length,0);assert.equal(zero.hasMore,true);assert.equal(zero.globalReview[0].globalCheck.status,'restricted');
+ states=[none.input,'Global','/',false,false,'',[],zero.globalReview,zero,none,true];hook=0;
+ const zeroMarkup=renderToStaticMarkup(exports.default({enabled:true}));
+ assert.equal((zeroMarkup.match(/<article\b/g)??[]).length,0);
+ assert.ok(zeroMarkup.includes('This does not show that no Global jobs exist.'));
+ assert.ok(/<button class="load-more"[^>]*>Load more<\/button>/.test(zeroMarkup),'Zero verified retains enabled Load more');
+ assert.ok(zeroMarkup.includes('Restricted or not fully remote (1)'));
  console.log(`Strict Global checks passed: ${cases.length} classification fixtures, 3 real-source excerpts, SSRF/redirect/timeout/size bounds, concurrency/cache, strict API results/counts, unchanged query, pagination and legacy replay. False positives: ${falsePositives}; synthetic Unknowns: ${cases.filter(c=>c[2]==='unknown').length}. No live Serper calls.`);
 }finally{sqlite.close();}

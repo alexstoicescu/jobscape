@@ -48,7 +48,13 @@ export function strictGlobal(read: PostingRead): GlobalCheck {
        !/\b(?:company|team|customers?|clients?)\b/i.test(phrase))remote=true;
     // Mandatory physical attendance/residency overrides remote metadata/benefits.
     const office=/\b(?:hybrid (?:role|position|schedule)|(?:this|the) (?:role|position) is hybrid|not (?:a )?(?:(?:fully|entirely|100%) )?remote|on[ -]site only|(?:office|on[ -]site)(?: attendance| presence)? (?:is )?(?:required|mandatory)|(?:mandatory|required) office (?:attendance|presence)|(?:must|required to|need to|have to|expected to) (?:work |be |attend |come |go )?(?:in[ -]office|on[ -]site|(?:to |in |at )?(?:the |our |an? )?office)|\d+ (?:days?|times?) (?:per |a |each )?week[^.!?\n]{0,60}(?:office|on[ -]site)|(?:office|on[ -]site)[^.!?\n]{0,60}\d+ (?:days?|times?) (?:per |a |each )?week)\b/i.test(phrase);
-    const residency=/\b(?:must|need to|have to|required to) (?:currently )?(?:reside|live|be based|be located|work from)|\b(?:based|residing|located) in\b/i.test(phrase)||!timezone.test(phrase)&&/\b(?:must|need to|required to) be in\b/i.test(phrase);
+    // Applicant-residency requirements need no country/city dictionary: an
+    // explicit local-only condition contradicts worldwide hiring anywhere.
+    // Preferences alone must not turn an office/HQ address into a restriction.
+    const optionalGeography=/\b(?:preferred|preferably|ideally|optional|nice to have)\b/i.test(phrase)&&!/\b(?:must|only|required|mandatory|need to|have to|restricted|limited)\b/i.test(phrase);
+    const officeAddress=/\b(?:offices?|headquarters?|HQ) (?:is|are) (?:based|located) in\b/i.test(phrase)&&!/\b(?:applicants?|candidates?|must|only|required|mandatory|need to|have to)\b/i.test(phrase);
+    const localApplicants=/\bonly (?:applicants?|candidates?|people) (?:currently )?(?:living|residing|based|located|(?:who |that )(?:live|reside|are based|are located)) (?:in|within|near)\b|\bonly (?:current )?residents? (?:of|in)\b|\bonly [^.!?\n]{1,80}\bresidents?\b[^.!?\n]{0,50}\b(?:apply|considered|eligible)\b|\b(?:applicants?|candidates?) (?:currently )?(?:living|residing) (?:in|within|near)\b[^.!?\n]{0,100}\b(?:only|will be considered|may apply)\b|\b(?:must|need to|have to|required to) be (?:an? )?(?:current )?residents? (?:of|in)\b|\b(?:residence|residency) (?:in|within)\b[^.!?\n]{0,100}\b(?:required|mandatory)\b/i.test(phrase);
+    const residency=!optionalGeography&&(localApplicants||/\b(?:must|need to|have to|required to) (?:currently )?(?:reside|live|be based|be located|work from)/i.test(phrase)||!officeAddress&&/\b(?:based|residing|located) in\b/i.test(phrase)||!timezone.test(phrase)&&/\b(?:must|need to|required to) be in\b/i.test(phrase));
     const hiring=/\b(?:hir(?:e[sd]?|ing)|recruit(?:ing|ment)?|accept(?:ing)? (?:applications|applicants)|applicants?|candidates?|eligible|available|open|work remotely|remote|work from|location\s*:)\b/i.test(phrase);
     const narrow=/\b(?:only|restricted|limited|except|excluding|excluded|not hiring|not available|cannot hire|unable to hire|residents?|citizens?|reside|based in|located in|from|within|in|across)\b/i.test(phrase);
     const normalized=normalizeText(phrase);
@@ -62,18 +68,22 @@ export function strictGlobal(read: PostingRead): GlobalCheck {
     const geographicExclusion=hasGeo&&/\b(?:except|excluding|excluded|ineligible|not from|not eligible in)\b/i.test(phrase);
     const allowedList=hasGeo&&/\b(?:(?:hiring|applicant|eligible|permitted|supported)\s+)?(?:countries|regions|locations)\s*:|\beligible\s*:/i.test(phrase);
     const universalResidence=/\b(?:reside|live|be based|be located|be in|work from)\s+(?:in |from )?(?:anywhere in the world|any country in the world|anywhere(?!\s+(?:in|within|across)\b)|any country(?!\s+(?:in|within|across)\b))\b/i.test(phrase);
-    if(office || !headquarters && (residency && !universalResidence || unnamedLimit || geographicExclusion || allowedList || hiring&&hasGeo&&!timeOnly&&(narrow||/\bremote\b/i.test(phrase)) || /\b(?:available|hiring|hire|open)[^.!?\n]{0,60}\b\d+ (?:named )?countries\b/i.test(phrase))){
+    if(office || !headquarters && (residency && !universalResidence || unnamedLimit || geographicExclusion || allowedList || !optionalGeography&&hiring&&hasGeo&&!timeOnly&&(narrow||/\bremote\b/i.test(phrase)) || /\b(?:available|hiring|hire|open)[^.!?\n]{0,60}\b\d+ (?:named )?countries\b/i.test(phrase))){
       limited=true;add(phrase);if(!timezone.test(phrase))restrictions.push(phrase.slice(0,650));
     }
     if(/\bhybrid\b/i.test(phrase)&&!office&&!/\bhybrid (?:cloud|infrastructure)\b/i.test(phrase)){unclear=true;add(phrase);}
     if(hasGeo&&!headquarters&&!timeOnly&&/\b(?:employ|staff|countries|residency|work authori[sz]ation|right to work)\b/i.test(phrase)&&!limited){unclear=true;add(phrase);}
     if(/\b(?:not (?:available )?worldwide|geographic(?:al)? restrictions?|location (?:is |to be )?(?:unconfirmed|determined)|may hire|might hire|potentially worldwide|possibly worldwide)\b/i.test(phrase)) {unclear=true;add(phrase);}
+    if(!optionalGeography&&/\b(?:geographic(?:al)?|location|residen(?:ce|cy)) (?:requirements?|criteria|eligibility)\b|\bonly (?:local applicants?|local candidates?|residents?)\b/i.test(phrase)&&!limited){unclear=true;add(phrase);}
   }
   if(limited||p.remote===false)return result('restricted','The actual posting limits applicant geography or requires non-remote attendance.',evidence,restrictions);
   const affirmative=phrases.filter(phrase=>worldwide.test(phrase)&&
     !/\b(?:may|might|could|potentially|possibly|not|company|customers?|clients?|markets?|offices?)\b/i.test(phrase)&&
     (role.test(phrase)&&/\b(?:open|available|applicants?|applications?|candidates?|welcome|work|performed|hire|hiring)\b/i.test(phrase)||
-      /^(?:location\s*:\s*|(?:fully |100% )?remote[, :\-]+)(?:worldwide|anywhere in the world)[.!]?$/i.test(phrase)));
+      /^(?:location\s*:\s*|(?:fully |100% )?remote[, :\-]+)(?:worldwide|anywhere in the world)[.!]?$/i.test(phrase)||
+      // An explicit posting eligibility label is role evidence even when a
+      // semicolon separates it from the remote-work clause (real ATS fixture).
+      /^eligibility\s*:\s*open to (?:applicants|candidates) worldwide[.!]?$/i.test(phrase)));
   affirmative.forEach(phrase=>add(phrase));
   if(!remote||unclear||(!affirmative.length&&!explicitWorld))return result('unknown',!remote?'Fully remote work for this role was not established.':unclear?'The posting has conditional or unresolved geographic terms.':'The posting does not affirmatively establish worldwide applications for this role.',evidence,restrictions);
   if(p.remote===true)add('TELECOMMUTE','jobLocationType (establishes remote work only)');

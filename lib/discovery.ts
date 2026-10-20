@@ -6,7 +6,7 @@ export type DiscoveryPage = {
   query: string; session: string; page: number; results: Candidate[]; hasMore: boolean;
   stopReason?: string; warning?: string; rawCount: number; rejected: number; duplicates: number;
   globalReview?: Candidate[];
-  globalPolicy?: 'strict-global-v1';
+  globalPolicy?: 'strict-global-v2';
   usage: {request: number; search: number; daily: number; monthly: number; total: number;
     dailyLimit: number; monthlyLimit: number; totalLimit: number; searchLimit: number; cached: boolean; providerCredits: number | null};
 };

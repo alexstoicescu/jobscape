@@ -104,10 +104,10 @@ export async function discovery(body: unknown, env: SerperEnv, fetcher: typeof f
   if (previous) {
     if (previous.response && previous.status === 200) {
       const saved: DiscoveryPage = JSON.parse(previous.response);
-      if(JSON.parse(session.spec).region==='Global' && (saved.globalPolicy!=='strict-global-v1'||
+      if(JSON.parse(session.spec).region==='Global' && (saved.globalPolicy!=='strict-global-v2'||
          saved.globalReview?.some(row=>!row.globalCheck||Date.now()-Date.parse(row.globalCheck.checkedAt)>600000))){
         const globalReview=await verifyGlobalPage(saved.globalReview??saved.results,db,fetcher);
-        saved.results=globalReview.filter(row=>row.globalCheck?.status==='verified');saved.globalReview=globalReview;saved.globalPolicy='strict-global-v1';
+        saved.results=globalReview.filter(row=>row.globalCheck?.status==='verified');saved.globalReview=globalReview;saved.globalPolicy='strict-global-v2';
       }
       return {...saved,usage:{...saved.usage,request:0,cached:true,providerCredits:0}};
     }
@@ -141,7 +141,7 @@ export async function discovery(body: unknown, env: SerperEnv, fetcher: typeof f
       COALESCE(SUM(CASE WHEN session=? THEN charged ELSE 0 END),0) search FROM discovery_requests`).bind(day,month,id).first<{total:number;daily:number;monthly:number;search:number}>();
     if (!usage) throw new Error('Usage missing');
     const limited = page >= cap.search;
-    const result: DiscoveryPage = {query:session.query,session:id,page,results:globalReview?globalReview.filter(row=>row.globalCheck?.status==='verified'):rows.results,globalReview,globalPolicy:globalReview?'strict-global-v1':undefined,rawCount:rows.rawCount,rejected:rows.rejected,duplicates:rows.duplicates,
+    const result: DiscoveryPage = {query:session.query,session:id,page,results:globalReview?globalReview.filter(row=>row.globalCheck?.status==='verified'):rows.results,globalReview,globalPolicy:globalReview?'strict-global-v2':undefined,rawCount:rows.rawCount,rejected:rows.rejected,duplicates:rows.duplicates,
       hasMore:!rows.exhausted&&!limited,
       stopReason: rows.exhausted ? rows.rawCount ? 'The provider repeated the previously loaded raw results. Pagination stopped.' : 'The provider returned an empty organic page. Pagination stopped.' : limited ? 'The configured per-search page limit was reached. More indexed results may exist.' : undefined,
       warning: rows.rejected ? `${rows.rejected} results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.` : undefined,

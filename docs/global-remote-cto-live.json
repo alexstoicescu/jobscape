@@ -1,0 +1,130 @@
+{
+  "investigation": "Bounded CTO review: five candidate ATS URLs, six direct ATS HTTP requests including one final positive validation; no reader changes or access retries.",
+  "atsRequests": 6,
+  "serperRequests": 0,
+  "policy": "strict-global-v2",
+  "genuinePositiveDescriptionRead": true,
+  "verifiedGlobal": 1,
+  "correction": "The a2z posting was initially Unknown because a semicolon separated its explicit eligibility label from the remote-work clause. Exact affirmative posting eligibility labels are now recognized; separate remote proof and every geographic/attendance veto still apply.",
+  "rows": [
+    {
+      "title": "ML Research Engineer / Scientist (Remote, international)",
+      "url": "https://jobs.ashbyhq.com/a2zradiology/fb1c1cbf-4b0a-465c-aa27-0a61c3c6ab71",
+      "checkedAt": "2026-10-20T21:18:35.142Z",
+      "elapsedMs": 285,
+      "beforeClassification": "unknown",
+      "method": "JobPosting JSON-LD",
+      "descriptionCharacters": 3620,
+      "descriptionSha256": "7066f4b8d2e4abc6967b3613036d1ff1dd9ccc68a11394318decd3944d9ba24a",
+      "explicitSourceQuote": "Eligibility: Open to candidates worldwide; this role is fully remote.",
+      "remoteMetadata": true,
+      "applicantLocationRequirements": [],
+      "classification": {
+        "status": "verified",
+        "reason": "The posting explicitly establishes fully remote worldwide hiring, with no detected conflicting geographic or office requirement.",
+        "evidence": [
+          {
+            "quote": "Eligibility: Open to candidates worldwide",
+            "source": "Posting description"
+          },
+          {
+            "quote": "TELECOMMUTE",
+            "source": "jobLocationType (establishes remote work only)"
+          }
+        ],
+        "restrictions": [],
+        "checkedAt": "2026-10-20T21:18:35.142Z",
+        "sourceUrl": "https://jobs.ashbyhq.com/a2zradiology/fb1c1cbf-4b0a-465c-aa27-0a61c3c6ab71",
+        "method": "JobPosting JSON-LD"
+      }
+    },
+    {
+      "title": "Freelance Product Designer (Fractional)",
+      "url": "https://jobs.ashbyhq.com/Clera/c3ab2983-4fa6-401e-960a-97882ab6621b",
+      "checkedAt": "2026-10-20T21:14:01.173Z",
+      "elapsedMs": 147,
+      "beforeClassification": null,
+      "method": "unavailable",
+      "descriptionCharacters": 0,
+      "descriptionSha256": null,
+      "explicitSourceQuote": null,
+      "remoteMetadata": null,
+      "applicantLocationRequirements": null,
+      "classification": {
+        "status": "unknown",
+        "reason": "No single identifiable full JobPosting description was found.",
+        "evidence": [],
+        "restrictions": [],
+        "checkedAt": "2026-10-20T21:14:01.173Z",
+        "sourceUrl": "https://jobs.ashbyhq.com/Clera/c3ab2983-4fa6-401e-960a-97882ab6621b",
+        "method": "unavailable"
+      }
+    },
+    {
+      "title": "AI LoRA Character Creator (Full Remote - Worldwide)",
+      "url": "https://jobs.ashbyhq.com/everai/6f4c889a-96a6-48c3-9a23-16afe3470350/",
+      "checkedAt": "2026-10-20T21:14:01.320Z",
+      "elapsedMs": 156,
+      "beforeClassification": null,
+      "method": "unavailable",
+      "descriptionCharacters": 0,
+      "descriptionSha256": null,
+      "explicitSourceQuote": null,
+      "remoteMetadata": null,
+      "applicantLocationRequirements": null,
+      "classification": {
+        "status": "unknown",
+        "reason": "No single identifiable full JobPosting description was found.",
+        "evidence": [],
+        "restrictions": [],
+        "checkedAt": "2026-10-20T21:14:01.320Z",
+        "sourceUrl": "https://jobs.ashbyhq.com/everai/6f4c889a-96a6-48c3-9a23-16afe3470350/",
+        "method": "unavailable"
+      }
+    },
+    {
+      "title": "Paralegal, Entity Management & Corporate Governance",
+      "url": "https://jobs.ashbyhq.com/elevenlabs/faf6f3a3-c215-4f25-aaee-5111dddde3c9",
+      "checkedAt": "2026-10-20T21:16:29.244Z",
+      "elapsedMs": 208,
+      "beforeClassification": null,
+      "method": "unavailable",
+      "descriptionCharacters": 0,
+      "descriptionSha256": null,
+      "explicitSourceQuote": null,
+      "remoteMetadata": null,
+      "applicantLocationRequirements": null,
+      "classification": {
+        "status": "unknown",
+        "reason": "No single identifiable full JobPosting description was found.",
+        "evidence": [],
+        "restrictions": [],
+        "checkedAt": "2026-10-20T21:16:29.244Z",
+        "sourceUrl": "https://jobs.ashbyhq.com/elevenlabs/faf6f3a3-c215-4f25-aaee-5111dddde3c9",
+        "method": "unavailable"
+      }
+    },
+    {
+      "title": "Freelance Multimedia Localisation Specialist - Remote",
+      "url": "https://jobs.ashbyhq.com/lilt-production/4c98da08-915f-4965-a43b-31e0341a7d15/",
+      "checkedAt": "2026-10-20T21:16:29.452Z",
+      "elapsedMs": 171,
+      "beforeClassification": null,
+      "method": "unavailable",
+      "descriptionCharacters": 0,
+      "descriptionSha256": null,
+      "explicitSourceQuote": null,
+      "remoteMetadata": null,
+      "applicantLocationRequirements": null,
+      "classification": {
+        "status": "unknown",
+        "reason": "No single identifiable full JobPosting description was found.",
+        "evidence": [],
+        "restrictions": [],
+        "checkedAt": "2026-10-20T21:16:29.452Z",
+        "sourceUrl": "https://jobs.ashbyhq.com/lilt-production/4c98da08-915f-4965-a43b-31e0341a7d15/",
+        "method": "unavailable"
+      }
+    }
+  ]
+}
