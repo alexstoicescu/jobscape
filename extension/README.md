@@ -68,4 +68,3 @@ pagination before closing only its owned helper.
 
 Live acceptance results and the release recommendation are recorded in
 `CTO-CHROME-RELIABILITY.md`. A passing fixture suite is not Chrome acceptance.
-
