@@ -1,0 +1,928 @@
+{
+  "date": "2026-10-20",
+  "environment": "Local Cloudflare Worker and D1 emulator, native in-app browser UI",
+  "rows": [
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"events\" OR intitle:\"field marketing\" OR intitle:\"event\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "events, field marketing",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 1,
+      "time": 1792523316164,
+      "charged": 1,
+      "status": 502,
+      "response": null
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"events\" OR intitle:\"field marketing\" OR intitle:\"event\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "events, field marketing",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 1,
+      "time": 1792523365170,
+      "charged": 1,
+      "status": 502,
+      "response": null
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"events\" OR intitle:\"field marketing\" OR intitle:\"event\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "events, field marketing",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 1,
+      "time": 1792523388167,
+      "charged": 1,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"events\" OR intitle:\"field marketing\" OR intitle:\"event\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "2f9477e4-ab5d-481c-b934-4574f74b21ed",
+        "page": 1,
+        "results": [
+          {
+            "title": "Partner Marketing Manager, Online & Regional Events",
+            "url": "https://job-boards.greenhouse.io/stripe/jobs/8175661",
+            "platform": "greenhouse",
+            "key": "greenhouse:stripe:8175661"
+          },
+          {
+            "title": "Event Specialist - Remote (CST or EST) - Myworkdayjobs.com",
+            "url": "https://onedigital.wd504.myworkdayjobs.com/en-US/OneDigital/job/Remote/Event-Specialist---Remote--CST-or-EST-_R9358",
+            "platform": "workday",
+            "key": "workday:onedigital.wd504.myworkdayjobs.com:onedigital:_r9358"
+          },
+          {
+            "title": "Events Marketing Manager @ Chili Piper",
+            "url": "https://jobs.ashbyhq.com/chilipiper/42b0d252-7407-4dd3-ab17-825be9599a7b",
+            "platform": "ashby",
+            "key": "ashby:chilipiper:42b0d252-7407-4dd3-ab17-825be9599a7b"
+          },
+          {
+            "title": "Strategic Events Marketing Manager - Remote - CO",
+            "url": "https://job-boards.greenhouse.io/samsara/jobs/8243226",
+            "platform": "greenhouse",
+            "key": "greenhouse:samsara:8243226"
+          },
+          {
+            "title": "AMD Field Events Marketing Manager - Channel Partners",
+            "url": "https://careers-channelpartners.icims.com/jobs/50541/amd-field-events-marketing-manager/job",
+            "platform": "icims",
+            "key": "icims:careers-channelpartners.icims.com:50541"
+          },
+          {
+            "title": "Job Application for Events Marketing Manager at InStride",
+            "url": "https://job-boards.greenhouse.io/instride/jobs/5230377007",
+            "platform": "greenhouse",
+            "key": "greenhouse:instride:5230377007"
+          },
+          {
+            "title": "Events Manager | EMEA | Remote",
+            "url": "https://job-boards.greenhouse.io/grafanalabs/jobs/6150203004",
+            "platform": "greenhouse",
+            "key": "greenhouse:grafanalabs:6150203004"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 3,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "3 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 3,
+          "daily": 3,
+          "monthly": 3,
+          "search": 1,
+          "request": 1,
+          "cached": false,
+          "providerCredits": 1,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"events\" OR intitle:\"field marketing\" OR intitle:\"event\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "events, field marketing",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 2,
+      "time": 1792523406593,
+      "charged": 1,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"events\" OR intitle:\"field marketing\" OR intitle:\"event\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "2f9477e4-ab5d-481c-b934-4574f74b21ed",
+        "page": 2,
+        "results": [
+          {
+            "title": "Strategic Field Marketing Manager (Remote, DEU)",
+            "url": "https://crowdstrike.wd5.myworkdayjobs.com/en-US/crowdstrikecareers/job/Germany---Remote/Strategic-Field-Marketing-Manager--Remote--DEU-_R29931?Job_Family=1408861ee6e20177a63efbf6b000ec0b",
+            "platform": "workday",
+            "key": "workday:crowdstrike.wd5.myworkdayjobs.com:crowdstrikecareers:_r29931"
+          },
+          {
+            "title": "Event Parking Manager | Part-Time | Careers at Remote",
+            "url": "https://careers-ovg.icims.com/jobs/35099/event-parking-manager-%7C-part-time-%7C-remote/job",
+            "platform": "icims",
+            "key": "icims:careers-ovg.icims.com:35099"
+          },
+          {
+            "title": "Event Marketing Specialist in Remote - Curana Health, Inc.",
+            "url": "https://general-careers-curanahealth.icims.com/jobs/4565/event-marketing-specialist/job",
+            "platform": "icims",
+            "key": "icims:general-careers-curanahealth.icims.com:4565"
+          },
+          {
+            "title": "COLE402: Event Coordinator in | Careers at Location - Remote",
+            "url": "https://volunteers-jerseystem.icims.com/jobs/2543/cole402%3A-event-coordinator/job",
+            "platform": "icims",
+            "key": "icims:volunteers-jerseystem.icims.com:2543"
+          },
+          {
+            "title": "B2B Event Marketing Manager (6-Month Contract)",
+            "url": "https://job-boards.greenhouse.io/instacart/jobs/8212434",
+            "platform": "greenhouse",
+            "key": "greenhouse:instacart:8212434"
+          },
+          {
+            "title": "Arbital Health - Events & Experiences Manager",
+            "url": "https://jobs.lever.co/arbitalhealth/b5aeaf70-8b75-4a4f-b7d6-387cb576fa48",
+            "platform": "lever",
+            "key": "lever:arbitalhealth:b5aeaf70-8b75-4a4f-b7d6-387cb576fa48"
+          },
+          {
+            "title": "Field Marketing Coordinator @ NetBox Labs",
+            "url": "https://jobs.ashbyhq.com/netboxlabs/5fd273de-96be-4594-af8f-ed3315842ccb",
+            "platform": "ashby",
+            "key": "ashby:netboxlabs:5fd273de-96be-4594-af8f-ed3315842ccb"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 3,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "3 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 4,
+          "daily": 4,
+          "monthly": 4,
+          "search": 2,
+          "request": 1,
+          "cached": false,
+          "providerCredits": 1,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"developer relations\" OR intitle:\"developer advocate\" OR intitle:\"devrel\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "developer relations, developer advocate",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 1,
+      "time": 1792523483600,
+      "charged": 1,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"developer relations\" OR intitle:\"developer advocate\" OR intitle:\"devrel\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "64750faf-fcd6-4768-8c16-16eac9df598a",
+        "page": 1,
+        "results": [
+          {
+            "title": "Developer Relations Engineer @ Runpod",
+            "url": "https://jobs.ashbyhq.com/runpod/9026d3b8-b736-4bb4-b269-e0b60a7f51ef",
+            "platform": "ashby",
+            "key": "ashby:runpod:9026d3b8-b736-4bb4-b269-e0b60a7f51ef"
+          },
+          {
+            "title": "Community Lead, Developer Relations @ OpenRouter",
+            "url": "https://jobs.ashbyhq.com/openrouter/44ef374e-b234-4d77-b002-8b38b4fda18f",
+            "platform": "ashby",
+            "key": "ashby:openrouter:44ef374e-b234-4d77-b002-8b38b4fda18f"
+          },
+          {
+            "title": "Member of DevRel Staff - Developer Advocate @ Tessl",
+            "url": "https://jobs.ashbyhq.com/tesslcareers/8eeda9c5-5790-4fb4-a209-fc071d4d9d4c",
+            "platform": "ashby",
+            "key": "ashby:tesslcareers:8eeda9c5-5790-4fb4-a209-fc071d4d9d4c"
+          },
+          {
+            "title": "Developer Relations Engineer @ Supabase",
+            "url": "https://jobs.ashbyhq.com/supabase/a1320bbf-bfae-49a8-a1b7-12eeccaf39ca",
+            "platform": "ashby",
+            "key": "ashby:supabase:a1320bbf-bfae-49a8-a1b7-12eeccaf39ca"
+          },
+          {
+            "title": "Senior Developer Advocate - Modern App Development",
+            "url": "https://job-boards.greenhouse.io/datadog/jobs/7985840",
+            "platform": "greenhouse",
+            "key": "greenhouse:datadog:7985840"
+          },
+          {
+            "title": "Manager, Developer Relations Engineering",
+            "url": "https://job-boards.greenhouse.io/tailscale/jobs/4733571005",
+            "platform": "greenhouse",
+            "key": "greenhouse:tailscale:4733571005"
+          },
+          {
+            "title": "Developer Relations @ Linq",
+            "url": "https://jobs.ashbyhq.com/linqapp/e279b1e1-8dfc-4db6-ae1a-60b067bb5183",
+            "platform": "ashby",
+            "key": "ashby:linqapp:e279b1e1-8dfc-4db6-ae1a-60b067bb5183"
+          },
+          {
+            "title": "Staff Enterprise Developer Advocate",
+            "url": "https://job-boards.greenhouse.io/launchdarkly/jobs/7895529003",
+            "platform": "greenhouse",
+            "key": "greenhouse:launchdarkly:7895529003"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 2,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "2 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 5,
+          "daily": 5,
+          "monthly": 5,
+          "search": 1,
+          "request": 1,
+          "cached": false,
+          "providerCredits": 1,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"developer relations\" OR intitle:\"developer advocate\" OR intitle:\"devrel\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "developer relations, developer advocate",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 2,
+      "time": 1792523521658,
+      "charged": 1,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"developer relations\" OR intitle:\"developer advocate\" OR intitle:\"devrel\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "64750faf-fcd6-4768-8c16-16eac9df598a",
+        "page": 2,
+        "results": [
+          {
+            "title": "Senior Developer Advocate, Social @ LiveKit",
+            "url": "https://jobs.ashbyhq.com/livekit/6ab89fdf-8331-4bb8-a746-059cee5eed7e",
+            "platform": "ashby",
+            "key": "ashby:livekit:6ab89fdf-8331-4bb8-a746-059cee5eed7e"
+          },
+          {
+            "title": "Developer Relations @ WorkOS",
+            "url": "https://jobs.ashbyhq.com/workos/bb4e927b-5bbd-4704-954d-5b716c3ff1f3",
+            "platform": "ashby",
+            "key": "ashby:workos:bb4e927b-5bbd-4704-954d-5b716c3ff1f3"
+          },
+          {
+            "title": "Senior Developer Relations Engineer",
+            "url": "https://job-boards.greenhouse.io/cresta/jobs/5376093008",
+            "platform": "greenhouse",
+            "key": "greenhouse:cresta:5376093008"
+          },
+          {
+            "title": "Developer Relations Engineer @ Prefect",
+            "url": "https://jobs.ashbyhq.com/prefect/2ea26851-744d-4693-bd79-43d25d0d7d96",
+            "platform": "ashby",
+            "key": "ashby:prefect:2ea26851-744d-4693-bd79-43d25d0d7d96"
+          },
+          {
+            "title": "Developer Advocate @ InfluxData",
+            "url": "https://jobs.ashbyhq.com/influxdata/72a6fb9f-16e9-4d32-ab07-03a44eccbce1",
+            "platform": "ashby",
+            "key": "ashby:influxdata:72a6fb9f-16e9-4d32-ab07-03a44eccbce1"
+          },
+          {
+            "title": "Developer Advocate - Service Management",
+            "url": "https://job-boards.greenhouse.io/datadog/jobs/8139662",
+            "platform": "greenhouse",
+            "key": "greenhouse:datadog:8139662"
+          },
+          {
+            "title": "Job Application for DevRel Engineer at Akuity",
+            "url": "https://job-boards.greenhouse.io/akuity/jobs/4393861009",
+            "platform": "greenhouse",
+            "key": "greenhouse:akuity:4393861009"
+          },
+          {
+            "title": "Developer Advocate @ Roboflow",
+            "url": "https://jobs.ashbyhq.com/roboflow/daf0248c-c215-4c44-a2bd-e3512b38f37b",
+            "platform": "ashby",
+            "key": "ashby:roboflow:daf0248c-c215-4c44-a2bd-e3512b38f37b"
+          },
+          {
+            "title": "Job Application for Senior Developer Advocate at GitLab",
+            "url": "https://job-boards.greenhouse.io/gitlab/jobs/8838202002",
+            "platform": "greenhouse",
+            "key": "greenhouse:gitlab:8838202002"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 1,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "1 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 6,
+          "daily": 6,
+          "monthly": 6,
+          "search": 2,
+          "request": 1,
+          "cached": false,
+          "providerCredits": 1,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "partnerships, ecosystem",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 1,
+      "time": 1792523557226,
+      "charged": 1,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "11c4ba53-4de2-40e9-9f86-b0bc3ad8ec64",
+        "page": 1,
+        "results": [
+          {
+            "title": "Business Development Manager, Strategic Partnerships",
+            "url": "https://job-boards.greenhouse.io/dropbox/jobs/8048847",
+            "platform": "greenhouse",
+            "key": "greenhouse:dropbox:8048847"
+          },
+          {
+            "title": "Business Development Manager, Strategic Partnerships",
+            "url": "https://job-boards.greenhouse.io/dropbox/jobs/8048848",
+            "platform": "greenhouse",
+            "key": "greenhouse:dropbox:8048848"
+          },
+          {
+            "title": "Head of Partnerships (Remote) - RealPage, Inc.",
+            "url": "https://careers-realpagepms.icims.com/jobs/14747/head-of-partnerships-%28remote%29/job",
+            "platform": "icims",
+            "key": "icims:careers-realpagepms.icims.com:14747"
+          },
+          {
+            "title": "Director, Partnerships - Careers at Manassas, VA - ATCC",
+            "url": "https://careers-atcc.icims.com/jobs/4136/director%2C-partnerships/job",
+            "platform": "icims",
+            "key": "icims:careers-atcc.icims.com:4136"
+          },
+          {
+            "title": "Head of Partnerships @ Miter",
+            "url": "https://jobs.ashbyhq.com/miter/6908168d-3e95-4243-a2df-9186428af6b2",
+            "platform": "ashby",
+            "key": "ashby:miter:6908168d-3e95-4243-a2df-9186428af6b2"
+          },
+          {
+            "title": "Partner Development Manager, AI Ecosystem @ OpenRouter",
+            "url": "https://jobs.ashbyhq.com/openrouter/99b31b81-5ee6-4f4a-990b-d4f4f1b65516",
+            "platform": "ashby",
+            "key": "ashby:openrouter:99b31b81-5ee6-4f4a-990b-d4f4f1b65516"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 4,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "4 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 7,
+          "daily": 7,
+          "monthly": 7,
+          "search": 1,
+          "request": 1,
+          "cached": false,
+          "providerCredits": 1,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "partnerships, ecosystem",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 2,
+      "time": 1792523596300,
+      "charged": 1,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "11c4ba53-4de2-40e9-9f86-b0bc3ad8ec64",
+        "page": 2,
+        "results": [
+          {
+            "title": "Partner Solutions Engineer, Ecosystem",
+            "url": "https://job-boards.greenhouse.io/stripe/jobs/8227563",
+            "platform": "greenhouse",
+            "key": "greenhouse:stripe:8227563"
+          },
+          {
+            "title": "Job Application for Partnerships Manager at Addepar",
+            "url": "https://job-boards.greenhouse.io/addepar1/jobs/8742647002",
+            "platform": "greenhouse",
+            "key": "greenhouse:addepar1:8742647002"
+          },
+          {
+            "title": "Head of Strategic Partnerships & Ecosystem @ Render",
+            "url": "https://jobs.ashbyhq.com/render/a08513c2-b39d-45d6-9194-348d38035f55",
+            "platform": "ashby",
+            "key": "ashby:render:a08513c2-b39d-45d6-9194-348d38035f55"
+          },
+          {
+            "title": "Channel Partnerships Manager @ WellTheory",
+            "url": "https://jobs.ashbyhq.com/welltheory/1dd4a368-d4da-4b4c-8b5a-919e1d784381",
+            "platform": "ashby",
+            "key": "ashby:welltheory:1dd4a368-d4da-4b4c-8b5a-919e1d784381"
+          },
+          {
+            "title": "Head of Partnerships @ Andromeda Cluster",
+            "url": "https://jobs.ashbyhq.com/andromeda/07c8f9e0-a2ab-43f6-a0c8-ecb6ba1add1f",
+            "platform": "ashby",
+            "key": "ashby:andromeda:07c8f9e0-a2ab-43f6-a0c8-ecb6ba1add1f"
+          },
+          {
+            "title": "Job Application for Director, Channel & Partnerships at Prove",
+            "url": "https://job-boards.greenhouse.io/prove/jobs/6132502004",
+            "platform": "greenhouse",
+            "key": "greenhouse:prove:6132502004"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 4,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "4 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 8,
+          "daily": 8,
+          "monthly": 8,
+          "search": 2,
+          "request": 1,
+          "cached": false,
+          "providerCredits": 1,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "partnerships, ecosystem",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 1,
+      "time": 1792523649538,
+      "charged": 0,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "337b9efc-4674-45b5-aad0-d40876bb85ed",
+        "page": 1,
+        "results": [
+          {
+            "title": "Business Development Manager, Strategic Partnerships",
+            "url": "https://job-boards.greenhouse.io/dropbox/jobs/8048847",
+            "platform": "greenhouse",
+            "key": "greenhouse:dropbox:8048847"
+          },
+          {
+            "title": "Business Development Manager, Strategic Partnerships",
+            "url": "https://job-boards.greenhouse.io/dropbox/jobs/8048848",
+            "platform": "greenhouse",
+            "key": "greenhouse:dropbox:8048848"
+          },
+          {
+            "title": "Head of Partnerships (Remote) - RealPage, Inc.",
+            "url": "https://careers-realpagepms.icims.com/jobs/14747/head-of-partnerships-%28remote%29/job",
+            "platform": "icims",
+            "key": "icims:careers-realpagepms.icims.com:14747"
+          },
+          {
+            "title": "Director, Partnerships - Careers at Manassas, VA - ATCC",
+            "url": "https://careers-atcc.icims.com/jobs/4136/director%2C-partnerships/job",
+            "platform": "icims",
+            "key": "icims:careers-atcc.icims.com:4136"
+          },
+          {
+            "title": "Head of Partnerships @ Miter",
+            "url": "https://jobs.ashbyhq.com/miter/6908168d-3e95-4243-a2df-9186428af6b2",
+            "platform": "ashby",
+            "key": "ashby:miter:6908168d-3e95-4243-a2df-9186428af6b2"
+          },
+          {
+            "title": "Partner Development Manager, AI Ecosystem @ OpenRouter",
+            "url": "https://jobs.ashbyhq.com/openrouter/99b31b81-5ee6-4f4a-990b-d4f4f1b65516",
+            "platform": "ashby",
+            "key": "ashby:openrouter:99b31b81-5ee6-4f4a-990b-d4f4f1b65516"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 4,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "4 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 8,
+          "daily": 8,
+          "monthly": 8,
+          "search": 0,
+          "request": 0,
+          "cached": true,
+          "providerCredits": 0,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    },
+    {
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "spec": {
+        "input": {
+          "keywords": "partnerships, ecosystem",
+          "location": "",
+          "remote": true,
+          "platforms": [
+            "greenhouse",
+            "lever",
+            "ashby",
+            "workday",
+            "smartrecruiters",
+            "workable",
+            "recruitee",
+            "personio",
+            "icims",
+            "jobvite",
+            "breezy",
+            "jazzhr",
+            "taleo",
+            "bamboohr",
+            "teamtailor",
+            "paylocity",
+            "adp",
+            "successfactors"
+          ],
+          "expandTitles": true,
+          "searchDescriptions": false,
+          "includeUnknownRemote": false,
+          "wholePageKeywords": false
+        },
+        "region": "All"
+      },
+      "page": 2,
+      "time": 1792523655572,
+      "charged": 0,
+      "status": 200,
+      "response": {
+        "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"partnerships\" OR intitle:\"ecosystem\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+        "session": "337b9efc-4674-45b5-aad0-d40876bb85ed",
+        "page": 2,
+        "results": [
+          {
+            "title": "Partner Solutions Engineer, Ecosystem",
+            "url": "https://job-boards.greenhouse.io/stripe/jobs/8227563",
+            "platform": "greenhouse",
+            "key": "greenhouse:stripe:8227563"
+          },
+          {
+            "title": "Job Application for Partnerships Manager at Addepar",
+            "url": "https://job-boards.greenhouse.io/addepar1/jobs/8742647002",
+            "platform": "greenhouse",
+            "key": "greenhouse:addepar1:8742647002"
+          },
+          {
+            "title": "Head of Strategic Partnerships & Ecosystem @ Render",
+            "url": "https://jobs.ashbyhq.com/render/a08513c2-b39d-45d6-9194-348d38035f55",
+            "platform": "ashby",
+            "key": "ashby:render:a08513c2-b39d-45d6-9194-348d38035f55"
+          },
+          {
+            "title": "Channel Partnerships Manager @ WellTheory",
+            "url": "https://jobs.ashbyhq.com/welltheory/1dd4a368-d4da-4b4c-8b5a-919e1d784381",
+            "platform": "ashby",
+            "key": "ashby:welltheory:1dd4a368-d4da-4b4c-8b5a-919e1d784381"
+          },
+          {
+            "title": "Head of Partnerships @ Andromeda Cluster",
+            "url": "https://jobs.ashbyhq.com/andromeda/07c8f9e0-a2ab-43f6-a0c8-ecb6ba1add1f",
+            "platform": "ashby",
+            "key": "ashby:andromeda:07c8f9e0-a2ab-43f6-a0c8-ecb6ba1add1f"
+          },
+          {
+            "title": "Job Application for Director, Channel & Partnerships at Prove",
+            "url": "https://job-boards.greenhouse.io/prove/jobs/6132502004",
+            "platform": "greenhouse",
+            "key": "greenhouse:prove:6132502004"
+          }
+        ],
+        "rawCount": 10,
+        "rejected": 4,
+        "duplicates": 0,
+        "hasMore": true,
+        "warning": "4 results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.",
+        "usage": {
+          "total": 8,
+          "daily": 8,
+          "monthly": 8,
+          "search": 0,
+          "request": 0,
+          "cached": true,
+          "providerCredits": 0,
+          "dailyLimit": 12,
+          "monthlyLimit": 12,
+          "totalLimit": 12,
+          "searchLimit": 3
+        }
+      }
+    }
+  ]
+}

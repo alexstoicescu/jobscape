@@ -1,16 +1,16 @@
 # JobScape
 
-A free search interface for company-hosted job listings. React, TypeScript, Vinext, and a Cloudflare-compatible server route. No paid search service or model API is required.
+A free search interface for company-hosted job listings. React, TypeScript, Vinext, and a Cloudflare-compatible server route. The Serper preview uses server-side free search credits; it does not use a model API.
 
-## Chrome search prototype
+## Serper discovery preview
 
-The extension interface is the homepage at `/`; `/prototype` remains an alias using the same component without redirecting or dropping query parameters. It reuses the existing form styling, ATS definitions and combined Boolean query builder, and requests one Google results page through a minimal unpacked Chrome extension. Search reconnects on demand. Explicit Load more follows Google's saved next-page link for the submitted query and appends deduplicated results. Successful extraction saves pagination before closing only the extension-owned helper tab; manual-intervention failures retain it. It never falls back to the employer registry. The old registry UI is no longer exposed through user navigation; its backend remains intact.
+The homepage now uses server-side Serper discovery when `JOBSCAPE_DISCOVERY=serper` is enabled. It preserves the existing form, ATS domain/query definitions and dark mode. Search is manual, Load more uses the submitted query, and results are unchecked ATS posting candidates. No Chrome extension or browser-side API key is required. Disabled/missing configuration shows an explicit failure rather than a registry fallback.
 
-See [extension setup, reload steps and limitations](extension/README.md). Description reading is deferred. Initial type checks, existing search regressions, extension boundary tests and JavaScript syntax checks passed on 2 October 2026. Real retrieval remains **unverified**: the initial Windows computer-use verification stopped before Search was clicked because the tool could not determine Chrome's current URL confidently enough to enforce its policy. Chrome testing of reconnect, pagination, focus and scroll is now reserved for the user. No alternate automation architecture was attempted.
+Setup, durable D1 usage caps, deployment blockers and the PR #12/#13 dependency are documented in [SERPER-DISCOVERY.md](SERPER-DISCOVERY.md). Live results and validation evidence are in [SERPER-SMOKE.md](SERPER-SMOKE.md). No production binding or deployment was provisioned.
 
-The header's Dark mode toggle follows the system preference until an explicit choice is saved locally. It works on both entry points without changing search state. Scope, implementation, validation and the PR #12 dependency are documented in [CTO-DARK-MODE.md](CTO-DARK-MODE.md).
+The previous extension interface remains at `/prototype`; its setup and limitations remain in [extension/README.md](extension/README.md). PR #14's failed extraction experiment is not included. Existing ATS adapters and the registry endpoint remain available in source. The registry is not the Serper discovery boundary. Theme behavior is preserved as documented in [CTO-DARK-MODE.md](CTO-DARK-MODE.md).
 
-**Search hiring region** offers All (default), Global, EU, EMEA, APAC and US. Search combines that choice, keywords, location/remote preferences and selected ATS domains into one Google query. All adds no region terms; Global targets worldwide-remote phrases; regional queries include mapped countries and worldwide candidates without blanket US exclusions. Every returned candidate appears immediately, without automatic description checks. Changing region takes effect only on the next Search; Load more retains the submitted query. Full-posting checks stay on demand and override snippet estimates in evidence labels/counts. Only explicit unrestricted worldwide remote posting evidence earns Global remote; unchecked and inconclusive Unknown remain distinct. Definitions and limits are in [HIRING-REGIONS.md](HIRING-REGIONS.md).
+The sections below describe existing adapter/extension behavior and its historical limitations; they do not imply those checks are part of the Serper discovery preview.
 
 ## Product behavior
 

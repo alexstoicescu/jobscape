@@ -1,0 +1,10 @@
+{
+  // Local schema setup only. No real database or deployment identity is created.
+  "name": "jobscape-discovery-local",
+  "compatibility_date": "2026-05-15",
+  "d1_databases": [{
+    "binding": "SERPER_DB",
+    "database_name": "jobscape-discovery",
+    "database_id": "00000000-0000-4000-8000-000000000001"
+  }]
+}

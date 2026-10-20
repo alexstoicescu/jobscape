@@ -1,5 +1,5 @@
 import vinext from "vinext";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import hostingConfig from "./.openai/hosting.json";
 import { readExecutionProfile } from "./scripts/execution-profile.mjs";
 import { sites } from "./build/sites-vite-plugin";
@@ -36,7 +36,12 @@ const localBindingConfig = {
     : [],
 };
 
-export default defineConfig(async ({ command }) => {
+export default defineConfig(async ({ command, mode }) => {
+  // Only the local server receives .env.local secrets. Never serialize them into
+  // build configuration, public Vite variables or the generated Worker bundle.
+  const localEnv: Record<string,string|undefined> = command === 'serve' ? {...loadEnv(mode, process.cwd(), ''), ...process.env} : {};
+  const previewVars = Object.fromEntries(['JOBSCAPE_DISCOVERY','SERPER_API_KEY','SERPER_SEARCH_LIMIT','SERPER_DAILY_LIMIT','SERPER_MONTHLY_LIMIT','SERPER_TOTAL_LIMIT']
+    .filter(key => localEnv[key] !== undefined).map(key => [key, localEnv[key]!]));
   // Use Miniflare's local Request.cf placeholder unless fetching is requested.
   process.env.CLOUDFLARE_CF_FETCH_ENABLED ??= "false";
   process.env.WRANGLER_SEND_METRICS ??= "false";
@@ -69,8 +74,13 @@ export default defineConfig(async ({ command }) => {
         inspectorPort: false,
         config: {
           ...localBindingConfig,
+          d1_databases: [...localBindingConfig.d1_databases, {
+            binding: 'SERPER_DB', database_name: 'jobscape-discovery',
+            database_id: process.env.SERPER_D1_DATABASE_ID || '00000000-0000-4000-8000-000000000001',
+          }],
           ...(command === "serve"
             ? {
+                vars: previewVars,
                 services: [
                   {
                     binding: "CONNECTORS",
