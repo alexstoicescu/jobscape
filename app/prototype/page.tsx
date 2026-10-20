@@ -20,6 +20,7 @@ export default function Prototype() {
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [paging, setPaging] = useState(false);
   const [warning, setWarning] = useState('');
+  const [diagnostics, setDiagnostics] = useState('');
   const [region, setRegion] = useState<HiringRegion>('All');
   const [submittedRegion, setSubmittedRegion] = useState<HiringRegion>('All');
   const [checkingUrl, setCheckingUrl] = useState<string | null>(null);
@@ -42,6 +43,7 @@ export default function Prototype() {
     try {
       const reply = await extensionRequest('ping');
       if (reply.type !== 'ready') throw new Error('Unexpected connection response.');
+      if (reply.revision !== 'retrieval-v2') throw new Error('Reload the JobScape extension in chrome://extensions, then refresh this page. The connected extension is an older revision.');
       setConnection('Chrome extension connected.'); return true;
     } catch (e) { setConnection(e instanceof Error ? e.message : 'Extension disconnected.'); return false; }
   };
@@ -72,7 +74,7 @@ export default function Prototype() {
     inFlight.current = true;
     const combined = googleQuery(input, input.platforms, region === 'Global remote' ? 'Global' : region === 'Unknown' ? 'All' : region);
     appendScroll.current = null;
-    setQuery(combined); setSubmitted(input); setPagination(null); setCards([]); setError(''); setWarning(''); setBusy(true); setPaging(false);
+    setQuery(combined); setSubmitted(input); setPagination(null); setCards([]); setError(''); setWarning(''); setDiagnostics(''); setBusy(true); setPaging(false);
     setSubmittedRegion(region);
     history.replaceState(null, '', '?' + new URLSearchParams({q: input.keywords, l: input.location, r: input.remote ? '1' : '0', p: input.platforms.join(','), a: input.expandTitles === false ? '0' : '1', hr: region === 'Global remote' ? 'Global' : region, wp: input.wholePageKeywords ? '1' : '0'}));
     setHomeHref('/' + location.search);
@@ -83,6 +85,7 @@ export default function Prototype() {
       const page = paginationState(response);
       if (id === request.current) {
         setCards(rows); setPagination(page); setWarning(typeof response.warning === 'string' ? response.warning : '');
+        setDiagnostics(JSON.stringify(response.diagnostics ?? {}));
       }
     } catch (e) { if (id === request.current) setError(e instanceof Error ? e.message : 'Search failed.'); }
     finally { inFlight.current = false; if (id === request.current) setBusy(false); }
@@ -105,6 +108,7 @@ export default function Prototype() {
           return [...previous, ...rows.filter(row => { if (seen.has(row.url)) return false; seen.add(row.url); return true; })];
         });
         setPagination(page); setWarning(typeof response.warning === 'string' ? response.warning : '');
+        setDiagnostics(JSON.stringify(response.diagnostics ?? {}));
       }
     } catch (e) { if (id === request.current) setError(e instanceof Error ? e.message : 'Could not load the next page.'); }
     finally { inFlight.current = false; if (id === request.current) { setBusy(false); setPaging(false); } }
@@ -145,6 +149,7 @@ export default function Prototype() {
           <div className="search-bottom"><label className="check-label">Search hiring region <select aria-label="Search hiring region" value={region} onChange={e => setRegion(e.target.value as HiringRegion)}>{hiringRegions.filter(name => name !== 'Unknown').map(name => <option key={name} value={name}>{name === 'Global remote' ? 'Global' : name}</option>)}</select></label></div>
           <p className="small-note">Region changes apply on the next Search. All adds no region terms; Global targets worldwide-remote phrases. Regional queries also include worldwide candidates. All returned candidates appear immediately; only explicit full-posting evidence establishes Global remote. Check descriptions individually, on demand.</p>
           {query && <details className="query-details"><summary>See the combined query</summary><code>{query}</code></details>}
+          {diagnostics && <details className="query-details"><summary>Retrieval details</summary><code>{diagnostics}</code></details>}
           {busy && !paging && <div className="loading" role="status"><p><LoaderCircle size={18} className="spin"/>Retrieving one Google results page…</p></div>}
           {error && <div className="message error" role="alert"><h2>Search could not finish.</h2><p>{error}</p><button onClick={() => void openHelper()}>Open helper tab</button><p>No automatic retry or company-feed fallback was made.</p></div>}
           {!query && <div className="welcome"><div className="welcome-icon"><BriefcaseBusiness size={28}/></div><h2>A shorter path to the right job.</h2><p>Load the Chrome extension, choose your platforms, then click Search.</p></div>}

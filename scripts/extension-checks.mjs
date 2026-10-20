@@ -80,10 +80,10 @@ const chrome = {
     onUpdated: event(), onRemoved: event(),
     get: async id => {if (!tabs.has(id)) throw new Error('Closed'); return tabs.get(id);},
     create: async options => {const tab = {id: ++tabId, ...options}; tabs.set(tab.id, tab); actions.push(['create', tab.id, options.active]); return tab;},
-    update: async (id, options) => {Object.assign(tabs.get(id), options); actions.push(['update', id, options.url, options.active]); if (options.url) queueMicrotask(() => chrome.tabs.onUpdated.fire(id, {status: 'complete'})); return tabs.get(id);},
+    update: async (id, options) => {Object.assign(tabs.get(id), options); actions.push(['update', id, options.url, options.active]); if (options.url) queueMicrotask(() => chrome.tabs.onUpdated.fire(id, {url: options.url, status: options.url.includes('google.com') ? 'loading' : 'complete'})); return tabs.get(id);},
     remove: async id => {actions.push(['close', id]); assert.ok(storage['search:42'], 'Pagination saved before close'); tabs.delete(id); chrome.tabs.onRemoved.fire(id);}
   },
-  scripting: {executeScript: async () => [{result: await extraction()}]},
+  scripting: {executeScript: async options => {actions.push(['inject', options.injectImmediately, options.args]); return [{result: await extraction()}];}},
   runtime: {onConnect: event()}
 };
 const worker = readFileSync(new URL('../extension/worker.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
@@ -103,6 +103,7 @@ restartWorker();
 extraction = async () => ({blocked: false, results: rows, nextPage: next});
 const pageOne = await request({id: 'one', type: 'search', query, platforms: input.platforms});
 assert.equal(pageOne.type, 'results'); assert.equal(pageOne.results.length, 1); assert.equal(pageOne.pagination.hasMore, true);
+assert.ok(actions.some(a=>a[0]==='inject' && a[1]===true && a[2][0].query===query),'Search succeeds while Chrome still reports loading, with exact document validation');
 assert.equal(tabs.size, 2); assert.equal(tabs.get(42).active, true); assert.ok(tabs.has(777));
 assert.ok(actions.findIndex(a => a[0] === 'save' && a.includes('search:42')) < actions.findIndex(a => a[0] === 'close'));
 assert.ok(actions.filter(a => a[0] === 'update').every(a => a[3] === false));
@@ -124,6 +125,7 @@ const nextAttempt = storage['search:42'].nextPage;
 assert.equal(new URL(nextAttempt).searchParams.get('start'), '20');
 const repeated = await request({id:'repeated',type:'load-more',token:pageTwo.pagination.token});
 assert.equal(repeated.type, 'results'); assert.equal(repeated.pagination.hasMore, false);
+assert.equal(repeated.results.length,0,'Repeated URLs must not be appended again');
 assert.equal(actions.filter(a => a[0] === 'update' && a[2]).at(-1)[2], nextAttempt);
 const count = actions.length;
 assert.equal((await request({id: 'replay', type: 'load-more', token: oldToken})).type, 'error');

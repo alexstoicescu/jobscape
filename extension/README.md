@@ -22,7 +22,7 @@ The extension requests `scripting`, session `storage`, Google search access and 
 ## Bounds and limitations
 
 - One combined query per Search click and one next page per Load more click, maximum 20 selected-ATS cards per page. No startup searches, per-platform requests, employer allowlist, age cutoff, automatic pagination, reader, or feed fallback.
-- Navigation has a 20-second deadline; one retrieval may run at a time across connected pages. Synchronous UI and worker guards prevent concurrent duplicate requests. Every request creates a fresh port and closes it after replying, with no polling, keep-alive or retransmission of uncertain searches. The UI drops obsolete responses. Connection checks send a handshake only, never a Google search.
+- Search has a 12-second navigation deadline plus an 8-second DOM observation budget; existing posting checks retain their 20-second navigation deadline. One retrieval may run at a time across connected pages. Synchronous UI and worker guards prevent concurrent duplicate requests. Every request creates a fresh port and closes it after replying, with no polling, keep-alive or retransmission of uncertain searches. The UI drops obsolete responses. Connection checks send a handshake only, never a Google search.
 - Actual next/numbered links must be HTTPS Google search links with the same submitted query and increasing offset. Missing links permit one next-offset attempt per explicit click. Saved cursors are scoped to the requesting JobScape tab and rotated after successful extraction; stale/replayed cursors are rejected without navigation. Empty/repeated raw URLs stop pagination; title filtering does not. Raw-URL fingerprint history is bounded to 5,000 entries with an explicit stop message. Actual focus, scroll and Chrome extraction remain manual checks.
 - Results display only titles, snippets, source labels and HTTPS original links. Text renders through React escaping. Destination domains and path prefixes must match the selected ATS definitions. Tracking parameters and fragments are removed for deduplication.
 - Google DOM extraction is experimental. Consent, verification, redirects, unsupported markup and empty extraction are reported instead of invented results. No exhaustive coverage, freshness, active status, company/location metadata or remote eligibility is claimed. Large Boolean queries may omit platforms.
@@ -44,3 +44,27 @@ For this update, reload the unpacked extension in `chrome://extensions`, review 
 Choose Search hiring region before clicking Search: All adds no region terms, Global targets worldwide-remote phrases, and EU/EMEA/APAC/US include both mapped countries/regions and worldwide candidates. One combined query retains all selected ATS domains and existing keyword/location preferences, without blanket US exclusions. Region changes apply on a new Search; Load more keeps the submitted query.
 
 All returned candidates appear immediately. Check remote eligibility remains strictly on demand; there is no automatic checking on Search, per page or when changing region. Unchecked candidates and checked-but-inconclusive Unknown remain separate from full-posting evidence. Only explicit unrestricted worldwide remote posting evidence earns Global remote. Quotes and restrictions remain visible, with no eligibility guarantee. This supersedes the former local-filter UI. Complete sources/limits are in [HIRING-REGIONS.md](../HIRING-REGIONS.md). Refresh JobScape; no extension reload is needed for this website/query update.
+# Retrieval reliability revision (0.2.0)
+
+After switching branches, reload the existing JobScape extension at
+`chrome://extensions`, then refresh JobScape at `http://127.0.0.1:5173/`.
+The website checks for `retrieval-v2` before Search and Load more and explains
+when the loaded worker is stale. No new permissions are requested.
+
+Search waits up to 12 seconds for navigation to reach a document, then reads
+the DOM for up to 8 seconds without waiting for all Google subresources.
+Only linked, visible organic headings qualify, including accessible headings;
+ad containers and image carousels are excluded. An image-only or unsupported
+layout is an extraction failure, never confirmed zero jobs. Consent and
+verification require manual handling in the retained helper. No automatic
+navigation retries or searches are made.
+
+Successful reads expose Retrieval details (source URL, observed organic count,
+new ATS URLs, timing and pagination mode). Pagination retains the exact query,
+follows validated Google links, or makes one offset attempt per explicit click.
+Empty or repeated raw pages stop it; extraction failure retains the cursor and
+helper. The website also deduplicates appended cards. A successful read saves
+pagination before closing only its owned helper.
+
+Live acceptance results and the release recommendation are recorded in
+`CTO-CHROME-RELIABILITY.md`. A passing fixture suite is not Chrome acceptance.

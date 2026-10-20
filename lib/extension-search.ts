@@ -22,7 +22,7 @@ export function extensionRequest(type: 'ping' | 'search' | 'load-more' | 'check-
       if (event.source !== window || event.origin !== location.origin || !m ||
           m.protocol !== protocol || m.direction !== 'response' || m.id !== id) return;
       cleanup();
-      if (m.type === 'error' || m.type === 'blocked') reject(new Error(typeof m.error === 'string' ? m.error.slice(0,1000) : 'Extension retrieval failed.'));
+      if (m.type === 'error' || m.type === 'blocked') reject(new Error((typeof m.code === 'string' ? '[' + m.code.slice(0,60) + '] ' : '') + (typeof m.error === 'string' ? m.error.slice(0,1000) : 'Extension retrieval failed.')));
       else resolve(m);
     };
     const timer = setTimeout(() => { cleanup(); reject(new Error(type === 'ping' ? 'Extension missing or disconnected. Enable it in Chrome, then click Search to reconnect.' : 'Extension did not respond. No automatic retry was made.')); }, type === 'ping' ? 5000 : type === 'check-posting' ? 35000 : 25000);

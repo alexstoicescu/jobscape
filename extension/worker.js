@@ -16,15 +16,17 @@ async function helper(owner) {
   await chrome.storage.session.set({helperId: tab.id, helperOwner: owner});
   return tab;
 }
-function navigate(tabId, url) {
+function navigate(tabId, url, searchDocument = false) {
   return new Promise((resolve, reject) => {
     const finish = error => {
       clearTimeout(timer); chrome.tabs.onUpdated.removeListener(updated); chrome.tabs.onRemoved.removeListener(removed);
       error ? reject(error) : resolve();
     };
-    const updated = (id, change) => { if (id === tabId && change.status === 'complete') finish(); };
+    // URL changes identify the committed target without waiting for images and
+    // other subresources. The injected reader separately validates its document.
+    const updated = (id, change) => { if (id === tabId && (change.status === 'complete' || searchDocument && change.url)) finish(); };
     const removed = id => { if (id === tabId) finish(new Error('Helper tab was closed.')); };
-    const timer = setTimeout(() => finish(new Error('The requested page did not finish loading within 20 seconds. No automatic retry was made.')), 20000);
+    const timer = setTimeout(() => finish(new Error(searchDocument ? '[navigation_timeout] Google navigation did not reach a document within 12 seconds. Open the helper to inspect it. No automatic retry was made.' : 'The requested page did not finish loading within 20 seconds. No automatic retry was made.')), searchDocument ? 12000 : 20000);
     chrome.tabs.onUpdated.addListener(updated); chrome.tabs.onRemoved.addListener(removed);
     chrome.tabs.update(tabId, {url, active: false}).catch(finish);
   });
@@ -67,6 +69,7 @@ async function checkPosting(message, owner) {
   return response;
 }
 async function search(message, owner) {
+  const started = Date.now();
   const key = 'search:' + owner;
   let input, url, pages, previous;
   if (message.type === 'load-more') {
@@ -85,18 +88,24 @@ async function search(message, owner) {
     await chrome.storage.session.remove(key);
   }
   const tab = await helper(owner);
-  await navigate(tab.id, url); // One navigation per explicit Search/Load more.
+  await navigate(tab.id, url, true); // One navigation per explicit Search/Load more.
   const loaded = await chrome.tabs.get(tab.id);
   if (!loaded.url || new URL(loaded.url).origin !== 'https://www.google.com')
-    return {type: 'blocked', error: 'Google redirected or requires consent. Open the helper tab and handle it manually, then repeat your Search or Load more action.'};
+    return {type: 'blocked', code: 'consent_or_redirect', error: 'Google redirected or requires consent. Open the helper tab and handle it manually, then repeat your Search or Load more action.'};
   const actual = new URL(loaded.url);
   if (actual.pathname !== '/search' || actual.searchParams.get('q') !== input.query ||
       Number(actual.searchParams.get('start') ?? 0) !== Number(new URL(url).searchParams.get('start') ?? 0))
-    return {type: 'blocked', error: 'The helper is not on the requested results page. Open it to handle any verification, then repeat your Search or Load more action.'};
-  const [{result}] = await chrome.scripting.executeScript({target: {tabId: tab.id}, func: extractGoogle});
-  if (result?.blocked) return {type: 'blocked', error: 'Google requires consent or verification. Open the helper tab and handle it manually, then repeat your Search or Load more action.'};
+    return {type: 'blocked', code: actual.pathname.startsWith('/sorry') ? 'verification' : 'navigation_mismatch', error: 'The helper is not on the requested results page. Open it to handle any verification, then repeat your Search or Load more action.'};
+  let result;
+  try {
+    [{result}] = await chrome.scripting.executeScript({target: {tabId: tab.id}, injectImmediately: true, func: extractGoogle,
+      args: [{query: input.query, offset: Number(actual.searchParams.get('start') ?? 0)}]});
+  } catch {
+    return {type: 'error', code: 'document_unavailable', error: 'The Google document could not be read or changed during navigation. Open the helper to inspect it; no retry was made.'};
+  }
+  if (result?.blocked) return {type: 'blocked', code: result.code, error: result.error ?? 'Google requires consent or verification. Open the helper tab and handle it manually.'};
   if (!result || result.error || !Array.isArray(result.results) || !result.results.length && !result.empty)
-    return {type: 'error', error: result?.error ?? 'Google result extraction failed; exhaustion is not confirmed. Open the helper tab to inspect it.'};
+    return {type: 'error', code: result?.code ?? 'extraction_failure', error: result?.error ?? 'Google result extraction failed; exhaustion is not confirmed. Open the helper tab to inspect it.'};
   const raw = await Promise.all(result.results.map(async row => {
     const u = new URL(row.url); u.hash = '';
     for (const key of [...u.searchParams.keys()]) if (/^(utm_|gclid$|fbclid$)/i.test(key)) u.searchParams.delete(key);
@@ -109,9 +118,9 @@ async function search(message, owner) {
   const rawSeen = [...new Set([...prior, ...raw])];
   const exhausted = !raw.length || !fresh;
   const seen = new Set();
-  const results = result.results.flatMap(row => {
+  const results = result.results.flatMap((row, index) => {
     const target = destination(row.url, input.platforms);
-    if (!target || seen.has(target.url)) return [];
+    if (!target || seen.has(target.url) || prior.has(raw[index])) return [];
     seen.add(target.url); return [{...target, title: row.title, snippet: row.snippet}];
   }).slice(0,20);
   const actualNext = nextPage(result.nextPage, input.query, url);
@@ -128,7 +137,9 @@ async function search(message, owner) {
       await chrome.storage.session.remove(['helperId', 'helperOwner']);
     } catch { warning = 'Results loaded, but the helper tab could not be closed. You can close it manually.'; }
   }
-  return {type: 'results', query: input.query, results, pagination: {token: saved.token, hasMore: saved.nextPage !== null, pages}, warning};
+  return {type: 'results', query: input.query, results, pagination: {token: saved.token, hasMore: saved.nextPage !== null, pages}, warning,
+    diagnostics: {revision: 'retrieval-v2', status: result.code, pageUrl: result.pageUrl ?? loaded.url, organicCount: result.results.length,
+      newAtsCount: results.length, imageBlock: result.imageBlock === true, elapsedMs: Date.now() - started, next: actualNext ? 'google_link' : saved.nextPage ? 'offset_attempt' : 'stopped'}};
 }
 chrome.runtime.onConnect.addListener(port => {
   if (port.name !== protocol || !allowedSender(port.sender) || !Number.isInteger(port.sender.tab?.id)) { port.disconnect(); return; }
@@ -137,7 +148,7 @@ chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener(async message => {
     if (!message || typeof message.id !== 'string' || message.id.length > 80) return;
     const id = message.id;
-    if (message.type === 'ping') { reply({id, type: 'ready'}); return; }
+    if (message.type === 'ping') { reply({id, type: 'ready', revision: 'retrieval-v2'}); return; }
     if (message.type === 'open-helper') {
       const {helperId, helperOwner} = await chrome.storage.session.get(['helperId', 'helperOwner']);
       try { if (!Number.isInteger(helperId) || helperOwner !== owner) throw new Error(); await chrome.tabs.update(helperId, {active: true}); reply({id, type: 'opened'}); }
