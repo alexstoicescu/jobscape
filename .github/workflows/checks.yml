@@ -44,5 +44,7 @@ jobs:
         run: node scripts/personio-checks.mjs
       - name: Serper discovery regression checks
         run: node scripts/serper-checks.mjs
+      - name: Strict Global Remote checks
+        run: node scripts/global-remote-checks.mjs
       - name: Build Worker
         run: pnpm build

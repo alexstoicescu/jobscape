@@ -1,5 +1,7 @@
 # Serper discovery: CTO handoff
 
+This documents the PR #15 foundation. The separately stacked [Strict Global Remote feature](GLOBAL-REMOTE.md) supersedes its Global-only classification deferral; the foundation's configuration/release prerequisites still apply.
+
 ## Scope and dependencies
 
 Branch `codex/serper-discovery` starts at `feat/dark-mode` (`a00b936`), PR #13, which depends on PR #12 (`feat/chrome-search-reader`). Review/merge order remains #12 → #13 → this PR. PR #14 is excluded: none of its experimental extractor changes are ancestors of this branch. No PR was merged or deployment changed.

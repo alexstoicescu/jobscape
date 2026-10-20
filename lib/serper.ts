@@ -1,5 +1,6 @@
 import {googleQuery, validateInput, matchesGoogleTitle} from './search';
 import {atsPosting, type Candidate, type DiscoveryInput, type DiscoveryPage} from './discovery';
+import {verifyGlobalPage} from './global-page';
 
 export type SerperEnv = {
   JOBSCAPE_DISCOVERY?: string; SERPER_API_KEY?: string; SERPER_DB?: D1Database;
@@ -103,6 +104,11 @@ export async function discovery(body: unknown, env: SerperEnv, fetcher: typeof f
   if (previous) {
     if (previous.response && previous.status === 200) {
       const saved: DiscoveryPage = JSON.parse(previous.response);
+      if(JSON.parse(session.spec).region==='Global' && (saved.globalPolicy!=='strict-global-v1'||
+         saved.globalReview?.some(row=>!row.globalCheck||Date.now()-Date.parse(row.globalCheck.checkedAt)>600000))){
+        const globalReview=await verifyGlobalPage(saved.globalReview??saved.results,db,fetcher);
+        saved.results=globalReview.filter(row=>row.globalCheck?.status==='verified');saved.globalReview=globalReview;saved.globalPolicy='strict-global-v1';
+      }
       return {...saved,usage:{...saved.usage,request:0,cached:true,providerCredits:0}};
     }
     throw new DiscoveryError('already_requested', previous.status ? 'This page previously failed. Start a new Search; no duplicate provider request was made.' : 'This page is already being requested. No duplicate request was made.', 409);
@@ -128,13 +134,14 @@ export async function discovery(body: unknown, env: SerperEnv, fetcher: typeof f
   try {
     const data: ProviderPage = cache ? JSON.parse(cache.body) : await fetchSerper(session.query,page,env.SERPER_API_KEY,fetcher);
     const rows = candidatePage(data,spec,JSON.parse(session.seen));
+    const globalReview=spec.region==='Global'?await verifyGlobalPage(rows.results,db,fetcher):undefined;
     const usage = await db.prepare(`SELECT COALESCE(SUM(charged),0) total,
       COALESCE(SUM(CASE WHEN day=? THEN charged ELSE 0 END),0) daily,
       COALESCE(SUM(CASE WHEN month=? THEN charged ELSE 0 END),0) monthly,
       COALESCE(SUM(CASE WHEN session=? THEN charged ELSE 0 END),0) search FROM discovery_requests`).bind(day,month,id).first<{total:number;daily:number;monthly:number;search:number}>();
     if (!usage) throw new Error('Usage missing');
     const limited = page >= cap.search;
-    const result: DiscoveryPage = {query:session.query,session:id,page,results:rows.results,rawCount:rows.rawCount,rejected:rows.rejected,duplicates:rows.duplicates,
+    const result: DiscoveryPage = {query:session.query,session:id,page,results:globalReview?globalReview.filter(row=>row.globalCheck?.status==='verified'):rows.results,globalReview,globalPolicy:globalReview?'strict-global-v1':undefined,rawCount:rows.rawCount,rejected:rows.rejected,duplicates:rows.duplicates,
       hasMore:!rows.exhausted&&!limited,
       stopReason: rows.exhausted ? rows.rawCount ? 'The provider repeated the previously loaded raw results. Pagination stopped.' : 'The provider returned an empty organic page. Pagination stopped.' : limited ? 'The configured per-search page limit was reached. More indexed results may exist.' : undefined,
       warning: rows.rejected ? `${rows.rejected} results were omitted because the URL was not a supported posting or the title did not match. Selected-platform coverage is not guaranteed.` : undefined,
