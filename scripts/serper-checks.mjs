@@ -3,6 +3,8 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync, mkdirSync, unlinkSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {sourceModule} from './load-source.mjs';
+import ts from 'typescript';
+import vm from 'node:vm';
 const {discovery, fetchSerper, candidatePage, limits} = await import(sourceModule('../lib/serper.ts'));
 const {atsPosting, appendCandidates} = await import(sourceModule('../lib/discovery.ts'));
 const {googleQuery, terms, validateInput} = await import(sourceModule('../lib/search.ts'));
@@ -23,6 +25,27 @@ const provider=async(_url,options)=>{assert.equal(options.redirect,'manual','Wor
 const request=(session=randomUUID(),page=1,s=spec)=>({session,page,spec:s});
 const rejects=(fn,code)=>assert.rejects(fn,e=>e.code===code);
 try {
+  // Execute the real server page with JSX/component stubs; no browser or API call.
+  const homeSource=readFileSync(new URL('../app/page.tsx',import.meta.url),'utf8');
+  const compiledHome=ts.transpileModule(homeSource,{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.React,target:ts.ScriptTarget.ES2022}}).outputText;
+  const homeFor=flag=>{
+    const exports={};const legacy=()=>null,serper=()=>null;
+    const context={exports,React:{createElement:(component,props)=>({component,props})},require:name=>
+      name==='cloudflare:workers'?{env:{JOBSCAPE_DISCOVERY:flag}}:{default:name.includes('discovery-search')?serper:legacy}};
+    vm.runInNewContext(compiledHome,context);
+    const rendered=exports.default();return {rendered,legacy,serper};
+  };
+  for(const flag of [undefined,'','off','unknown']){const {rendered,legacy}=homeFor(flag);assert.equal(rendered.component,legacy,'Flag-off preserves the pre-Serper homepage');}
+  {const {rendered,serper}=homeFor('serper');assert.equal(rendered.component,serper);assert.equal(rendered.props.enabled,true);}
+  const config=ts.createSourceFile('vite.config.ts',readFileSync(new URL('../vite.config.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
+  let bindingsExpression;
+  const visit=node=>{if(ts.isPropertyAssignment(node)&&node.name.getText(config)==='d1_databases'&&ts.isArrayLiteralExpression(node.initializer))bindingsExpression=node.initializer.getText(config);ts.forEachChild(node,visit);};
+  visit(config);assert.ok(bindingsExpression);
+  for(const declared of [[],[{binding:'DB'}],[{binding:'SERPER_DB'}]]){
+    const bindings=vm.runInNewContext('('+bindingsExpression+')',{localBindingConfig:{d1_databases:declared},process:{env:{}}});
+    assert.equal(bindings.filter(b=>b.binding==='SERPER_DB').length,1,'Managed declaration must not duplicate the local Serper binding');
+    assert.equal(new Set(bindings.map(b=>b.binding)).size,bindings.length);
+  }
   assert.deepEqual(terms('"community, events" OR "ecosystem OR partnerships", field marketing'),['community, events','ecosystem OR partnerships','field marketing']);
   const quoted=googleQuery({...input,keywords:'"community, events" OR "customer programs"',expandTitles:false});
   assert.ok(quoted.includes('intitle:"community, events" OR intitle:"customer programs"'));

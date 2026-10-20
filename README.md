@@ -4,7 +4,7 @@ A free search interface for company-hosted job listings. React, TypeScript, Vine
 
 ## Serper discovery preview
 
-The homepage now uses server-side Serper discovery when `JOBSCAPE_DISCOVERY=serper` is enabled. It preserves the existing form, ATS domain/query definitions and dark mode. Search is manual, Load more uses the submitted query, and results are unchecked ATS posting candidates. No Chrome extension or browser-side API key is required. Disabled/missing configuration shows an explicit failure rather than a registry fallback.
+The homepage now uses server-side Serper discovery when `JOBSCAPE_DISCOVERY=serper` is enabled. It preserves the existing form, ATS domain/query definitions and dark mode. Search is manual, Load more uses the submitted query, and results are unchecked ATS posting candidates. No Chrome extension or browser-side API key is required for Serper. An unset/off flag preserves the preceding extension homepage; an enabled Serper request with missing configuration or a provider failure shows an explicit error without switching search providers.
 
 Setup, durable D1 usage caps, deployment blockers and the PR #12/#13 dependency are documented in [SERPER-DISCOVERY.md](SERPER-DISCOVERY.md). Live results and validation evidence are in [SERPER-SMOKE.md](SERPER-SMOKE.md). No production binding or deployment was provisioned.
 

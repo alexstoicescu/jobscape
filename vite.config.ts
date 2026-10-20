@@ -74,7 +74,7 @@ export default defineConfig(async ({ command, mode }) => {
         inspectorPort: false,
         config: {
           ...localBindingConfig,
-          d1_databases: [...localBindingConfig.d1_databases, {
+          d1_databases: [...localBindingConfig.d1_databases.filter(binding => binding.binding !== 'SERPER_DB'), {
             binding: 'SERPER_DB', database_name: 'jobscape-discovery',
             database_id: process.env.SERPER_D1_DATABASE_ID || '00000000-0000-4000-8000-000000000001',
           }],
