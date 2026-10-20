@@ -1,9 +1,12 @@
 import {platforms, type SearchInput} from './search';
 
-export type Candidate = {title: string; snippet: string; url: string; platform: string; key: string};
+import type {GlobalCheck} from './global-remote';
+export type Candidate = {title: string; snippet: string; url: string; platform: string; key: string; globalCheck?: GlobalCheck};
 export type DiscoveryPage = {
   query: string; session: string; page: number; results: Candidate[]; hasMore: boolean;
   stopReason?: string; warning?: string; rawCount: number; rejected: number; duplicates: number;
+  globalReview?: Candidate[];
+  globalPolicy?: 'strict-global-v2';
   usage: {request: number; search: number; daily: number; monthly: number; total: number;
     dailyLimit: number; monthlyLimit: number; totalLimit: number; searchLimit: number; cached: boolean; providerCredits: number | null};
 };
@@ -55,4 +58,10 @@ export function atsPosting(raw: string, ids: string[]) {
 export function appendCandidates(previous: Candidate[], incoming: Candidate[]) {
   const seen = new Set(previous.map(row => row.key));
   return [...previous, ...incoming.filter(row => {if (seen.has(row.key)) return false; seen.add(row.key); return true;})];
+}
+export function globalCounts(rows:Candidate[]){
+  const unique=appendCandidates([],rows);
+  return {verified:unique.filter(row=>row.globalCheck?.status==='verified').length,
+    restricted:unique.filter(row=>row.globalCheck?.status==='restricted').length,
+    unverified:unique.filter(row=>!row.globalCheck||row.globalCheck.status==='unknown').length};
 }

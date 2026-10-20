@@ -1,0 +1,100 @@
+{
+  "checkedAt": "2026-10-20T20:53:09.304Z",
+  "serperRequests": 0,
+  "atsRequests": 10,
+  "elapsedMs": 1346,
+  "falsePositives": 0,
+  "unknown": 4,
+  "verified": 0,
+  "restricted": 4,
+  "rows": [
+    {
+      "title": "Events Marketing Manager",
+      "url": "https://jobs.ashbyhq.com/chilipiper/42b0d252-7407-4dd3-ab17-825be9599a7b",
+      "expected": "restricted",
+      "actual": "restricted",
+      "reason": "The actual posting limits applicant geography or requires non-remote attendance.",
+      "method": "JobPosting JSON-LD",
+      "checkedAt": "2026-10-20T20:53:07.959Z",
+      "sourceUrl": "https://jobs.ashbyhq.com/chilipiper/42b0d252-7407-4dd3-ab17-825be9599a7b",
+      "evidencePhrases": 1
+    },
+    {
+      "title": "Developer Relations Engineer",
+      "url": "https://jobs.ashbyhq.com/supabase/a1320bbf-bfae-49a8-a1b7-12eeccaf39ca",
+      "expected": "restricted",
+      "actual": "restricted",
+      "reason": "The actual posting limits applicant geography or requires non-remote attendance.",
+      "method": "JobPosting JSON-LD",
+      "checkedAt": "2026-10-20T20:53:08.000Z",
+      "sourceUrl": "https://jobs.ashbyhq.com/supabase/a1320bbf-bfae-49a8-a1b7-12eeccaf39ca",
+      "evidencePhrases": 3
+    },
+    {
+      "title": "Global Field Marketing Lead",
+      "url": "https://jobs.ashbyhq.com/jobs.june-ai/9c3f6747-ba48-43be-a18b-257afffbf3a9",
+      "expected": "restricted",
+      "actual": "restricted",
+      "reason": "The actual posting limits applicant geography or requires non-remote attendance.",
+      "method": "JobPosting JSON-LD",
+      "checkedAt": "2026-10-20T20:53:08.001Z",
+      "sourceUrl": "https://jobs.ashbyhq.com/jobs.june-ai/9c3f6747-ba48-43be-a18b-257afffbf3a9",
+      "evidencePhrases": 4
+    },
+    {
+      "title": "Senior Developer Relations Manager - Photonic AI (f/m/d)",
+      "url": "https://q-ant-gmbh.jobs.personio.de/job/2579395?language=en",
+      "expected": "restricted",
+      "actual": "unknown",
+      "reason": "No single identifiable full JobPosting description was found.",
+      "method": "unavailable",
+      "checkedAt": "2026-10-20T20:53:08.332Z",
+      "sourceUrl": "https://q-ant-gmbh.jobs.personio.de/job/2579395?language=en",
+      "evidencePhrases": 0
+    },
+    {
+      "title": "Events Marketing Manager, EMEA",
+      "url": "https://job-boards.greenhouse.io/customerio/jobs/8260218",
+      "expected": "restricted",
+      "actual": "restricted",
+      "reason": "The actual posting limits applicant geography or requires non-remote attendance.",
+      "method": "Greenhouse single-job API",
+      "checkedAt": "2026-10-20T20:53:08.366Z",
+      "sourceUrl": "https://job-boards.greenhouse.io/customerio/jobs/8260218",
+      "evidencePhrases": 4
+    },
+    {
+      "title": "Strategic Field Marketing Manager",
+      "url": "https://crowdstrike.wd5.myworkdayjobs.com/en-US/crowdstrikecareers/job/Germany---Remote/Strategic-Field-Marketing-Manager--Remote--DEU-_R29931",
+      "expected": "unknown",
+      "actual": "unknown",
+      "reason": "No single identifiable full JobPosting description was found.",
+      "method": "unavailable",
+      "checkedAt": "2026-10-20T20:53:08.462Z",
+      "sourceUrl": "https://crowdstrike.wd5.myworkdayjobs.com/en-US/crowdstrikecareers/job/Germany---Remote/Strategic-Field-Marketing-Manager--Remote--DEU-_R29931",
+      "evidencePhrases": 0
+    },
+    {
+      "title": "Director of AI Automation",
+      "url": "https://job-boards.greenhouse.io/interdependence/jobs/5145926008",
+      "expected": "unknown",
+      "actual": "unknown",
+      "reason": "The posting does not affirmatively establish worldwide applications for this role.",
+      "method": "Greenhouse single-job API",
+      "checkedAt": "2026-10-20T20:53:08.608Z",
+      "sourceUrl": "https://job-boards.greenhouse.io/interdependence/jobs/5145926008",
+      "evidencePhrases": 0
+    },
+    {
+      "title": "Lead Scrum Master - Remote (PH)",
+      "url": "https://job-boards.greenhouse.io/theoriamedical/jobs/4632108008",
+      "expected": "restricted",
+      "actual": "unknown",
+      "reason": "Posting redirected outside the validated ATS job.",
+      "method": "unavailable",
+      "checkedAt": "2026-10-20T20:53:09.115Z",
+      "sourceUrl": "https://job-boards.greenhouse.io/theoriamedical/jobs/4632108008",
+      "evidencePhrases": 0
+    }
+  ]
+}

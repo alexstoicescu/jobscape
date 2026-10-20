@@ -8,6 +8,8 @@ The homepage now uses server-side Serper discovery when `JOBSCAPE_DISCOVERY=serp
 
 Setup, durable D1 usage caps, deployment blockers and the PR #12/#13 dependency are documented in [SERPER-DISCOVERY.md](SERPER-DISCOVERY.md). Live results and validation evidence are in [SERPER-SMOKE.md](SERPER-SMOKE.md). No production binding or deployment was provisioned.
 
+**Strict Global Remote:** selecting Global verifies only the current page's original ATS postings and shows only fully remote positions with explicit worldwide application evidence. Restricted and Unverified results have separate counts/disclosures; zero verified results is not proof of no Global jobs. No extra Serper queries are made. Bounds, real examples and remaining validation gaps: [GLOBAL-REMOTE.md](GLOBAL-REMOTE.md).
+
 The previous extension interface remains at `/prototype`; its setup and limitations remain in [extension/README.md](extension/README.md). PR #14's failed extraction experiment is not included. Existing ATS adapters and the registry endpoint remain available in source. The registry is not the Serper discovery boundary. Theme behavior is preserved as documented in [CTO-DARK-MODE.md](CTO-DARK-MODE.md).
 
 The sections below describe existing adapter/extension behavior and its historical limitations; they do not imply those checks are part of the Serper discovery preview.

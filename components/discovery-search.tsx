@@ -4,7 +4,7 @@ import {Search, MapPin, SlidersHorizontal, ExternalLink, LoaderCircle, Briefcase
 import {Checkbox} from '@/components/ui/checkbox';
 import {ThemeToggle} from '@/components/theme-toggle';
 import {platforms, validateInput, type SearchInput} from '@/lib/search';
-import {appendCandidates, type Candidate, type DiscoveryPage, type DiscoveryInput} from '@/lib/discovery';
+import {appendCandidates, globalCounts, type Candidate, type DiscoveryPage, type DiscoveryInput} from '@/lib/discovery';
 const initial: SearchInput = {keywords:'',location:'',remote:false,platforms:platforms.map(p=>p.id),expandTitles:true};
 const regions = ['All','Global','EU','EMEA','APAC','US'] as const;
 export default function DiscoverySearch({enabled}: {enabled: boolean}) {
@@ -15,9 +15,12 @@ export default function DiscoverySearch({enabled}: {enabled: boolean}) {
   const [paging,setPaging] = useState(false);
   const [error,setError] = useState('');
   const [cards,setCards] = useState<Candidate[]>([]);
+  const [review,setReview] = useState<Candidate[]>([]);
   const [page,setPage] = useState<DiscoveryPage|null>(null);
   const [submitted,setSubmitted] = useState<DiscoveryInput|null>(null);
   const [started,setStarted] = useState(false);
+  const globalMode=submitted?.region==='Global',counts=globalCounts(review);
+  const visible=globalMode?cards.filter(card=>card.globalCheck?.status==='verified'):cards;
   const inFlight = useRef(false), revision = useRef(0);
   const controller = useRef<AbortController|null>(null);
   const scroll = useRef<{x:number;y:number}|null>(null);
@@ -48,7 +51,10 @@ export default function DiscoverySearch({enabled}: {enabled: boolean}) {
       if(id!==revision.current) return;
       if(append) scroll.current={x:window.scrollX,y:window.scrollY};
       else scroll.current=null;
-      setCards(previous=>append?appendCandidates(previous,data.results):data.results);
+      const accepted=spec.region==='Global'?data.results.filter(row=>row.globalCheck?.status==='verified'):data.results;
+      const assessed=data.globalReview??data.results;
+      setCards(previous=>append?appendCandidates(previous,accepted):accepted);
+      setReview(previous=>append?appendCandidates(previous,assessed):assessed);
       setPage(data);setSubmitted(spec);
     } catch(e) {if(id===revision.current&&!abort.signal.aborted)setError(e instanceof Error?e.message:'Search failed.');}
     finally {inFlight.current=false;if(id===revision.current){setBusy(false);setPaging(false);if(focus instanceof HTMLElement)requestAnimationFrame(()=>focus.isConnected&&focus.focus({preventScroll:true}));}}
@@ -58,7 +64,7 @@ export default function DiscoverySearch({enabled}: {enabled: boolean}) {
     let input: SearchInput;
     try {input=validateInput(form);}catch(e){setError(e instanceof Error?e.message:'Check the search inputs.');return;}
     const spec={input,region};
-    setStarted(true);setCards([]);setPage(null);setSubmitted(spec);
+    setStarted(true);setCards([]);setReview([]);setPage(null);setSubmitted(spec);
     history.replaceState(null,'','?'+new URLSearchParams({q:input.keywords,l:input.location,r:input.remote?'1':'0',p:input.platforms.join(','),a:input.expandTitles===false?'0':'1',hr:region,wp:input.wholePageKeywords?'1':'0'}));
     setHomeHref('/'+location.search);
     await retrieve({session:crypto.randomUUID(),page:1,spec},false,spec);
@@ -86,19 +92,22 @@ export default function DiscoverySearch({enabled}: {enabled: boolean}) {
         <div className="provider-list">{platforms.map(p=><label className="provider" key={p.id}><Checkbox checked={form.platforms.includes(p.id)} onCheckedChange={()=>setForm({...form,platforms:form.platforms.includes(p.id)?form.platforms.filter(id=>id!==p.id):[...form.platforms,p.id]})}/><span>{p.name}<small>{p.domains[0]}</small></span></label>)}</div></aside>
         <section className="results-area" aria-live="polite">
           <div className="search-bottom"><label className="check-label">Search hiring region <select aria-label="Search hiring region" value={region} onChange={e=>setRegion(e.target.value as DiscoveryInput['region'])}>{regions.map(name=><option key={name} value={name}>{name}</option>)}</select></label></div>
-          <p className="small-note">Region changes apply on the next Search. These terms guide discovery only; they do not verify hiring eligibility.</p>
+          <p className="small-note">Region changes apply on the next Search. Global displays only fully remote positions with explicit worldwide hiring evidence from the original posting. Other regions remain discovery hints.</p>
           {page&&<details className="query-details"><summary>See the combined query</summary><code>{page.query}</code></details>}
-          {busy&&!paging&&<div className="loading" role="status"><p><LoaderCircle size={18} className="spin"/>Retrieving one Google results page…</p></div>}
+          {busy&&!paging&&<div className="loading" role="status"><p><LoaderCircle size={18} className="spin"/>{globalMode?'Retrieving one Google results page and verifying its original postings…':'Retrieving one Google results page…'}</p></div>}
           {error&&<div className="message error" role="alert"><h2>Search could not finish.</h2><p>{error}</p><p>No automatic retry or company-feed fallback was made. A failed reserved page requires a new Search.</p></div>}
           {!started&&<div className="welcome"><div className="welcome-icon"><BriefcaseBusiness size={28}/></div><h2>A shorter path to the right job.</h2><p>Choose your platforms, then click Search.</p></div>}
-          {page&&<><div className="result-summary"><div><h2>{cards.length} loaded search candidates</h2><p>Submitted hiring region: {submitted?.region}. {page.page} results {page.page===1?'page':'pages'} retrieved. Coverage of individual platforms is not guaranteed.</p></div></div>
-            <div className="job-list">{cards.map(card=><article className="job-card" key={card.key}><div className={'company-avatar '+card.platform}><Search size={20}/></div><div className="job-main"><div className="job-company">{platforms.find(p=>p.id===card.platform)?.name}</div><h3><a href={card.url} target="_blank" rel="noopener noreferrer">{card.title}</a></h3>{card.snippet?<p className="job-description">{card.snippet}</p>:<p className="small-note">Google did not expose a readable snippet.</p>}
-              <p className="match-reason">Unchecked discovery candidate</p><p className="small-note">Active status, remote eligibility, worldwide hiring and required languages: Unknown.</p><p className="small-note">{new URL(card.url).hostname}</p></div><a className="open-job" href={card.url} target="_blank" rel="noopener noreferrer" aria-label={'Open original: '+card.title}><ExternalLink size={17}/></a></article>)}</div>
-            {cards.length===0&&!error&&<p className="small-note">No accepted posting candidates on the loaded pages. {page.hasMore?'Load more remains available while the provider returns new raw results.':'See the pagination status below.'}</p>}
+          {page&&<><div className="result-summary"><div><h2>{visible.length} {globalMode?'verified Global Remote positions':'loaded search candidates'}</h2><p>Submitted hiring region: {submitted?.region}. {page.page} results {page.page===1?'page':'pages'} retrieved. Coverage of individual platforms is not guaranteed.</p>{globalMode&&<p>Verified Global: {counts.verified}. Restricted or not fully remote: {counts.restricted}. Unverified: {counts.unverified}. Counts cover unique candidates on the loaded pages only.</p>}</div></div>
+            <div className="job-list">{visible.map(card=><article className="job-card" key={card.key}><div className={'company-avatar '+card.platform}><Search size={20}/></div><div className="job-main"><div className="job-company">{platforms.find(p=>p.id===card.platform)?.name}</div><h3><a href={card.url} target="_blank" rel="noopener noreferrer">{card.title}</a></h3>{card.snippet?<p className="job-description">{card.snippet}</p>:<p className="small-note">Google did not expose a readable snippet.</p>}
+              <p className="match-reason">{globalMode?'Verified Global Remote — stated posting terms':'Unchecked discovery candidate'}</p>
+              {globalMode&&card.globalCheck&&<div><p className="small-note">{card.globalCheck.reason}</p>{card.globalCheck.evidence.map((item,i)=><p className="small-note" key={i}>{item.source}: “{item.quote}”</p>)}{card.globalCheck.restrictions.map((item,i)=><p className="small-note" key={i}>Restriction: {item}</p>)}<p className="small-note">Checked {new Date(card.globalCheck.checkedAt).toLocaleString()}{card.globalCheck.cached?' (cached)':''}. Individual work authorization and current vacancy status are not verified.</p></div>}
+              <p className="small-note">{globalMode?'Active status and required languages remain Unknown.':'Active status, remote eligibility, worldwide hiring and required languages: Unknown.'}</p><p className="small-note">{new URL(card.url).hostname}</p></div><a className="open-job" href={card.url} target="_blank" rel="noopener noreferrer" aria-label={'Open original: '+card.title}><ExternalLink size={17}/></a></article>)}</div>
+            {globalMode&&(['restricted','unknown'] as const).map(status=><details className="query-details" key={status}><summary>{status==='restricted'?'Restricted or not fully remote':'Unverified'} ({review.filter(row=>(row.globalCheck?.status??'unknown')===status).length})</summary><ul>{review.filter(row=>(row.globalCheck?.status??'unknown')===status).map(row=><li key={row.key}><a href={row.url} target="_blank" rel="noopener noreferrer">{row.title}</a><p className="small-note">{row.globalCheck?.reason??'No original-posting verification was returned.'}</p></li>)}</ul></details>)}
+            {visible.length===0&&!error&&<p className="small-note">{globalMode?'No verified Global Remote positions on the loaded pages. This does not show that no Global jobs exist.':'No accepted posting candidates on the loaded pages.'} {page.hasMore?'Load more remains available while the provider returns new raw results.':'See the pagination status below.'}</p>}
             <p className="small-note">Usage reservations: {page.usage.request} new API request for this page{page.usage.cached?' (cached)':''}; {page.usage.search}/{page.usage.searchLimit} this search, {page.usage.daily}/{page.usage.dailyLimit} today, {page.usage.monthly}/{page.usage.monthlyLimit} this month, {page.usage.total}/{page.usage.totalLimit} total. Failed requests also count. UTC periods.</p>
             {page.hasMore&&<button className="load-more" disabled={busy} onClick={()=>void loadMore()}>{paging?'Loading…':'Load more'}</button>}
             {page.stopReason&&<p className="small-note">{page.stopReason}</p>}{page.warning&&<p className="small-note" role="status">{page.warning}</p>}</>}
-          <p className="small-note">Google titles and snippets are search evidence, not full descriptions or verified job information. Posting-level eligibility and language validation are deferred.</p>
+          <p className="small-note">Google titles and snippets are discovery evidence. Global checks only the current page’s original postings; inaccessible or ambiguous sources remain Unverified. Required languages and individual work authorization are not checked.</p>
         </section></div>
       <footer><span>JobScape <span className="footer-separator">/</span> a direct route to company jobs</span><span>No account. No browser extension.</span></footer>
     </main>
