@@ -90,21 +90,91 @@ and plugin-timing notices. It was not a deployed Worker check.
 
 ## Live Chrome acceptance
 
-Pending manual reload of the unpacked extension. The new website reports that the
-currently connected worker is an older revision. Browser automation cannot open
-Chrome's protected extension settings. The user must reload the extension, then
-refresh JobScape; no browser-security workaround will be attempted.
+The user reloaded the extension. A fresh real Chrome JobScape page connected
+to `retrieval-v2`. No subsequent page reload or Check connection action was
+used between Search/Load more actions. All tests used the existing Chrome
+profile, which was already signed in; a signed-out run is not established.
 
-Planned fixed cases: Events = title mode, aliases on, Remote, EU, blank location,
-all ATS. Developer Relations and Partnerships = title mode, aliases on, Remote,
-All, blank location, all ATS. Three independent Search clicks per case. Each
-trial must record the exact displayed query, observed source evidence, native
-cards, distinct legitimate ATS URLs, elapsed time and failure classification.
-Two successful cases must also verify visible next-page results, submitted-query
-preservation, append/dedup, focus/scroll and owned-helper cleanup.
+Fixed cases: Events = title mode, aliases on, Remote, EU, blank location, all
+18 ATS. Developer Relations and Partnerships = title mode, aliases on, Remote,
+All, blank location, all ATS. Every row's exact submitted query and native URLs
+are recorded in [the machine-readable evidence](docs/evidence/chrome-reliability-2026-10-20.json).
+These are independent Search clicks, not cached application responses.
 
-No nine-trial success rate or live reconnect/cleanup pass is claimed yet.
-**NO-GO pending the required >=8/9 live acceptance gate. Keep the PR draft.**
+| Trial | Google/source observation | Native cards / distinct ATS URLs | Time to usable results | Outcome |
+| --- | --- | --- | --- | --- |
+| Events 1 | Image block; independently inspected helper: zero organic headings, no consent/verification | 0 / 0 | None; failure observed within 10.326 s (upper bound including tool gap) | `unsupported_layout`; helper retained |
+| Developer Relations 1 | DOM reader reported 10 organic entries; native ATS titles/links inspected | 10 / 10 | 2.960 s (worker: 1.860 s) | Extracted |
+| Partnerships 1 | DOM reader reported 10 organic entries; two rejected by existing title validation | 8 / 8 | 2.296 s (worker: 1.444 s) | Extracted |
+| Events 2 | Independently inspected image-only helper, zero organic headings, no consent/verification | 0 / 0 | None; exact terminal duration not captured | `unsupported_layout`; helper retained |
+| Developer Relations 2 | Google redirected to `/sorry/index`; unusual-traffic text and reCAPTCHA iframe confirmed | 0 / 0 | None; verification error in 1.428 s | `verification`; helper retained |
+| Events 3 | Not run after verification blocker | Not measured | Not measured | Blocked |
+| Developer Relations 3 | Not run after verification blocker | Not measured | Not measured | Blocked |
+| Partnerships 2 | Not run after verification blocker | Not measured | Not measured | Blocked |
+| Partnerships 3 | Not run after verification blocker | Not measured | Not measured | Blocked |
+
+Two extractions succeeded in five completed trials. Three failures already make
+8/9 impossible, even if all remaining trials succeeded. The four remaining
+Searches were therefore not issued after Google required verification. No CAPTCHA
+was interacted with, no view/query/profile change used to evade it, and no retry
+loop or replacement architecture was attempted.
+
+Timing measures the Search click to the next observed ready state, including
+browser-tool overhead; worker times are separately reported. Events 2's browser
+locator wait expired before the application completed, so the same trial was
+subsequently observed without issuing another Search. Its time to usable results
+is correctly absent. The error ultimately appeared, rather than a stuck spinner.
+
+Successful Google helpers closed too quickly for independent source screenshots.
+Their organic counts come from the actual injected DOM reader, and their native
+cards were separately inspected in Chrome. The ATS URLs are posting-shaped
+original destinations, not invented fixture data; their current active status
+was not independently checked. This is narrower evidence than a recorded visual
+comparison of every Google organic row. A screenshot capture also timed out;
+the committed evidence is DOM observations, not a screenshot claim.
+
+### Pagination and preserved state
+
+Both tests followed real Google next links with `start=10`, with no offset
+fallback needed. Exact decoded `q` matched the submitted Boolean string.
+
+| Search | Cards before / after | Distinct after | Scroll Y before / after | JobScape visible / helper closed | Elapsed |
+| --- | --- | --- | --- | --- | --- |
+| Developer Relations | 10 / 20 | 20 | 3237 / 3237 | Yes / yes | 2.556 s |
+| Partnerships | 8 / 18 | 18 | 2635 / 2635 | Yes / yes | 1.394 s |
+
+The original URLs remained in order and each appended page added ten new URLs,
+without duplicates. Developer Relations form location was changed to Berlin and
+region to US before Load more: both the displayed submitted query and Google's
+next-page `q` remained the original All/blank-location query. Form values were
+restored before the next independent Search. No automatic next-page request was
+observed. Failed helpers were reused; successful helpers closed, while the
+verification helper remains available for manual handling.
+
+Fresh extension connections worked across the actual actions without Check
+connection. A forced service-worker-idle/termination recovery was not verified.
+Actual repeated/empty final pages and unavailable-page boundaries were not
+reached before the stop condition; these retain fixture coverage only. The
+live image layout was safely rejected, but its specific image-block detector
+missed this markup and emitted the broader `unsupported_layout` classification.
+
+### Recommendation
+
+**NO-GO for continued investment in the extension as JobScape's primary search
+mechanism under the current constraints. Keep PR #14 draft.** The load-completion
+mitigation improves DevRel and both successful cases paginate correctly, but it
+does not resolve image-only discovery, and Google imposed verification after a
+small manual test set (five Searches plus two Load more clicks). This is a failed
+gate, not 8/9 acceptance or a nine-trial completion claim. Do not proceed with
+PR 2/3 or add workarounds on the strength of these two successful extractions.
+Earlier diagnostic Google queries also used this profile. This is an observed
+verification blocker during acceptance, not a controlled estimate of Google's
+rate limit or proof that exactly seven requests always trigger verification.
+
+CI `verify` passed for implementation head `10b10f0` on 20 October:
+[run 39442428063](https://github.com/alexstoicescu/jobscape/actions/runs/39442428063).
+Only evidence/documentation changes follow that tested implementation; passing
+local checks were not rerun for this handoff.
 
 ## Limits and reload
 

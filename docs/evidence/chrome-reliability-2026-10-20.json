@@ -1,0 +1,453 @@
+{
+  "date": "2026-10-20",
+  "revision": "retrieval-v2",
+  "implementationCommit": "10b10f03fa10d0be6f56117c94fb89df105f5399",
+  "decision": "NO-GO",
+  "completedTrials": 5,
+  "successfulExtractions": 2,
+  "target": "At least 8 successful independent trials out of 9",
+  "stoppedFor": "Google unusual-traffic verification; threshold already unreachable",
+  "method": "Real Chrome, native JobScape Search clicks; no API, injected results, query weakening, CAPTCHA interaction or automatic pagination. Google tracking parameters omitted from evidence URLs. Active posting status not inferred.",
+  "trials": [
+    {
+      "case": "Events",
+      "trial": 1,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Events\" OR intitle:\"event\") (((\"remote\" OR \"work from home\" OR \"distributed\") AND (\"EU\" OR \"European Union\" OR \"Europe\" OR \"Austria\" OR \"Belgium\" OR \"Bulgaria\" OR \"Croatia\" OR \"Cyprus\" OR \"Czechia\" OR \"Denmark\" OR \"Estonia\" OR \"Finland\" OR \"France\" OR \"Germany\" OR \"Greece\" OR \"Hungary\" OR \"Ireland\" OR \"Italy\" OR \"Latvia\" OR \"Lithuania\" OR \"Luxembourg\" OR \"Malta\" OR \"Netherlands\" OR \"Poland\" OR \"Portugal\" OR \"Romania\" OR \"Slovakia\" OR \"Slovenia\" OR \"Spain\" OR \"Sweden\")) OR (\"remote worldwide\" OR \"worldwide remote\" OR \"remote globally\" OR \"globally remote\" OR \"work from anywhere\"))",
+      "outcome": "unsupported_layout",
+      "cards": [],
+      "distinctAtsUrls": 0,
+      "timeToUsableMs": null,
+      "observedTerminalMs": 10326,
+      "timingNote": "10.326 s observed upper bound to failure, including tool gap; no usable results.",
+      "error": "Search could not finish.\n\n[unsupported_layout] Google opened, but no supported organic result structure or explicit empty message appeared. This is an extraction failure, not zero jobs.\n\nOpen helper tab\n\nNo automatic retry or company-feed fallback was made.",
+      "diagnostics": null,
+      "source": {
+        "blocked": false,
+        "headings": [],
+        "links": [
+          {
+            "title": "",
+            "url": "https://rindus.jobs.personio.de/job/2700052?language=en"
+          },
+          {
+            "title": "",
+            "url": "https://theeventacademy.recruitee.com/o/senior-project-manager-pharma"
+          },
+          {
+            "title": "",
+            "url": "https://jobs.eu.lever.co/creatio/2fac7978-8977-43d1-8f4e-d4598300440c?lever-origin=applied&lever-source%5B%5D=dou.ua"
+          },
+          {
+            "title": "",
+            "url": "https://apply.workable.com/worknomads/j/9F7C5A24D5/"
+          },
+          {
+            "title": "",
+            "url": "https://jobs.ashbyhq.com/dandy/29d4f67d-2cd2-446d-9104-1c604968d5bf"
+          },
+          {
+            "title": "",
+            "url": "https://apply.workable.com/zyte/j/81A373BCBA"
+          },
+          {
+            "title": "",
+            "url": "https://theeventacademy.recruitee.com/o/senior-project-manager-pharma"
+          },
+          {
+            "title": "",
+            "url": "https://apply.workable.com/privateluxuryevents/"
+          },
+          {
+            "title": "",
+            "url": "https://apply.workable.com/privateluxuryevents/"
+          }
+        ],
+        "organicHeadings": 0,
+        "url": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Events%22+OR+intitle%3A%22event%22%29+%28%28%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29+AND+%28%22EU%22+OR+%22European+Union%22+OR+%22Europe%22+OR+%22Austria%22+OR+%22Belgium%22+OR+%22Bulgaria%22+OR+%22Croatia%22+OR+%22Cyprus%22+OR+%22Czechia%22+OR+%22Denmark%22+OR+%22Estonia%22+OR+%22Finland%22+OR+%22France%22+OR+%22Germany%22+OR+%22Greece%22+OR+%22Hungary%22+OR+%22Ireland%22+OR+%22Italy%22+OR+%22Latvia%22+OR+%22Lithuania%22+OR+%22Luxembourg%22+OR+%22Malta%22+OR+%22Netherlands%22+OR+%22Poland%22+OR+%22Portugal%22+OR+%22Romania%22+OR+%22Slovakia%22+OR+%22Slovenia%22+OR+%22Spain%22+OR+%22Sweden%22%29%29+OR+%28%22remote+worldwide%22+OR+%22worldwide+remote%22+OR+%22remote+globally%22+OR+%22globally+remote%22+OR+%22work+from+anywhere%22%29%29"
+      },
+      "jobscapeVisibility": "not recorded"
+    },
+    {
+      "case": "Developer Relations",
+      "trial": 1,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Developer Relations\" OR intitle:\"devrel\" OR intitle:\"developer advocate\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "outcome": "extracted",
+      "cards": [
+        {
+          "title": "Developer Advocate @ InfluxData",
+          "url": "https://jobs.ashbyhq.com/influxdata/72a6fb9f-16e9-4d32-ab07-03a44eccbce1"
+        },
+        {
+          "title": "Developer Relations Advocate - Tyk Technologies",
+          "url": "https://apply.workable.com/tyk-technologies/j/29A8E859E9/"
+        },
+        {
+          "title": "Senior AI Evangelist & Developer Advocate, Agentic AI",
+          "url": "https://job-boards.greenhouse.io/nice/jobs/4999865101"
+        },
+        {
+          "title": "Community Lead, Developer Relations @ OpenRouter",
+          "url": "https://jobs.ashbyhq.com/openrouter/44ef374e-b234-4d77-b002-8b38b4fda18f"
+        },
+        {
+          "title": "Senior Developer Relations Manager – Cloud Provider AI ...",
+          "url": "https://nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite/job/singapore-remote/senior-developer-relations-manager---cloud-provider-ai-factory_jr2025571"
+        },
+        {
+          "title": "Developer Relations Engineer - UK",
+          "url": "https://job-boards.greenhouse.io/storyblok/jobs/4969714101"
+        },
+        {
+          "title": "Senior Developer Relations Manager - Photonic AI (f/m/d)",
+          "url": "https://q-ant-gmbh.jobs.personio.de/job/2579395?language=en"
+        },
+        {
+          "title": "Manager, Developer Relations Engineering",
+          "url": "https://job-boards.greenhouse.io/tailscale/jobs/4733571005"
+        },
+        {
+          "title": "Developer Relations Engineer (London, UK) @ Supabase",
+          "url": "https://jobs.ashbyhq.com/supabase/1acade7a-0b80-4c6c-9253-7c27a165739d"
+        },
+        {
+          "title": "Developer Advocate @ ElevenLabs",
+          "url": "https://jobs.ashbyhq.com/elevenlabs/969bbf7d-037c-4965-812e-442105ce58c1"
+        }
+      ],
+      "distinctAtsUrls": 10,
+      "timeToUsableMs": 2960,
+      "observedTerminalMs": 2960,
+      "timingNote": null,
+      "error": null,
+      "diagnostics": {
+        "revision": "retrieval-v2",
+        "status": "organic_results",
+        "pageUrl": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Developer+Relations%22+OR+intitle%3A%22devrel%22+OR+intitle%3A%22developer+advocate%22+OR+intitle%3A%22dev+advocate%22%29+%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29",
+        "organicCount": 10,
+        "newAtsCount": 10,
+        "imageBlock": false,
+        "elapsedMs": 1860,
+        "next": "google_link"
+      },
+      "source": {
+        "method": "Extension DOM diagnostics; native cards inspected. Google helper closed before independent visual inspection."
+      },
+      "jobscapeVisibility": "visible"
+    },
+    {
+      "case": "Partnerships",
+      "trial": 1,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Partnerships\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "outcome": "extracted",
+      "cards": [
+        {
+          "title": "Partnerships Coordinator - Jobgether",
+          "url": "https://jobs.lever.co/jobgether/42a15a80-22a6-44e9-8f44-90af6285638f"
+        },
+        {
+          "title": "Growth Marketing Manager - Affiliates & Partnerships ...",
+          "url": "https://feather.jobs.personio.com/job/2838368?language=en"
+        },
+        {
+          "title": "Creator Partnerships Manager - Jobgether",
+          "url": "https://jobs.lever.co/jobgether/75662ddd-b19d-456b-a0e9-63a2ecac3633"
+        },
+        {
+          "title": "Business Development Manager, Strategic Partnerships",
+          "url": "https://job-boards.greenhouse.io/dropbox/jobs/8048848"
+        },
+        {
+          "title": "Business Development Manager, Strategic Partnerships",
+          "url": "https://job-boards.greenhouse.io/dropbox/jobs/8048847"
+        },
+        {
+          "title": "Teamlead Brand Partnerships (All Genders)",
+          "url": "https://prematch-sports-gmbh.jobs.personio.de/job/2750950?language=en"
+        },
+        {
+          "title": "Strategic Partnerships Director",
+          "url": "https://goodwall.recruitee.com/o/strategic-partnerships-director"
+        },
+        {
+          "title": "Jobgether - Senior Publisher Partnerships Manager",
+          "url": "https://jobs.lever.co/jobgether/2d1ada54-a591-4585-899f-bbda4d4c7b39"
+        }
+      ],
+      "distinctAtsUrls": 8,
+      "timeToUsableMs": 2296,
+      "observedTerminalMs": 2296,
+      "timingNote": null,
+      "error": null,
+      "diagnostics": {
+        "revision": "retrieval-v2",
+        "status": "organic_results",
+        "pageUrl": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Partnerships%22%29+%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29",
+        "organicCount": 10,
+        "newAtsCount": 10,
+        "imageBlock": false,
+        "elapsedMs": 1444,
+        "next": "google_link"
+      },
+      "source": {
+        "method": "Extension DOM diagnostics; native cards inspected. Google helper closed before independent visual inspection."
+      },
+      "jobscapeVisibility": "visible"
+    },
+    {
+      "case": "Events",
+      "trial": 2,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Events\" OR intitle:\"event\") (((\"remote\" OR \"work from home\" OR \"distributed\") AND (\"EU\" OR \"European Union\" OR \"Europe\" OR \"Austria\" OR \"Belgium\" OR \"Bulgaria\" OR \"Croatia\" OR \"Cyprus\" OR \"Czechia\" OR \"Denmark\" OR \"Estonia\" OR \"Finland\" OR \"France\" OR \"Germany\" OR \"Greece\" OR \"Hungary\" OR \"Ireland\" OR \"Italy\" OR \"Latvia\" OR \"Lithuania\" OR \"Luxembourg\" OR \"Malta\" OR \"Netherlands\" OR \"Poland\" OR \"Portugal\" OR \"Romania\" OR \"Slovakia\" OR \"Slovenia\" OR \"Spain\" OR \"Sweden\")) OR (\"remote worldwide\" OR \"worldwide remote\" OR \"remote globally\" OR \"globally remote\" OR \"work from anywhere\"))",
+      "outcome": "unsupported_layout",
+      "cards": [],
+      "distinctAtsUrls": 0,
+      "timeToUsableMs": null,
+      "observedTerminalMs": null,
+      "timingNote": "No usable results. Chrome test locator wait expired before the application finished; no second Search was issued.",
+      "error": "Search could not finish.\n\n[unsupported_layout] Google opened, but no supported organic result structure or explicit empty message appeared. This is an extraction failure, not zero jobs.\n\nOpen helper tab\n\nNo automatic retry or company-feed fallback was made.",
+      "diagnostics": null,
+      "source": {
+        "blocked": false,
+        "images": [
+          "Event-driven Architect for Enterprise Integration | Jobs at ...",
+          "",
+          "The Event Academy - Senior Project Manager - Pharma",
+          "",
+          "Creatio - Event Manager",
+          "",
+          "Marketing & Events Manager (Remote from Singapore) Freelance ...",
+          "",
+          "Events Manager - EMEA @ Dandy",
+          "",
+          "Events Manager - Remote - Zyte",
+          "",
+          "The Event Academy - Senior Project Manager - Pharma",
+          "",
+          "Private Luxury Events - Current Openings",
+          "",
+          "Private Luxury Events - Current Openings",
+          ""
+        ],
+        "organicHeadings": 0,
+        "url": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Events%22+OR+intitle%3A%22event%22%29+%28%28%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29+AND+%28%22EU%22+OR+%22European+Union%22+OR+%22Europe%22+OR+%22Austria%22+OR+%22Belgium%22+OR+%22Bulgaria%22+OR+%22Croatia%22+OR+%22Cyprus%22+OR+%22Czechia%22+OR+%22Denmark%22+OR+%22Estonia%22+OR+%22Finland%22+OR+%22France%22+OR+%22Germany%22+OR+%22Greece%22+OR+%22Hungary%22+OR+%22Ireland%22+OR+%22Italy%22+OR+%22Latvia%22+OR+%22Lithuania%22+OR+%22Luxembourg%22+OR+%22Malta%22+OR+%22Netherlands%22+OR+%22Poland%22+OR+%22Portugal%22+OR+%22Romania%22+OR+%22Slovakia%22+OR+%22Slovenia%22+OR+%22Spain%22+OR+%22Sweden%22%29%29+OR+%28%22remote+worldwide%22+OR+%22worldwide+remote%22+OR+%22remote+globally%22+OR+%22globally+remote%22+OR+%22work+from+anywhere%22%29%29"
+      },
+      "jobscapeVisibility": "visible"
+    },
+    {
+      "case": "Developer Relations",
+      "trial": 2,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Developer Relations\" OR intitle:\"devrel\" OR intitle:\"developer advocate\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "outcome": "verification",
+      "cards": [],
+      "distinctAtsUrls": 0,
+      "timeToUsableMs": null,
+      "observedTerminalMs": 1428,
+      "timingNote": null,
+      "error": "Search could not finish.\n\n[verification] The helper is not on the requested results page. Open it to handle any verification, then repeat your Search or Load more action.\n\nOpen helper tab\n\nNo automatic retry or company-feed fallback was made.",
+      "diagnostics": null,
+      "source": {
+        "captchaFrame": true,
+        "path": "/sorry/index",
+        "title": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Developer+Relations%22+OR+intitle%3A%22devrel%22+OR+intitle%3A%22developer+advocate%22+OR+intitle%3A%22dev+advocate%22%29+%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29",
+        "unusualTraffic": true
+      },
+      "jobscapeVisibility": "visible"
+    },
+    {
+      "case": "Events",
+      "trial": 3,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Events\" OR intitle:\"event\") (((\"remote\" OR \"work from home\" OR \"distributed\") AND (\"EU\" OR \"European Union\" OR \"Europe\" OR \"Austria\" OR \"Belgium\" OR \"Bulgaria\" OR \"Croatia\" OR \"Cyprus\" OR \"Czechia\" OR \"Denmark\" OR \"Estonia\" OR \"Finland\" OR \"France\" OR \"Germany\" OR \"Greece\" OR \"Hungary\" OR \"Ireland\" OR \"Italy\" OR \"Latvia\" OR \"Lithuania\" OR \"Luxembourg\" OR \"Malta\" OR \"Netherlands\" OR \"Poland\" OR \"Portugal\" OR \"Romania\" OR \"Slovakia\" OR \"Slovenia\" OR \"Spain\" OR \"Sweden\")) OR (\"remote worldwide\" OR \"worldwide remote\" OR \"remote globally\" OR \"globally remote\" OR \"work from anywhere\"))",
+      "outcome": "not_run",
+      "reason": "Stopped after Google verification and three failures made the >=8/9 gate unreachable. No bypass or repeated search attempted.",
+      "cards": [],
+      "distinctAtsUrls": null,
+      "timeToUsableMs": null
+    },
+    {
+      "case": "Developer Relations",
+      "trial": 3,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Developer Relations\" OR intitle:\"devrel\" OR intitle:\"developer advocate\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "outcome": "not_run",
+      "reason": "Stopped after Google verification and three failures made the >=8/9 gate unreachable. No bypass or repeated search attempted.",
+      "cards": [],
+      "distinctAtsUrls": null,
+      "timeToUsableMs": null
+    },
+    {
+      "case": "Partnerships",
+      "trial": 2,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Partnerships\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "outcome": "not_run",
+      "reason": "Stopped after Google verification and three failures made the >=8/9 gate unreachable. No bypass or repeated search attempted.",
+      "cards": [],
+      "distinctAtsUrls": null,
+      "timeToUsableMs": null
+    },
+    {
+      "case": "Partnerships",
+      "trial": 3,
+      "query": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Partnerships\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "outcome": "not_run",
+      "reason": "Stopped after Google verification and three failures made the >=8/9 gate unreachable. No bypass or repeated search attempted.",
+      "cards": [],
+      "distinctAtsUrls": null,
+      "timeToUsableMs": null
+    }
+  ],
+  "pagination": [
+    {
+      "case": "Developer Relations",
+      "queryBefore": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Developer Relations\" OR intitle:\"devrel\" OR intitle:\"developer advocate\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "queryAfter": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Developer Relations\" OR intitle:\"devrel\" OR intitle:\"developer advocate\" OR intitle:\"dev advocate\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "exactQueryPreserved": true,
+      "googlePageQueryPreserved": true,
+      "offset": "10",
+      "urlsBefore": [
+        "https://jobs.ashbyhq.com/influxdata/72a6fb9f-16e9-4d32-ab07-03a44eccbce1",
+        "https://apply.workable.com/tyk-technologies/j/29A8E859E9/",
+        "https://job-boards.greenhouse.io/nice/jobs/4999865101",
+        "https://jobs.ashbyhq.com/openrouter/44ef374e-b234-4d77-b002-8b38b4fda18f",
+        "https://nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite/job/singapore-remote/senior-developer-relations-manager---cloud-provider-ai-factory_jr2025571",
+        "https://job-boards.greenhouse.io/storyblok/jobs/4969714101",
+        "https://q-ant-gmbh.jobs.personio.de/job/2579395?language=en",
+        "https://job-boards.greenhouse.io/tailscale/jobs/4733571005",
+        "https://jobs.ashbyhq.com/supabase/1acade7a-0b80-4c6c-9253-7c27a165739d",
+        "https://jobs.ashbyhq.com/elevenlabs/969bbf7d-037c-4965-812e-442105ce58c1"
+      ],
+      "urlsAfter": [
+        "https://jobs.ashbyhq.com/influxdata/72a6fb9f-16e9-4d32-ab07-03a44eccbce1",
+        "https://apply.workable.com/tyk-technologies/j/29A8E859E9/",
+        "https://job-boards.greenhouse.io/nice/jobs/4999865101",
+        "https://jobs.ashbyhq.com/openrouter/44ef374e-b234-4d77-b002-8b38b4fda18f",
+        "https://nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite/job/singapore-remote/senior-developer-relations-manager---cloud-provider-ai-factory_jr2025571",
+        "https://job-boards.greenhouse.io/storyblok/jobs/4969714101",
+        "https://q-ant-gmbh.jobs.personio.de/job/2579395?language=en",
+        "https://job-boards.greenhouse.io/tailscale/jobs/4733571005",
+        "https://jobs.ashbyhq.com/supabase/1acade7a-0b80-4c6c-9253-7c27a165739d",
+        "https://jobs.ashbyhq.com/elevenlabs/969bbf7d-037c-4965-812e-442105ce58c1",
+        "https://apply.workable.com/trailofbits/j/427E4C8AA4/",
+        "https://nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite/job/france-remote/senior-developer-relations-manager---france_jr2025100",
+        "https://job-boards.greenhouse.io/backblaze/jobs/5424129008",
+        "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Developer-Relations-Manager--AI-Natives_JR2021213",
+        "https://jobs.ashbyhq.com/whitecircle/1a5253d6-1ef1-4db8-9eb6-008be4d03bff",
+        "https://jobs.ashbyhq.com/axelera/f3749590-0c0a-424b-a714-19bb82d1e321?departmentId=6ed63ff7-c091-4b11-a03f-b7c1f1e1ea0b",
+        "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Senior-Developer-Relations-Manager---Gen-AI_JR2025712",
+        "https://job-boards.greenhouse.io/datadog/jobs/8161455",
+        "https://jobs.ashbyhq.com/runpod/8e907491-3242-47ba-8de4-f7e3017e607b",
+        "https://job-boards.greenhouse.io/akuity/jobs/4393861009"
+      ],
+      "newUrls": [
+        "https://apply.workable.com/trailofbits/j/427E4C8AA4/",
+        "https://nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite/job/france-remote/senior-developer-relations-manager---france_jr2025100",
+        "https://job-boards.greenhouse.io/backblaze/jobs/5424129008",
+        "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Developer-Relations-Manager--AI-Natives_JR2021213",
+        "https://jobs.ashbyhq.com/whitecircle/1a5253d6-1ef1-4db8-9eb6-008be4d03bff",
+        "https://jobs.ashbyhq.com/axelera/f3749590-0c0a-424b-a714-19bb82d1e321?departmentId=6ed63ff7-c091-4b11-a03f-b7c1f1e1ea0b",
+        "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Senior-Developer-Relations-Manager---Gen-AI_JR2025712",
+        "https://job-boards.greenhouse.io/datadog/jobs/8161455",
+        "https://jobs.ashbyhq.com/runpod/8e907491-3242-47ba-8de4-f7e3017e607b",
+        "https://job-boards.greenhouse.io/akuity/jobs/4393861009"
+      ],
+      "distinct": 20,
+      "scrollBefore": {
+        "x": 0,
+        "y": 3237
+      },
+      "scrollAfter": {
+        "x": 0,
+        "y": 3237
+      },
+      "jobscapeVisibility": "visible",
+      "helperClosed": true,
+      "elapsedMs": 2556,
+      "diagnostics": {
+        "revision": "retrieval-v2",
+        "status": "organic_results",
+        "pageUrl": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Developer+Relations%22+OR+intitle%3A%22devrel%22+OR+intitle%3A%22developer+advocate%22+OR+intitle%3A%22dev+advocate%22%29+%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29&start=10",
+        "organicCount": 10,
+        "newAtsCount": 10,
+        "imageBlock": false,
+        "elapsedMs": 1322,
+        "next": "google_link"
+      },
+      "error": null
+    },
+    {
+      "case": "Partnerships",
+      "queryBefore": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Partnerships\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "queryAfter": "(site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.eu.lever.co OR site:jobs.ashbyhq.com OR site:myworkdayjobs.com OR site:jobs.smartrecruiters.com OR site:apply.workable.com OR site:recruitee.com OR site:jobs.personio.de OR site:jobs.personio.com OR site:icims.com OR site:jobs.jobvite.com OR site:breezy.hr OR site:applytojob.com OR site:taleo.net OR site:bamboohr.com/careers OR site:teamtailor.com/jobs OR site:recruiting.paylocity.com OR site:workforcenow.adp.com OR site:jobs2web.com OR site:successfactors.com) (intitle:\"Partnerships\") (\"remote\" OR \"work from home\" OR \"distributed\")",
+      "exactQueryPreserved": true,
+      "googlePageQueryPreserved": true,
+      "offset": "10",
+      "urlsBefore": [
+        "https://jobs.lever.co/jobgether/42a15a80-22a6-44e9-8f44-90af6285638f",
+        "https://feather.jobs.personio.com/job/2838368?language=en",
+        "https://jobs.lever.co/jobgether/75662ddd-b19d-456b-a0e9-63a2ecac3633",
+        "https://job-boards.greenhouse.io/dropbox/jobs/8048848",
+        "https://job-boards.greenhouse.io/dropbox/jobs/8048847",
+        "https://prematch-sports-gmbh.jobs.personio.de/job/2750950?language=en",
+        "https://goodwall.recruitee.com/o/strategic-partnerships-director",
+        "https://jobs.lever.co/jobgether/2d1ada54-a591-4585-899f-bbda4d4c7b39"
+      ],
+      "urlsAfter": [
+        "https://jobs.lever.co/jobgether/42a15a80-22a6-44e9-8f44-90af6285638f",
+        "https://feather.jobs.personio.com/job/2838368?language=en",
+        "https://jobs.lever.co/jobgether/75662ddd-b19d-456b-a0e9-63a2ecac3633",
+        "https://job-boards.greenhouse.io/dropbox/jobs/8048848",
+        "https://job-boards.greenhouse.io/dropbox/jobs/8048847",
+        "https://prematch-sports-gmbh.jobs.personio.de/job/2750950?language=en",
+        "https://goodwall.recruitee.com/o/strategic-partnerships-director",
+        "https://jobs.lever.co/jobgether/2d1ada54-a591-4585-899f-bbda4d4c7b39",
+        "https://good-hood-gmbh.jobs.personio.de/job/2799822?language=en",
+        "https://bookboost.jobs.personio.com/job/2776822",
+        "https://job-boards.greenhouse.io/engine/jobs/7820725003",
+        "https://jobs.eu.lever.co/pnlfin/7ef1cea0-3c6d-4535-942c-2e8c327915e8",
+        "https://job-boards.greenhouse.io/stripe/jobs/8187566",
+        "https://job-boards.greenhouse.io/stripe/jobs/8203216",
+        "https://gnosis.jobs.personio.com/job/2196740?language=en",
+        "https://dechra.teamtailor.com/jobs/8544623-director-strategic-partnerships-scouting",
+        "https://qevlar-1721317262.teamtailor.com/jobs/8568091-vp-partnerships",
+        "https://electrify.teamtailor.com/jobs/8175751-media-partnerships-lead-the-rundown"
+      ],
+      "newUrls": [
+        "https://good-hood-gmbh.jobs.personio.de/job/2799822?language=en",
+        "https://bookboost.jobs.personio.com/job/2776822",
+        "https://job-boards.greenhouse.io/engine/jobs/7820725003",
+        "https://jobs.eu.lever.co/pnlfin/7ef1cea0-3c6d-4535-942c-2e8c327915e8",
+        "https://job-boards.greenhouse.io/stripe/jobs/8187566",
+        "https://job-boards.greenhouse.io/stripe/jobs/8203216",
+        "https://gnosis.jobs.personio.com/job/2196740?language=en",
+        "https://dechra.teamtailor.com/jobs/8544623-director-strategic-partnerships-scouting",
+        "https://qevlar-1721317262.teamtailor.com/jobs/8568091-vp-partnerships",
+        "https://electrify.teamtailor.com/jobs/8175751-media-partnerships-lead-the-rundown"
+      ],
+      "distinct": 18,
+      "scrollBefore": {
+        "x": 0,
+        "y": 2635
+      },
+      "scrollAfter": {
+        "x": 0,
+        "y": 2635
+      },
+      "jobscapeVisibility": "visible",
+      "helperClosed": true,
+      "elapsedMs": 1394,
+      "diagnostics": {
+        "revision": "retrieval-v2",
+        "status": "organic_results",
+        "pageUrl": "https://www.google.com/search?q=%28site%3Aboards.greenhouse.io+OR+site%3Ajob-boards.greenhouse.io+OR+site%3Ajobs.lever.co+OR+site%3Ajobs.eu.lever.co+OR+site%3Ajobs.ashbyhq.com+OR+site%3Amyworkdayjobs.com+OR+site%3Ajobs.smartrecruiters.com+OR+site%3Aapply.workable.com+OR+site%3Arecruitee.com+OR+site%3Ajobs.personio.de+OR+site%3Ajobs.personio.com+OR+site%3Aicims.com+OR+site%3Ajobs.jobvite.com+OR+site%3Abreezy.hr+OR+site%3Aapplytojob.com+OR+site%3Ataleo.net+OR+site%3Abamboohr.com%2Fcareers+OR+site%3Ateamtailor.com%2Fjobs+OR+site%3Arecruiting.paylocity.com+OR+site%3Aworkforcenow.adp.com+OR+site%3Ajobs2web.com+OR+site%3Asuccessfactors.com%29+%28intitle%3A%22Partnerships%22%29+%28%22remote%22+OR+%22work+from+home%22+OR+%22distributed%22%29&start=10",
+        "organicCount": 10,
+        "newAtsCount": 10,
+        "imageBlock": false,
+        "elapsedMs": 1183,
+        "next": "google_link"
+      },
+      "error": null
+    }
+  ],
+  "verification": {
+    "path": "/sorry/index",
+    "unusualTraffic": true,
+    "captchaFrame": true
+  }
+}
