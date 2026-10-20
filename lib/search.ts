@@ -25,7 +25,17 @@ export type MatchReason = {field:'title'|'description';term:string;alias:boolean
 export type Job = {id:string;title:string;company:string;location:string;locations?:Place[];remote:boolean;url:string;platform:string;description:string;descriptionTruncated?:boolean;published:string|null;dateKind:'published'|'updated'|null;checked:string;match?:MatchReason};
 export type BoardHealth = {name:string;platform:string;source:string;status:'ok'|'partial'|'unavailable';jobs:number;checked:string;cached:boolean;error?:string;reportedTotal?:number;retryAt?:string};
 export type SearchResult = {jobs:Job[];total:number;scanned:number;boards:number;attempted:number;failed:string[];checked:string;truncated:boolean;health?:BoardHealth[];coverage?:import('./coverage').SourceCoverage[];metrics?:{requests:number;responseBytes:number;elapsedMs:number;cacheBytes:number};descriptions?:{available:number;truncated:number}};
-export function terms(value:string){return value.split(/\s+OR\s+|,/i).map(x=>x.replace(/["“”]/g,'').trim()).filter(Boolean).slice(0,8)}
+export function terms(value:string){
+ // Separators inside quoted user phrases are literal text, not alternatives.
+ const result:string[]=[];let part='',quoted=false;
+ for(let i=0;i<value.length;i++){
+  if(/["“”]/.test(value[i])){quoted=!quoted;continue;}
+  const or=!quoted?value.slice(i).match(/^\s+OR\s+/i):null;
+  if(!quoted&&value[i]===','||or){if(part.trim())result.push(part.trim());part='';if(or)i+=or[0].length-1;}
+  else part+=value[i];
+ }
+ if(part.trim())result.push(part.trim());return result;
+}
 const titleAliases=[
  ['event','events'],
  ['devrel','developer relations','developer advocate','dev advocate'],
@@ -73,6 +83,7 @@ export function validateInput(value:unknown):SearchInput{
  if(!value||typeof value!=='object')throw new Error('Enter a job title or keyword.');
  const v=value as Record<string,unknown>;
  if(typeof v.keywords!=='string'||!terms(v.keywords).some(term=>normalizeText(term).length)||v.keywords.length>180)throw new Error('Enter keywords up to 180 characters.');
+ if(terms(v.keywords).length>8)throw new Error('Use up to eight keyword alternatives; none will be silently omitted.');
  if(typeof v.location!=='string'||v.location.length>100||typeof v.remote!=='boolean')throw new Error('Check the location and remote filter.');
  if(!Array.isArray(v.platforms)||!v.platforms.length||v.platforms.some(p=>!platforms.some(x=>x.id===p)))throw new Error('Select at least one ATS platform.');
  for(const option of ['expandTitles','searchDescriptions','includeUnknownRemote','wholePageKeywords'])if(v[option]!==undefined&&typeof v[option]!=='boolean')throw new Error('Check the search options.');
